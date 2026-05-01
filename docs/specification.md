@@ -155,7 +155,7 @@ flowchart TB
     end
 
     subgraph GATEWAY["SPRING CLOUD GATEWAY"]
-        GW["Routing + Auth (JWT)"]
+        GW["Routing + Firebase Validation"]
     end
 
     subgraph DISCOVERY["EUREKA SERVER"]
@@ -163,7 +163,6 @@ flowchart TB
     end
 
     subgraph SERVICES["MICROSERVICIOS"]
-        AS["auth-service"]
         PS["players-service"]
         CS["comments-service"]
         IS["ideal-team-service"]
@@ -185,14 +184,18 @@ flowchart TB
         LLM["Groq / Google AI"]
     end
 
+    subgraph FIREBASE["FIREBASE"]
+        FA["Firebase Auth + Firestore"]
+    end
+
     FE -->|"Header:<br/>X-Backend=Springboot/Nodejs"| GW
     GW -->|"Route by handler"| SERVICES
+    GW -.->|"Validate Token"| FA
     DISCOVERY -->|"Registro"| SERVICES
 
     PS -->|"Persist"| DB
     CS -->|"Persist"| DB
     IS -->|"Persist"| DB
-    AS -->|"Persiste"| DB
 
     CS -->|"OpenFeign"| PS
     IS -->|"OpenFeign"| PS
@@ -210,17 +213,18 @@ La aplicación sigue una **arquitectura de microservicios** con los siguientes c
 | Capa               | Componentes                                                 |
 | ------------------ | ----------------------------------------------------------- |
 | **Frontend**       | Ionic App con toggle para elegir entre SpringBoot o Node.js |
-| **Gateway**        | Spring Cloud Gateway (enrutamiento + JWT)                   |
+| **Gateway**        | Spring Cloud Gateway (enrutamiento + Firebase Admin SDK) |
 | **Descubrimiento** | Eureka Server (registro de servicios)                       |
-| **Microservicios** | auth, players, comments, ideal-team, news                   |
-| **Datos**          | PostgreSQL o MongoDB                                        |
+| **Microservicios** | players, comments, ideal-team, news                           |
+| **Datos**          | PostgreSQL o MongoDB + Firestore                             |
+| **Firebase**       | Firebase Auth + Firestore (autenticación y datos de usuario) |
 | **CORBA**          | Servidor para noticias (productor/consumidor)               |
 | **Externos**       | API Football + Groq/Google AI (LLM)                         |
 
 ### Flujo principal
 
-1. El frontend envía peticiones con header `X-Backend` indicando el backend destino
-2. El Gateway enruta según el header y-valida JWT
+1. El frontend envía peticiones con header `X-Backend` indicando el backend destino y el token de Firebase
+2. El Gateway valida el token con Firebase Admin SDK y enruta según el header
 3. Eureka registra los microservicios disponibles
 4. Los servicios se comunican entre sí via OpenFeign
 5. CORBA se usa exclusivamente para noticias
