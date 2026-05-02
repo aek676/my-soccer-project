@@ -38,24 +38,24 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: maven
 
-      - name: Setup Docker
-        uses: docker/setup-docker-action@v4
-
-      - name: Make Maven wrapper executable
-        run: chmod +x mvnw
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('eureka-server/pom.xml') }}
+          restore-keys: maven-
 
       - name: Build image with Maven
+        env:
+          BP_JVM_CDS_ENABLED: "true"
         run: |
           ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:latest
 
-      - name: Tag image with Git SHA
+      - name: Tag and Push images to Artifact Registry
         run: |
           docker tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:latest \
             us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:${{ github.sha }}
-
-      - name: Push images to Artifact Registry
-        run: |
-          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:latest
-          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:latest &
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/eureka-server:${{ github.sha }} &
+          wait
