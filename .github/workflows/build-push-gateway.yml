@@ -1,0 +1,62 @@
+name: Build and Push Gateway
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gateway/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gateway
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Authenticate to GCP via OIDC
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('gateway/pom.xml') }}
+          restore-keys: maven-
+
+      - name: Build image with Maven
+        env:
+          BP_JVM_CDS_ENABLED: "true"
+        run: |
+          ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/gateway:latest
+
+      - name: Tag and Push images to Artifact Registry
+        run: |
+          docker tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/gateway:latest \
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/gateway:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/gateway:latest &
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/gateway:${{ github.sha }} &
+          wait
+
