@@ -1,0 +1,27 @@
+services:
+  eureka-server:
+    image: eureka-server:0.0.1-SNAPSHOT
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - JAVA_OPTS=-Deureka.instance.hostname=eureka-server
+    networks:
+      - my-soccer-network
+
+  gateway:
+    image: gateway:0.0.1-SNAPSHOT
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Deureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - my-soccer-network
+
+networks:
+  my-soccer-network:
+    driver: bridge
+
