@@ -25,45 +25,75 @@ services:
   players-service:
     image: players-service:0.0.1-SNAPSHOT
     container_name: players-service
-    # ports:
-    #   - "8081:8081"
     environment:
-      # - SERVER_PORT=8081
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/my_soccer_project
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
       - EUREKA_INSTANCE_HOSTNAME=players-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       - eureka-server
+      - postgres
     networks:
       - my-soccer-network
 
   comments-service:
     image: comments-service:0.0.1-SNAPSHOT
     container_name: comments-service
-    # ports:
-    # - "8082:8082"
     environment:
-      # - SERVER_PORT=8082
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/my_soccer_project
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
       - EUREKA_INSTANCE_HOSTNAME=comments-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       - eureka-server
+      - postgres
     networks:
       - my-soccer-network
 
   ideal-team-service:
     image: ideal-team-service:0.0.1-SNAPSHOT
     container_name: ideal-team-service
-    # ports:
-    #   - "8083:8083"
     environment:
-      # - SERVER_PORT=8083
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/my_soccer_project
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
       - EUREKA_INSTANCE_HOSTNAME=ideal-team-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       - eureka-server
+      - postgres
+    networks:
+      - my-soccer-network
+
+  postgres:
+    image: postgres:18.3-alpine3.23
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=my_soccer_project
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - my-soccer-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8090:8080"
     networks:
       - my-soccer-network
 
 networks:
   my-soccer-network:
     driver: bridge
+
+volumes:
+  postgres_data:
+
