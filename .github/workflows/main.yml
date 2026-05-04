@@ -1,0 +1,90 @@
+name: Main CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      players: ${{ steps.filter.outputs.players }}
+      comments: ${{ steps.filter.outputs.comments }}
+      eureka: ${{ steps.filter.outputs.eureka }}
+      gateway: ${{ steps.filter.outputs.gateway }}
+      ideal_team: ${{ steps.filter.outputs.ideal_team }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Check changes
+        uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            players: 
+              - 'players-service/**'
+            comments:
+              - 'comments-service/**'
+            eureka:
+              - 'eureka-server/**'
+            gateway:
+              - 'gateway/**'
+            ideal_team:
+              - 'ideal-team-service/**'
+
+  build-players:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.players == 'true' }}
+    uses: ./.github/workflows/tmpl-build-push.yml
+    with:
+      working_directory: "players-service"
+      image_name: "players-service"
+      publish_image: ${{ github.event_name == 'push' }}
+    secrets: inherit
+
+  build-comments:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.comments == 'true' }}
+    uses: ./.github/workflows/tmpl-build-push.yml
+    with:
+      working_directory: "comments-service"
+      image_name: "comments-service"
+      publish_image: ${{ github.event_name == 'push' }}
+    secrets: inherit
+
+  build-eureka:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.eureka == 'true' }}
+    uses: ./.github/workflows/tmpl-build-push.yml
+    with:
+      working_directory: "eureka-server"
+      image_name: "eureka-server"
+      publish_image: ${{ github.event_name == 'push' }}
+    secrets: inherit
+
+  build-gateway:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.gateway == 'true' }}
+    uses: ./.github/workflows/tmpl-build-push.yml
+    with:
+      working_directory: "gateway"
+      image_name: "gateway"
+      publish_image: ${{ github.event_name == 'push' }}
+    secrets: inherit
+
+  build-ideal-team:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.ideal_team == 'true' }}
+    uses: ./.github/workflows/tmpl-build-push.yml
+    with:
+      working_directory: "ideal-team-service"
+      image_name: "ideal-team-service"
+      publish_image: ${{ github.event_name == 'push' }}
+    secrets: inherit

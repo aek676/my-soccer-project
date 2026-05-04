@@ -1,0 +1,76 @@
+name: Template - Build and Push
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: true
+        type: string
+      image_name:
+        required: true
+        type: string
+      publish_image:
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('${{ inputs.working_directory }}/pom.xml') }}
+          restore-keys: maven-
+
+      - name: Run Unit Tests
+        run: ./mvnw test
+
+      - name: Build image with Maven
+        env:
+          BP_JVM_CDS_ENABLED: "true"
+        run: |
+          ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:latest
+
+      - name: Authenticate to GCP via OIDC
+        if: ${{ inputs.publish_image }}
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup Cloud SDK
+        if: ${{ inputs.publish_image }}
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        if: ${{ inputs.publish_image }}
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Tag and Push images to Artifact Registry
+        if: ${{ inputs.publish_image }}
+        run: |
+          docker tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:latest \
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:latest &
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:${{ github.sha }} &
+          wait
+
