@@ -36,6 +36,34 @@ services:
     networks:
       - my-soccer-network
 
+  comments-service:
+    image: comments-service:0.0.1-SNAPSHOT
+    container_name: comments-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+      - EUREKA_INSTANCE_HOSTNAME=comments-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - my-soccer-network
+
+  ideal-team-service:
+    image: ideal-team-service:0.0.1-SNAPSHOT
+    container_name: ideal-team-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SERVER_PORT=8083
+      - EUREKA_INSTANCE_HOSTNAME=ideal-team-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - my-soccer-network
+
 networks:
   my-soccer-network:
     driver: bridge
