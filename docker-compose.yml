@@ -25,10 +25,10 @@ services:
   players-service:
     image: players-service:0.0.1-SNAPSHOT
     container_name: players-service
-    ports:
-      - "8081:8081"
+    # ports:
+    #   - "8081:8081"
     environment:
-      - SERVER_PORT=8081
+      # - SERVER_PORT=8081
       - EUREKA_INSTANCE_HOSTNAME=players-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
@@ -39,10 +39,10 @@ services:
   comments-service:
     image: comments-service:0.0.1-SNAPSHOT
     container_name: comments-service
-    ports:
-      - "8082:8082"
+    # ports:
+    # - "8082:8082"
     environment:
-      - SERVER_PORT=8082
+      # - SERVER_PORT=8082
       - EUREKA_INSTANCE_HOSTNAME=comments-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
@@ -53,10 +53,10 @@ services:
   ideal-team-service:
     image: ideal-team-service:0.0.1-SNAPSHOT
     container_name: ideal-team-service
-    ports:
-      - "8083:8083"
+    # ports:
+    #   - "8083:8083"
     environment:
-      - SERVER_PORT=8083
+      # - SERVER_PORT=8083
       - EUREKA_INSTANCE_HOSTNAME=ideal-team-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
