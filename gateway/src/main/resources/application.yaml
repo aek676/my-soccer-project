@@ -17,7 +17,7 @@ server:
 eureka:
   instance:
     hostname: localhost
-    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
+    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${server.port}
   client:
     service-url:
       defaultZone: http://localhost:8761
