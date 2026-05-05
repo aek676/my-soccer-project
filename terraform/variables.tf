@@ -1,5 +1,5 @@
 variable "location" {
-  default     = "swedencentral"
+  default     = "norwayeast"
   description = "The Azure region to deploy resources in"
 }
 
