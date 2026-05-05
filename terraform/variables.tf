@@ -7,3 +7,4 @@ variable "prefix" {
   default     = "my-soccer-project"
   description = "A prefix for naming resources"
 }
+
