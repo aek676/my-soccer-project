@@ -3,7 +3,7 @@ name: "Terraform Plan"
 on:
   pull_request:
     paths:
-      - 'terraform/**'
+      - "terraform/**"
 
 env:
   TF_CLOUD_ORGANIZATION: "aek676"
@@ -28,7 +28,7 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ${{ env.CONFIG_DIRECTORY }}
-          speculative: true
+          speculative: false
 
       - name: Create Plan Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
