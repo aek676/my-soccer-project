@@ -63,7 +63,7 @@ jobs:
     uses: ./.github/workflows/tmpl-build-push.yml
     with:
       working_directory: "gateway"
-      image_name: "gateway"
+      image_name: "api-gateway"
       publish_image: ${{ github.event_name == 'push' }}
     secrets: inherit
 

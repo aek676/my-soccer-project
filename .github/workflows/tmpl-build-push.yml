@@ -73,3 +73,17 @@ jobs:
           docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:latest &
           docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:${{ github.sha }} &
           wait
+
+      - name: Azure Login
+        if: ${{ inputs.publish_image }}
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Container Apps
+        if: ${{ inputs.publish_image }}
+        run: |
+          az containerapp update \
+            --name ${{ inputs.image_name }} \
+            --resource-group rg-my-soccer-project-eureka \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:${{ github.sha }}
