@@ -32,8 +32,6 @@ jobs:
               - 'players-service/**'
             comments:
               - 'comments-service/**'
-            eureka:
-              - 'eureka-server/**'
             gateway:
               - 'gateway/**'
             ideal_team:
@@ -59,16 +57,6 @@ jobs:
       publish_image: ${{ github.event_name == 'push' }}
     secrets: inherit
 
-  build-eureka:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.eureka == 'true' }}
-    uses: ./.github/workflows/tmpl-build-push.yml
-    with:
-      working_directory: "eureka-server"
-      image_name: "eureka-server"
-      publish_image: ${{ github.event_name == 'push' }}
-    secrets: inherit
-
   build-gateway:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.gateway == 'true' }}
@@ -88,3 +76,4 @@ jobs:
       image_name: "ideal-team-service"
       publish_image: ${{ github.event_name == 'push' }}
     secrets: inherit
+
