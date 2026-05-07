@@ -56,25 +56,29 @@ resource "azapi_resource" "config_server" {
 }
 
 module "microservices" {
-  source            = "./modules/microservice"
-  for_each          = toset(var.services)
-  app_name          = each.value
-  image             = var.image
-  eureka_server_id  = azapi_resource.eureka_server.id
-  config_server_id  = azapi_resource.config_server.id
-  resource_group_id = azurerm_resource_group.rg.id
-  environment_id    = azurerm_container_app_environment.env.id
-  location          = azurerm_resource_group.rg.location
+  source              = "./modules/microservice"
+  for_each            = toset(var.services)
+  app_name            = each.value
+  image               = var.image
+  eureka_server_id    = azapi_resource.eureka_server.id
+  config_server_id    = azapi_resource.config_server.id
+  resource_group_id   = azurerm_resource_group.rg.id
+  environment_id      = azurerm_container_app_environment.env.id
+  location            = azurerm_resource_group.rg.location
+  gcp_registry_username = module.gcp.artifact_registry_email
+  gcp_registry_password = module.gcp.artifact_registry_json_key
 }
 
 module "gateway" {
-  source            = "./modules/microservice"
-  app_name          = "api-gateway"
-  image             = var.image
-  eureka_server_id  = azapi_resource.eureka_server.id
-  config_server_id  = azapi_resource.config_server.id
-  resource_group_id = azurerm_resource_group.rg.id
-  environment_id    = azurerm_container_app_environment.env.id
-  location          = azurerm_resource_group.rg.location
-  enable_ingress    = true
+  source              = "./modules/microservice"
+  app_name            = "api-gateway"
+  image               = var.image
+  eureka_server_id   = azapi_resource.eureka_server.id
+  config_server_id   = azapi_resource.config_server.id
+  resource_group_id  = azurerm_resource_group.rg.id
+  environment_id     = azurerm_container_app_environment.env.id
+  location           = azurerm_resource_group.rg.location
+  enable_ingress     = true
+  gcp_registry_username = module.gcp.artifact_registry_email
+  gcp_registry_password = module.gcp.artifact_registry_json_key
 }

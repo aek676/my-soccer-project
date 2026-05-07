@@ -48,3 +48,18 @@ resource "google_artifact_registry_repository_iam_member" "repo_writer" {
   role       = "roles/artifactregistry.writer"
   member     = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
+
+resource "google_service_account" "azure_pull_sa" {
+  account_id   = "azure-container-apps-pull"
+  display_name = "Azure Container Apps Pull"
+  description  = "Service Account for Azure Container Apps to pull images from GCP Artifact Registry"
+}
+
+resource "google_artifact_registry_repository_iam_member" "azure_pull_reader" {
+  project    = google_artifact_registry_repository.my-repo.project
+  location   = google_artifact_registry_repository.my-repo.location
+  repository = google_artifact_registry_repository.my-repo.repository_id
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${google_service_account.azure_pull_sa.email}"
+}
+
