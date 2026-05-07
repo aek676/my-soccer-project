@@ -1,6 +1,8 @@
 spring:
   application:
     name: players-service
+  config:
+    import: "optional:configserver:http://localhost:8888/"
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/my_soccer_project}
     username: ${DATABASE_USERNAME:postgres}
