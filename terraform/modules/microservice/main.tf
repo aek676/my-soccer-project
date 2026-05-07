@@ -13,6 +13,12 @@ resource "azapi_resource" "app" {
             {
               name  = "app"
               image = var.image
+              env = [
+                {
+                  name  = "SPRING_PROFILES_ACTIVE"
+                  value = "prod"
+                }
+              ]
               resources = {
                 cpu    = 0.5
                 memory = "1Gi"
