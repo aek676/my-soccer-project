@@ -39,3 +39,20 @@ variable "enable_ingress" {
   default     = false
 }
 
+variable "gcp_registry_server" {
+  description = "GCP Artifact Registry server hostname"
+  type        = string
+  default     = "us-central1-docker.pkg.dev"
+}
+
+variable "gcp_registry_username" {
+  description = "GCP service account email for registry authentication"
+  type        = string
+}
+
+variable "gcp_registry_password" {
+  description = "GCP service account private key for registry authentication"
+  type        = string
+  sensitive   = true
+}
+

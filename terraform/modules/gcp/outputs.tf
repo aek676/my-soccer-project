@@ -17,3 +17,17 @@ output "project_number" {
   description = "GCP Project Number"
   value       = var.project_id
 }
+
+resource "google_service_account_key" "azure_pull_key" {
+  service_account_id = google_service_account.azure_pull_sa.name
+}
+
+output "artifact_registry_json_key" {
+  value     = google_service_account_key.azure_pull_key.private_key
+  sensitive = true
+}
+
+output "artifact_registry_email" {
+  value = google_service_account.azure_pull_sa.email
+}
+
