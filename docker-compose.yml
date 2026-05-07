@@ -1,4 +1,14 @@
 services:
+  config-server:
+    image: config-server:0.0.1-SNAPSHOT
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/aek676/spring-my-soccer-project-microservices-config.git
+    networks:
+      - my-soccer-network
+
   eureka-server:
     image: eureka-server:0.0.1-SNAPSHOT
     container_name: eureka-server
@@ -6,6 +16,9 @@ services:
       - "8761:8761"
     environment:
       - EUREKA_INSTANCE_HOSTNAME=eureka-server
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
+    depends_on:
+      - config-server
     networks:
       - my-soccer-network
 
@@ -17,7 +30,9 @@ services:
     environment:
       - EUREKA_INSTANCE_HOSTNAME=gateway
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - eureka-server
     networks:
       - my-soccer-network
@@ -31,7 +46,9 @@ services:
       - DATABASE_PASSWORD=postgres
       - EUREKA_INSTANCE_HOSTNAME=players-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - eureka-server
       - postgres
     networks:
@@ -46,7 +63,9 @@ services:
       - DATABASE_PASSWORD=postgres
       - EUREKA_INSTANCE_HOSTNAME=comments-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - eureka-server
       - postgres
     networks:
@@ -61,7 +80,9 @@ services:
       - DATABASE_PASSWORD=postgres
       - EUREKA_INSTANCE_HOSTNAME=ideal-team-service
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - eureka-server
       - postgres
     networks:
@@ -96,4 +117,3 @@ networks:
 
 volumes:
   postgres_data:
-
