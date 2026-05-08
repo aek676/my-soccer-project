@@ -6,6 +6,7 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>4.0.6</version>
     <relativePath></relativePath>
+    <!-- lookup parent from repository -->
   </parent>
   <groupId>es.ual</groupId>
   <artifactId>gateway</artifactId>
