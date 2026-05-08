@@ -13,12 +13,28 @@ resource "azapi_resource" "app" {
             {
               name  = "app"
               image = var.image
-              env = [
-                {
-                  name  = "SPRING_PROFILES_ACTIVE"
-                  value = "prod"
-                }
-              ]
+              env = concat(
+                [
+                  {
+                    name  = "SPRING_PROFILES_ACTIVE"
+                    value = "prod"
+                  }
+                ],
+                var.postgres_url != "" ? [
+                  {
+                    name  = "POSTGRES_URL"
+                    value = var.postgres_url
+                  },
+                  {
+                    name  = "POSTGRES_USER"
+                    value = var.postgres_user
+                  },
+                  {
+                    name      = "POSTGRES_PASSWORD"
+                    secretRef = "postgres-password"
+                  }
+                ] : []
+              )
               resources = {
                 cpu    = 0.5
                 memory = "1Gi"
@@ -40,6 +56,29 @@ resource "azapi_resource" "app" {
             }
           ]
         }
+        configuration = {
+          registries = [
+            {
+              server            = var.gcp_registry_server
+              username          = var.gcp_registry_username
+              passwordSecretRef = "gcp-registry-secret"
+            }
+          ]
+          secrets = concat(
+            [
+              {
+                name  = "gcp-registry-secret"
+                value = var.gcp_registry_password
+              }
+            ],
+            var.postgres_password != "" ? [
+              {
+                name  = "postgres-password"
+                value = var.postgres_password
+              }
+            ] : []
+          )
+        }
       },
       var.enable_ingress ? {
         configuration = {
@@ -58,31 +97,5 @@ resource "azapi_resource" "app" {
     ignore_changes = [
       body.properties.template.containers[0].image,
     ]
-  }
-}
-
-resource "azapi_update_resource" "app_registries" {
-  type      = "Microsoft.App/containerApps@2025-10-02-preview"
-  name      = var.app_name
-  parent_id = var.resource_group_id
-
-  body = {
-    properties = {
-      configuration = {
-        registries = [
-          {
-            server               = var.gcp_registry_server
-            username             = var.gcp_registry_username
-            passwordSecretRef    = "gcp-registry-secret"
-          }
-        ]
-        secrets = [
-          {
-            name  = "gcp-registry-secret"
-            value = var.gcp_registry_password
-          }
-        ]
-      }
-    }
   }
 }

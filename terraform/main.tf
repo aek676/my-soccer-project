@@ -65,8 +65,11 @@ module "microservices" {
   resource_group_id   = azurerm_resource_group.rg.id
   environment_id      = azurerm_container_app_environment.env.id
   location            = azurerm_resource_group.rg.location
-  gcp_registry_username = module.gcp.artifact_registry_email
+  gcp_registry_username = "_json_key_base64"
   gcp_registry_password = module.gcp.artifact_registry_json_key
+  postgres_url        = var.supabase_url
+  postgres_user       = var.supabase_user
+  postgres_password   = var.supabase_password
 }
 
 module "gateway" {
@@ -79,6 +82,6 @@ module "gateway" {
   environment_id     = azurerm_container_app_environment.env.id
   location           = azurerm_resource_group.rg.location
   enable_ingress     = true
-  gcp_registry_username = module.gcp.artifact_registry_email
+  gcp_registry_username = "_json_key_base64"
   gcp_registry_password = module.gcp.artifact_registry_json_key
 }

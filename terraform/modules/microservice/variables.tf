@@ -52,7 +52,26 @@ variable "gcp_registry_username" {
 
 variable "gcp_registry_password" {
   description = "GCP service account private key for registry authentication"
-  type        = string
   sensitive   = true
+  type        = string
+}
+
+variable "postgres_url" {
+  type        = string
+  description = "JDBC URL for PostgreSQL"
+  default     = ""
+}
+
+variable "postgres_user" {
+  type        = string
+  description = "PostgreSQL user"
+  default     = ""
+}
+
+variable "postgres_password" {
+  type        = string
+  description = "PostgreSQL password"
+  sensitive   = true
+  default     = ""
 }
 

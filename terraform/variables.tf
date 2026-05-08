@@ -30,3 +30,19 @@ variable "services" {
   default     = ["comments-service", "ideal-team-service", "players-service"]
   description = "List of microservice names to deploy"
 }
+
+variable "supabase_url" {
+  type        = string
+  description = "JDBC URL for the Supabase PostgreSQL database"
+}
+
+variable "supabase_user" {
+  type        = string
+  description = "Supabase PostgreSQL database user"
+}
+
+variable "supabase_password" {
+  type        = string
+  description = "Supabase PostgreSQL database password"
+  sensitive   = true
+}
