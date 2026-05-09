@@ -4,6 +4,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "bun run --watch src/index.ts",
+		"typecheck": "bun tsc",
 		"lint": "biome check --write"
 	},
 	"dependencies": {
@@ -16,7 +17,8 @@
 		"@biomejs/biome": "2.4.14",
 		"@testcontainers/mongodb": "^11.14.0",
 		"bun-types": "latest",
-		"testcontainers": "^11.14.0"
+		"testcontainers": "^11.14.0",
+		"typescript": "^6.0.3"
 	},
 	"module": "src/index.js",
 	"trustedDependencies": [
