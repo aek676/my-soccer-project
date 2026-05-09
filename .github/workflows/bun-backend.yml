@@ -16,7 +16,7 @@ jobs:
 
       - uses: biomejs/setup-biome@v2
         with:
-          version: latest
+          version: 2.4.14
       - uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
@@ -42,6 +42,14 @@ jobs:
         run: bun test
         env:
           DOCKER_HOST: unix:///var/run/docker.sock
+
+      - name: Upload test results
+        uses: dorny/test-reporter@v3
+        if: always()
+        with:
+          name: Bun Backend Tests
+          path: bun-backend/test/junit.xml
+          reporter: java-junit
 
       - name: Upload Artifacts (Binary)
         uses: actions/upload-artifact@v4

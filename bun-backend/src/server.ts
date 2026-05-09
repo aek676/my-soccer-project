@@ -4,7 +4,7 @@ import { connectDB } from "./config/db";
 const port = Bun.env.PORT ? Number(Bun.env.PORT) : 3000;
 await connectDB();
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const app = new Elysia().get("/", () => "Hello Elysia");
 
 app.listen(port);
 
