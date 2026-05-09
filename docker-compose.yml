@@ -17,6 +17,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - EUREKA_INSTANCE_HOSTNAME=eureka-server
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
       - config-server
     networks:
@@ -30,6 +31,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - EUREKA_INSTANCE_HOSTNAME=gateway
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
       - config-server
       - eureka-server
@@ -42,6 +44,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - EUREKA_INSTANCE_HOSTNAME=players-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
       - config-server
       - eureka-server
@@ -55,6 +58,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - EUREKA_INSTANCE_HOSTNAME=comments-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
       - config-server
       - eureka-server
@@ -68,6 +72,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - EUREKA_INSTANCE_HOSTNAME=ideal-team-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
       - config-server
       - eureka-server
