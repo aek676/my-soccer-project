@@ -1,21 +1,20 @@
-import {
-  MongoDBContainer,
-  StartedMongoDBContainer,
-} from "@testcontainers/mongodb";
+import { GenericContainer, StartedTestContainer } from "testcontainers";
 import { afterAll, beforeAll } from "bun:test";
 import { Wait } from "testcontainers";
 
-let mongoContainer: StartedMongoDBContainer;
+let mongoContainer: StartedTestContainer;
 export let mongoUrl: string;
 
 beforeAll(async () => {
-  mongoContainer = await new MongoDBContainer("mongo:4.4-focal")
+  mongoContainer = await new GenericContainer("mongo:4.4.18")
     .withExposedPorts(27017)
-    .withWaitStrategy(Wait.forListeningPorts())
+    .withWaitStrategy(Wait.forLogMessage("Waiting for connections"))
     .start();
-  mongoUrl = mongoContainer.getConnectionString();
-});
+  const port = mongoContainer.getMappedPort(27017);
+  const ip = mongoContainer.getHost();
+  mongoUrl = `mongodb://${ip}:${port}`;
+}, 60000);
 
 afterAll(async () => {
-  mongoContainer?.stop();
+  await mongoContainer?.stop();
 });

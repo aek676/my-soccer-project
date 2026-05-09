@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 describe("MongoDB connection", () => {
   beforeAll(async () => {
     await mongoose.connect(mongoUrl);
-  });
+  }, 10000);
 
   afterAll(async () => {
     await mongoose.disconnect();
