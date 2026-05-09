@@ -1,23 +1,25 @@
 {
-  "name": "bun-backend",
-  "version": "1.0.50",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
-  },
-  "dependencies": {
-    "@elysia/jwt": "^1.4.2",
-    "@elysia/openapi": "^1.4.15",
-    "elysia": "latest",
-    "mongoose": "^9.6.2"
-  },
-  "devDependencies": {
-    "@testcontainers/mongodb": "^11.14.0",
-    "bun-types": "latest",
-    "testcontainers": "^11.14.0"
-  },
-  "module": "src/index.js",
-  "trustedDependencies": [
-    "protobufjs"
-  ]
+	"name": "bun-backend",
+	"version": "1.0.50",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "bun run --watch src/index.ts",
+		"lint": "biome check --write"
+	},
+	"dependencies": {
+		"@elysia/jwt": "^1.4.2",
+		"@elysia/openapi": "^1.4.15",
+		"elysia": "latest",
+		"mongoose": "^9.6.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.14",
+		"@testcontainers/mongodb": "^11.14.0",
+		"bun-types": "latest",
+		"testcontainers": "^11.14.0"
+	},
+	"module": "src/index.js",
+	"trustedDependencies": [
+		"protobufjs"
+	]
 }
