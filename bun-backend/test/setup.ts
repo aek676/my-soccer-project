@@ -2,14 +2,20 @@ import {
   MongoDBContainer,
   StartedMongoDBContainer,
 } from "@testcontainers/mongodb";
+import { afterAll, beforeAll } from "bun:test";
+import { Wait } from "testcontainers";
 
 let mongoContainer: StartedMongoDBContainer;
+export let mongoUrl: string;
 
-export async function setup(project) {
-  mongoContainer = await new MongoDBContainer("mongo:4.4-focal").start();
-  project.provide("mongoUrl", mongoContainer.getConnectionString());
-}
+beforeAll(async () => {
+  mongoContainer = await new MongoDBContainer("mongo:4.4-focal")
+    .withExposedPorts(27017)
+    .withWaitStrategy(Wait.forListeningPorts())
+    .start();
+  mongoUrl = mongoContainer.getConnectionString();
+});
 
-export async function teardown() {
-  await mongoContainer.stop();
-}
+afterAll(async () => {
+  mongoContainer?.stop();
+});
