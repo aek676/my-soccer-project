@@ -9,6 +9,8 @@ on:
 permissions:
   contents: read
   id-token: write
+  pull-requests: write
+  checks: write
 
 jobs:
   detect-changes:
@@ -84,4 +86,5 @@ jobs:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.bun_backend == 'true' }}
     uses: ./.github/workflows/bun-backend.yml
+    secrets: inherit
 

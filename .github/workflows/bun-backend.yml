@@ -1,5 +1,8 @@
 name: Bun Backend CI
 
+on:
+  workflow_call:
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
