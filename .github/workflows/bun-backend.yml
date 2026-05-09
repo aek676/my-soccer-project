@@ -1,15 +1,5 @@
 name: Bun Backend CI
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - "bun-backend/**"
-  pull_request:
-    branches: [main]
-    paths:
-      - "bun-backend/**"
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
