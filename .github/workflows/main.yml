@@ -19,6 +19,7 @@ jobs:
       eureka: ${{ steps.filter.outputs.eureka }}
       gateway: ${{ steps.filter.outputs.gateway }}
       ideal_team: ${{ steps.filter.outputs.ideal_team }}
+      bun_backend: ${{ steps.filter.outputs.bun_backend }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -28,7 +29,7 @@ jobs:
         id: filter
         with:
           filters: |
-            players: 
+            players:
               - 'players-service/**'
             comments:
               - 'comments-service/**'
@@ -36,6 +37,8 @@ jobs:
               - 'gateway/**'
             ideal_team:
               - 'ideal-team-service/**'
+            bun_backend:
+              - 'bun-backend/**'
 
   build-players:
     needs: detect-changes
@@ -76,4 +79,9 @@ jobs:
       image_name: "ideal-team-service"
       publish_image: ${{ github.event_name == 'push' }}
     secrets: inherit
+
+  build-bun-backend:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.bun_backend == 'true' }}
+    uses: ./.github/workflows/bun-backend.yml
 
