@@ -2,68 +2,66 @@ name: Bun Backend CI
 
 on:
   push:
+    branches: [main]
     paths:
       - "bun-backend/**"
   pull_request:
+    branches: [main]
     paths:
       - "bun-backend/**"
 
 jobs:
-  install:
+  build-and-test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-      - run: bun ci
-
-  biome:
-    name: runner / Biome
-    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bun-backend
     permissions:
       contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v5
-      - uses: mongolyy/reviewdog-action-biome@v2
         with:
-          github_token: ${{ secrets.github_token }}
+          persist-credentials: false
+
+      - uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun ci
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Run Biome
+        run: biome ci .
+        continue-on-error: true
+
+      - uses: mongolyy/reviewdog-action-biome@v2
+        if: github.event_name == 'pull_request'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
 
-  typecheck:
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-      - run: bun run typecheck
+      - name: Build
+        run: bun run build
 
-  build:
-    needs: [biome, typecheck]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-      - run: bun run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: bun-backend-binary
-          path: dist/server
-
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:24.0.5
-        options: --privileged
-    steps:
-      - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-      - run: bun test
+      - name: Test
+        run: bun test
         env:
           DOCKER_HOST: unix:///var/run/docker.sock
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload Artifacts (Binary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: bun-backend-binary
+          path: bun-backend/dist/server
+
+      - name: Upload Artifacts (Test Report)
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-report
-          path: test/junit.xml
+          path: bun-backend/test/junit.xml
