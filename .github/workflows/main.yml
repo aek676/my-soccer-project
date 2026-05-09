@@ -40,7 +40,7 @@ jobs:
   build-players:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.players == 'true' }}
-    uses: ./.github/workflows/tmpl-build-push.yml
+    uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "players-service"
       image_name: "players-service"
@@ -50,7 +50,7 @@ jobs:
   build-comments:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.comments == 'true' }}
-    uses: ./.github/workflows/tmpl-build-push.yml
+    uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "comments-service"
       image_name: "comments-service"
@@ -60,7 +60,7 @@ jobs:
   build-gateway:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.gateway == 'true' }}
-    uses: ./.github/workflows/tmpl-build-push.yml
+    uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "gateway"
       image_name: "api-gateway"
@@ -70,7 +70,7 @@ jobs:
   build-ideal-team:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.ideal_team == 'true' }}
-    uses: ./.github/workflows/tmpl-build-push.yml
+    uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "ideal-team-service"
       image_name: "ideal-team-service"
