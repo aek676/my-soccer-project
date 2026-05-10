@@ -55,6 +55,10 @@ resource "google_service_account" "azure_pull_sa" {
   description  = "Service Account for Azure Container Apps to pull images from GCP Artifact Registry"
 }
 
+resource "google_service_account_key" "azure_pull_key" {
+  service_account_id = google_service_account.azure_pull_sa.name
+}
+
 resource "google_artifact_registry_repository_iam_member" "azure_pull_reader" {
   project    = google_artifact_registry_repository.my-repo.project
   location   = google_artifact_registry_repository.my-repo.location
