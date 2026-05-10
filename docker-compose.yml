@@ -90,8 +90,12 @@ services:
       - MONGODB_DB_NAME=my-soccer-project
       - PORT=8080
       - NODE_ENV=production
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - APP_NAME=bun-backend
+      - INSTANCE_HOSTNAME=bun-backend
     depends_on:
       - mongo
+      - eureka-server
     networks:
       - my-soccer-network
 
