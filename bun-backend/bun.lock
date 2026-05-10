@@ -7,7 +7,8 @@
       "dependencies": {
         "@elysia/jwt": "^1.4.2",
         "@elysia/openapi": "^1.4.15",
-        "elysia": "latest",
+        "elysia": "^1.4.28",
+        "elysia-healthcheck": "^1.0.0",
         "mongoose": "^9.6.2",
       },
       "devDependencies": {
@@ -192,6 +193,8 @@
     "eastasianwidth": ["eastasianwidth@0.2.0", "", {}, "sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA=="],
 
     "elysia": ["elysia@1.4.28", "", { "dependencies": { "cookie": "^1.1.1", "exact-mirror": "^0.2.7", "fast-decode-uri-component": "^1.0.1", "memoirist": "^0.4.0" }, "peerDependencies": { "@sinclair/typebox": ">= 0.34.0 < 1", "@types/bun": ">= 1.2.0", "file-type": ">= 20.0.0", "openapi-types": ">= 12.0.0", "typescript": ">= 5.0.0" }, "optionalPeers": ["@types/bun", "typescript"] }, "sha512-Vrx8sBnvq8squS/3yNBzR1jBXI+SgmnmvwawPjNuEHndUe5l1jV2Gp6JJ4ulDkEB8On6bWmmuyPpA+bq4t+WYg=="],
+
+    "elysia-healthcheck": ["elysia-healthcheck@1.0.0", "", { "peerDependencies": { "elysia": ">=1.3.0" } }, "sha512-wvrFp6L4+MQw53YamiSk4wS4/6SQvM690tqXLzH4sDJLtMOazIMX7kr5lUlBnJT4Gbi2652iGqnV/qEktJAFKw=="],
 
     "emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
 
