@@ -7,6 +7,10 @@ interface EurekaInstance {
   port: { $: number; "@enabled": boolean };
   dataCenterInfo: { "@class": string; name: string };
   leaseInfo: { renewalIntervalInSecs: number; durationInSecs: number };
+  vipAddress: string;
+  secureVipAddress: string;
+  statusPageUrl: string;
+  healthCheckUrl: string;
 }
 
 interface EurekaRegistrationPayload {
@@ -36,11 +40,10 @@ export async function registerWithEureka(): Promise<void> {
       renewalIntervalInSecs: 30,
       durationInSecs: 90,
     },
-    homePageUrl: `http://${instanceHostname}:${port}/`,
-    statusPageUrl: `http://${instanceHostname}:${port}/`,
-    healthCheckUrl: `http://${instanceHostname}:${port}/`,
     vipAddress: appName.toLowerCase(),
     secureVipAddress: appName.toLowerCase(),
+    statusPageUrl: `http://${instanceHostname}:${port}/healthz/live`,
+    healthCheckUrl: `http://${instanceHostname}:${port}/healthz/ready`,
   };
 
   const payload: EurekaRegistrationPayload = { instance: instanceData };
