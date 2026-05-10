@@ -1,4 +1,4 @@
-import { ConnectionStates, connect, connection } from "mongoose";
+import mongoose, { connect } from "mongoose";
 
 export const connectDB = async () => {
 	if (!Bun.env.MONGODB_URI) throw new Error("MONGO_URI is not set");
@@ -18,11 +18,11 @@ export const checkConnection = async (): Promise<{
 	connected: boolean;
 	error?: string;
 }> => {
-	if (connection.readyState !== ConnectionStates.connected) {
+	if (mongoose.connection.readyState !== mongoose.ConnectionStates.connected) {
 		return { connected: false, error: "No active connection" };
 	}
 
-	const db = connection.db;
+	const db = mongoose.connection.db;
 	if (!db) {
 		return { connected: false, error: "Database not initialized" };
 	}

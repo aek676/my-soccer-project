@@ -1,8 +1,11 @@
 import { Elysia } from "elysia";
 import { healthcheckPlugin } from "elysia-healthcheck";
-import { connection } from "mongoose";
+import mongoose from "mongoose";
+import { fetchRemoteConfig } from "./config/config-server";
 import { checkConnection, connectDB } from "./config/db";
 import { registerWithEureka } from "./config/eureka";
+
+fetchRemoteConfig("bun-backend", "local");
 
 const port = Bun.env.PORT ? Number(Bun.env.PORT) : 3000;
 await connectDB();
@@ -16,7 +19,7 @@ const app = new Elysia().use(
 					return {
 						name: "MongoDB",
 						healthy: isHealthy.connected,
-						details: { host: `${connection.host}:${connection.port}` },
+						details: { host: `${mongoose.connection.host}:${mongoose.connection.port}` },
 					};
 				},
 			],

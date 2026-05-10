@@ -1,5 +1,6 @@
 declare module "bun" {
 	interface Env {
+		CONFIG_SERVER_URL: string;
 		APP_NAME: string;
 		INSTANCE_HOSTNAME: string;
 		MONGODB_URI: string;
