@@ -17,10 +17,12 @@ interface EurekaRegistrationPayload {
 	instance: EurekaInstance;
 }
 
-export async function registerWithEureka(): Promise<void> {
-	const eurekaUrl = Bun.env.EUREKA_URL || "http://eureka-server:8761/eureka";
-	const appName = Bun.env.APP_NAME || "bun-backend";
-	const instanceHostname = Bun.env.INSTANCE_HOSTNAME || "bun-backend";
+export async function registerWithEureka(
+	appName: string,
+	instanceHostname: string,
+): Promise<void> {
+	const eurekaUrl = Bun.env.EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE;
+
 	const port = Number(Bun.env.PORT) || 8080;
 	const heartbeatInterval = 30 * 1000;
 	const ipAddr = "0.0.0.0";
@@ -112,9 +114,14 @@ export async function registerWithEureka(): Promise<void> {
 		}
 	}
 
-	const cleanup = (): void => {
+	const cleanup = async (): Promise<void> => {
 		console.log("[Eureka] Shutting down, deregistering...");
-		deregister();
+		try {
+			await deregister();
+		} catch (e) {
+			console.error("[Eureka] Deregistration failed during shutdown:", e);
+		}
+		await Bun.sleep(500);
 		process.exit(0);
 	};
 

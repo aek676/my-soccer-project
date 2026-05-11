@@ -1,14 +1,16 @@
 import { Elysia } from "elysia";
 import { healthcheckPlugin } from "elysia-healthcheck";
 import mongoose from "mongoose";
-import { fetchRemoteConfig } from "./config/config-server";
+import { buildConfig } from "./config/config-server";
 import { checkConnection, connectDB } from "./config/db";
 import { registerWithEureka } from "./config/eureka";
 
-fetchRemoteConfig("bun-backend", "local");
+const config = await buildConfig();
 
-const port = Bun.env.PORT ? Number(Bun.env.PORT) : 3000;
-await connectDB();
+console.log("Loaded configuration:", JSON.stringify(config, null, 2));
+
+const port = config.app.port;
+await connectDB(config.datasource.url, config.datasource.db);
 
 const app = new Elysia().use(
 	healthcheckPlugin({
@@ -33,7 +35,7 @@ const app = new Elysia().use(
 app.get("/", () => "Hello Elysia");
 
 app.listen({ port, hostname: "0.0.0.0" }, async () => {
-	await registerWithEureka();
+	await registerWithEureka(config.eureka.hostname, config.eureka.hostname);
 });
 
 console.log(

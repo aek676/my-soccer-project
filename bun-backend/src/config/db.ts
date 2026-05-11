@@ -1,15 +1,17 @@
 import mongoose, { connect } from "mongoose";
 
-export const connectDB = async () => {
-	if (!Bun.env.MONGODB_URI) throw new Error("MONGO_URI is not set");
+export const connectDB = async (mongodbUri: string, mongodbName: string) => {
+	if (!mongodbUri) throw new Error("MONGO_URI is not set");
 
 	try {
-		await connect(Bun.env.MONGODB_URI, {
-			dbName: Bun.env.MONGODB_DB_NAME,
+		await connect(mongodbUri, {
+			dbName: mongodbName,
 			autoIndex: true,
 		});
+
+		console.log(" MongoDB connected successfully");
 	} catch (error) {
-		console.error("MongoDB connection failed: ", error);
+		console.error(" MongoDB connection failed: ", error);
 		throw error;
 	}
 };
