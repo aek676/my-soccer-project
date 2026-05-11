@@ -19,7 +19,9 @@ const app = new Elysia().use(
 					return {
 						name: "MongoDB",
 						healthy: isHealthy.connected,
-						details: { host: `${mongoose.connection.host}:${mongoose.connection.port}` },
+						details: {
+							host: `${mongoose.connection.host}:${mongoose.connection.port}`,
+						},
 					};
 				},
 			],
