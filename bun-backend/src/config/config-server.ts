@@ -66,9 +66,7 @@ export async function buildConfig() {
 			url:
 				resolvePlaceholder(remoteProps["spring.datasource.url"], remoteProps) ||
 				Bun.env.MONGO_ATLAS_URI,
-			db:
-				resolvePlaceholder(remoteProps["spring.datasource.db"], remoteProps) ||
-				Bun.env.MONGO_ATLAS_DB_NAME,
+			db: resolvePlaceholder(remoteProps["spring.datasource.db"], remoteProps),
 		},
 		eureka: {
 			hostname: resolvePlaceholder(
