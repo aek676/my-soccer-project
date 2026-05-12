@@ -22,7 +22,11 @@ export async function registerWithEureka(
 	instanceHostname: string,
 	port: number,
 ): Promise<void> {
-	const eurekaUrl = Bun.env.EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE;
+	const eurekaUrl =
+		Bun.env["eureka.client.service-url.defaultZone"] ||
+		Bun.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE ||
+		Bun.env.EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE ||
+		"http://localhost:8761/eureka/";
 
 	const heartbeatInterval = 30 * 1000;
 	const ipAddr = "0.0.0.0";
