@@ -101,6 +101,8 @@ erDiagram
         string height
         string weight
         int number
+        string team
+        string league
         string position
         string photo
         string location
@@ -126,14 +128,6 @@ erDiagram
         datetime created
         int idPlayer FK
     }
-
-    USER_PLAYER {
-        int idUser FK
-        int idPlayer FK
-    }
-
-    USER ||--o{ USER_PLAYER : has
-    PLAYER ||--o{ USER_PLAYER : "belongs to"
 
     USER ||--o{ COMMENT : writes
     PLAYER ||--o{ COMMENT : receives
@@ -210,16 +204,16 @@ flowchart TB
 
 La aplicación sigue una **arquitectura de microservicios** con los siguientes componentes:
 
-| Capa               | Componentes                                                 |
-| ------------------ | ----------------------------------------------------------- |
-| **Frontend**       | Ionic App con toggle para elegir entre SpringBoot o Node.js |
-| **Gateway**        | Spring Cloud Gateway (enrutamiento + Firebase Admin SDK) |
-| **Descubrimiento** | Eureka Server (registro de servicios)                       |
-| **Microservicios** | players, comments, ideal-team, news                           |
+| Capa               | Componentes                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| **Frontend**       | Ionic App con toggle para elegir entre SpringBoot o Node.js  |
+| **Gateway**        | Spring Cloud Gateway (enrutamiento + Firebase Admin SDK)     |
+| **Descubrimiento** | Eureka Server (registro de servicios)                        |
+| **Microservicios** | players, comments, ideal-team, news                          |
 | **Datos**          | PostgreSQL o MongoDB + Firestore                             |
 | **Firebase**       | Firebase Auth + Firestore (autenticación y datos de usuario) |
-| **CORBA**          | Servidor para noticias (productor/consumidor)               |
-| **Externos**       | API Football + Groq/Google AI (LLM)                         |
+| **CORBA**          | Servidor para noticias (productor/consumidor)                |
+| **Externos**       | API Football + Groq/Google AI (LLM)                          |
 
 ### Flujo principal
 
