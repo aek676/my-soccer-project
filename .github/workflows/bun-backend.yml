@@ -101,3 +101,17 @@ jobs:
           tags: |
             us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/bun-backend:latest
             us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/bun-backend:${{ github.sha }}
+
+      - name: Azure Login
+        if: inputs.event_name == 'push'
+        uses: azure/login@v3.0.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Container Apps
+        if: inputs.event_name == 'push'
+        run: |
+          az containerapp update \
+            --name bun-backend \
+            --resource-group rg-my-soccer-project-eureka \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/bun-backend:${{ github.sha }}
