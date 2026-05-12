@@ -9,9 +9,9 @@ export const connectDB = async (mongodbUri: string, mongodbName: string) => {
 			autoIndex: true,
 		});
 
-		console.log(" MongoDB connected successfully");
+		console.log("📗 MongoDB connected successfully");
 	} catch (error) {
-		console.error(" MongoDB connection failed: ", error);
+		console.error("MongoDB connection failed: ", error);
 		throw error;
 	}
 };
