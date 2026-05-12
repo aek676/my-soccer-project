@@ -5,64 +5,64 @@ resource "azapi_resource" "app" {
   location  = var.location
 
   body = {
-    properties = merge(
-      {
-        managedEnvironmentId = var.environment_id
-        template = {
-          containers = [
-            {
-              name  = "app"
-              image = var.image
-              env = concat(
-                [
-                  {
-                    name  = "SPRING_PROFILES_ACTIVE"
-                    value = "prod"
-                  }
-                ],
-                var.postgres_url != "" ? [
-                  {
-                    name  = "POSTGRES_URL"
-                    value = var.postgres_url
-                  },
-                  {
-                    name  = "POSTGRES_USER"
-                    value = var.postgres_user
-                  },
-                  {
-                    name      = "POSTGRES_PASSWORD"
-                    secretRef = "postgres-password"
-                  }
-                ] : [],
-                var.mongo_atlas_uri != "" ? [
-                  {
-                    name      = "MONGO_ATLAS_URI"
-                    secretRef = "mongo-atlas-uri"
-                  }
-                ] : []
-              )
-              resources = {
-                cpu    = 0.5
-                memory = "1Gi"
-              }
+    properties = {
+      managedEnvironmentId = var.environment_id
+      template = {
+        containers = [
+          {
+            name  = "app"
+            image = var.image
+            env = concat(
+              [
+                {
+                  name  = "SPRING_PROFILES_ACTIVE"
+                  value = "prod"
+                }
+              ],
+              var.postgres_url != "" ? [
+                {
+                  name  = "POSTGRES_URL"
+                  value = var.postgres_url
+                },
+                {
+                  name  = "POSTGRES_USER"
+                  value = var.postgres_user
+                },
+                {
+                  name      = "POSTGRES_PASSWORD"
+                  secretRef = "postgres-password"
+                }
+              ] : [],
+              var.mongo_atlas_uri != "" ? [
+                {
+                  name      = "MONGO_ATLAS_URI"
+                  secretRef = "mongo-atlas-uri"
+                }
+              ] : []
+            )
+            resources = {
+              cpu    = 0.5
+              memory = "1Gi"
             }
-          ]
-          scale = {
-            minReplicas = 1
-            maxReplicas = 1
           }
-          serviceBinds = [
-            {
-              serviceId = var.eureka_server_id
-              name      = "eureka-server"
-            },
-            {
-              serviceId = var.config_server_id
-              name      = "config-server-for-spring"
-            }
-          ]
+        ]
+        scale = {
+          minReplicas = 1
+          maxReplicas = 1
         }
-        configuration = {
+        serviceBinds = [
+          {
+            serviceId = var.eureka_server_id
+            name      = "eureka-server"
+          },
+          {
+            serviceId = var.config_server_id
+            name      = "config-server-for-spring"
+          }
+        ]
+      }
+      configuration = merge(
+        {
           registries = [
             {
               server            = var.gcp_registry_server
@@ -90,17 +90,15 @@ resource "azapi_resource" "app" {
               }
             ] : []
           )
-        }
-      },
-      var.enable_ingress ? {
-        configuration = {
+        },
+        var.enable_ingress ? {
           ingress = {
             external   = true
             targetPort = 8080
           }
-        }
-      } : {}
-    )
+        } : {}
+      )
+    }
   }
 
   response_export_values = var.enable_ingress ? ["properties.configuration.ingress.fqdn"] : []
