@@ -7,7 +7,7 @@ import { registerWithEureka } from "./config/eureka";
 
 const config = await buildConfig();
 
-console.log("Loaded configuration:", JSON.stringify(config, null, 2));
+console.log("Loaded configuration:\n", JSON.stringify(config, null, 2));
 
 const port = Number(config.app.port);
 await connectDB(config.datasource.url, config.datasource.db);

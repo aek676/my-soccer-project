@@ -75,3 +75,10 @@ variable "postgres_password" {
   default     = ""
 }
 
+variable "mongo_atlas_uri" {
+  type        = string
+  description = "MongoDB Atlas connection URI"
+  sensitive   = true
+  default     = ""
+}
+
