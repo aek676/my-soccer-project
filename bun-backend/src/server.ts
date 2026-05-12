@@ -9,7 +9,7 @@ const config = await buildConfig();
 
 console.log("Loaded configuration:", JSON.stringify(config, null, 2));
 
-const port = config.app.port;
+const port = Number(config.app.port);
 await connectDB(config.datasource.url, config.datasource.db);
 
 const app = new Elysia().use(
@@ -35,7 +35,11 @@ const app = new Elysia().use(
 app.get("/", () => "Hello Elysia");
 
 app.listen({ port, hostname: "0.0.0.0" }, async () => {
-	await registerWithEureka(config.eureka.hostname, config.eureka.hostname);
+	await registerWithEureka(
+		config.eureka.hostname,
+		config.eureka.hostname,
+		port,
+	);
 });
 
 console.log(

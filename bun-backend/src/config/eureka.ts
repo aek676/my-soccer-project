@@ -20,10 +20,10 @@ interface EurekaRegistrationPayload {
 export async function registerWithEureka(
 	appName: string,
 	instanceHostname: string,
+	port: number,
 ): Promise<void> {
 	const eurekaUrl = Bun.env.EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE;
 
-	const port = Number(Bun.env.PORT) || 8080;
 	const heartbeatInterval = 30 * 1000;
 	const ipAddr = "0.0.0.0";
 
