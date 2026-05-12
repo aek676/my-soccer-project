@@ -18,7 +18,7 @@ jobs:
       id-token: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -94,7 +94,7 @@ jobs:
 
       - name: Build and Push Docker Image
         if: inputs.event_name == 'push'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./bun-backend
           push: true
