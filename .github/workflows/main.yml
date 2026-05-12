@@ -24,10 +24,10 @@ jobs:
       bun_backend: ${{ steps.filter.outputs.bun_backend }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Check changes
-        uses: dorny/paths-filter@v4
+        uses: dorny/paths-filter@v4.0.1
         id: filter
         with:
           filters: |

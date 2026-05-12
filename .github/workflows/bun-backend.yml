@@ -15,9 +15,10 @@ jobs:
         working-directory: bun-backend
     permissions:
       contents: read
+      id-token: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -71,3 +72,32 @@ jobs:
         with:
           name: test-report
           path: bun-backend/test/junit.xml
+
+      - name: Authenticate to GCP via OIDC
+        if: inputs.event_name == 'push'
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup Cloud SDK
+        if: inputs.event_name == 'push'
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        if: inputs.event_name == 'push'
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Set up Docker Buildx
+        if: inputs.event_name == 'push'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        if: inputs.event_name == 'push'
+        uses: docker/build-push-action@v7
+        with:
+          context: ./bun-backend
+          push: true
+          tags: |
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/bun-backend:latest
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/bun-backend:${{ github.sha }}
