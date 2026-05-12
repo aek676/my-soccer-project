@@ -39,3 +39,10 @@ variable "supabase_password" {
   description = "Supabase PostgreSQL database password"
   sensitive   = true
 }
+
+variable "mongo_atlas_uri" {
+  type        = string
+  description = "MongoDB Atlas connection URI for bun-backend"
+  sensitive   = true
+  default     = ""
+}

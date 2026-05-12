@@ -33,6 +33,12 @@ resource "azapi_resource" "app" {
                     name      = "POSTGRES_PASSWORD"
                     secretRef = "postgres-password"
                   }
+                ] : [],
+                var.mongo_atlas_uri != "" ? [
+                  {
+                    name      = "MONGO_ATLAS_URI"
+                    secretRef = "mongo-atlas-uri"
+                  }
                 ] : []
               )
               resources = {
@@ -76,6 +82,12 @@ resource "azapi_resource" "app" {
                 name  = "postgres-password"
                 value = var.postgres_password
               }
+            ] : [],
+            var.mongo_atlas_uri != "" ? [
+              {
+                name  = "mongo-atlas-uri"
+                value = var.mongo_atlas_uri
+              }
             ] : []
           )
         }
@@ -99,3 +111,4 @@ resource "azapi_resource" "app" {
     ]
   }
 }
+
