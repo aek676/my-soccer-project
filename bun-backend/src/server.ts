@@ -36,8 +36,8 @@ app.get("/", () => "Hello Elysia");
 
 app.listen({ port, hostname: "0.0.0.0" }, async () => {
 	await registerWithEureka(
-		config.eureka.hostname,
-		config.eureka.hostname,
+		config.app.name || "bun-backend",
+		config.eureka.hostname || "bun-backend",
 		port,
 	);
 });

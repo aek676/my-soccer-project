@@ -46,7 +46,7 @@ export async function fetchRemoteConfig(
 }
 
 export async function buildConfig() {
-	const env = Bun.env.NODE_ENV || "local";
+	const env = Bun.env.SPRING_PROFILES_ACTIVE || Bun.env.NODE_ENV || "local";
 
 	const remoteProps = await fetchRemoteConfig("bun-backend", env);
 
