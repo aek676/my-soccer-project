@@ -1,3 +1,5 @@
+import os from "node:os";
+
 interface EurekaInstance {
 	instanceId: string;
 	hostName: string;
@@ -17,6 +19,18 @@ interface EurekaRegistrationPayload {
 	instance: EurekaInstance;
 }
 
+function getLocalIpAddress(): string {
+	const interfaces = os.networkInterfaces();
+	for (const name of Object.keys(interfaces)) {
+		for (const iface of interfaces[name]!) {
+			if (iface.family === "IPv4" && !iface.internal) {
+				return iface.address;
+			}
+		}
+	}
+	return "127.0.0.1";
+}
+
 export async function registerWithEureka(
 	appName: string,
 	instanceHostname: string,
@@ -29,11 +43,13 @@ export async function registerWithEureka(
 		"http://localhost:8761/eureka/";
 
 	const heartbeatInterval = 30 * 1000;
-	const ipAddr = "0.0.0.0";
+	const ipAddr = getLocalIpAddress();
+	const isProduction = Bun.env.SPRING_PROFILES_ACTIVE === "prod";
+	const effectiveHostname = isProduction ? ipAddr : instanceHostname;
 
 	const instanceData: EurekaInstance = {
-		instanceId: `${instanceHostname}:${appName.toLowerCase()}:${port}`,
-		hostName: instanceHostname,
+		instanceId: `${effectiveHostname}:${appName.toLowerCase()}:${port}`,
+		hostName: effectiveHostname,
 		app: appName.toUpperCase(),
 		ipAddr: ipAddr,
 		status: "UP",
@@ -48,8 +64,8 @@ export async function registerWithEureka(
 		},
 		vipAddress: appName.toLowerCase(),
 		secureVipAddress: appName.toLowerCase(),
-		statusPageUrl: `http://${instanceHostname}:${port}/healthz/live`,
-		healthCheckUrl: `http://${instanceHostname}:${port}/healthz/ready`,
+		statusPageUrl: `http://${effectiveHostname}:${port}/healthz/live`,
+		healthCheckUrl: `http://${effectiveHostname}:${port}/healthz/ready`,
 	};
 
 	const payload: EurekaRegistrationPayload = { instance: instanceData };
@@ -80,7 +96,7 @@ export async function registerWithEureka(
 
 	async function heartbeat(): Promise<void> {
 		try {
-			const instanceId = `${instanceHostname}:${appName.toLowerCase()}:${port}`;
+			const instanceId = `${effectiveHostname}:${appName.toLowerCase()}:${port}`;
 			const heartbeatUrl = `${eurekaUrl}/apps/${appName.toUpperCase()}/${instanceId}`;
 
 			const response = await fetch(heartbeatUrl, {
@@ -102,7 +118,7 @@ export async function registerWithEureka(
 
 	async function deregister(): Promise<void> {
 		try {
-			const instanceId = `${instanceHostname}:${appName.toLowerCase()}:${port}`;
+			const instanceId = `${effectiveHostname}:${appName.toLowerCase()}:${port}`;
 			const deleteUrl = `${eurekaUrl}/apps/${appName.toUpperCase()}/${instanceId}`;
 
 			await fetch(deleteUrl, {
