@@ -51,24 +51,8 @@ public class NewsController {
         if (result) {
             response.put("message", "News inserted successfully");
         } else {
-            response.put("message", "Failed to insert news or buffer is full");
+            response.put("message", "Failed to insert news");
         }
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/count")
-    public ResponseEntity<Map<String, Object>> getCount() {
-        int count = newsService.getCount();
-        Map<String, Object> response = new HashMap<>();
-        response.put("count", count);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/empty")
-    public ResponseEntity<Map<String, Object>> isEmpty() {
-        boolean empty = newsService.isEmpty();
-        Map<String, Object> response = new HashMap<>();
-        response.put("empty", empty);
         return ResponseEntity.ok(response);
     }
 }

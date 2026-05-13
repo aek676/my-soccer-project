@@ -67,18 +67,4 @@ public class NewsCorbaService {
         }
         return client.put(xml);
     }
-
-    public boolean isEmpty() {
-        if (client == null) {
-            return true;
-        }
-        return client.isEmpty();
-    }
-
-    public int getCount() {
-        if (client == null) {
-            return 0;
-        }
-        return client.getCount();
-    }
 }
