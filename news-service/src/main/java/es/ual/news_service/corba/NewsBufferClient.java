@@ -45,13 +45,6 @@ public class NewsBufferClient {
     return null;
   }
 
-  public boolean isEmpty() {
-    if (bufferImpl == null) {
-      return true;
-    }
-    return bufferImpl.isEmpty();
-  }
-
   public String getAll() {
     if (bufferImpl == null) {
       System.err.println("Client not initialized");
@@ -62,12 +55,5 @@ public class NewsBufferClient {
       return holder.value;
     }
     return null;
-  }
-
-  public int getCount() {
-    if (bufferImpl == null) {
-      return 0;
-    }
-    return bufferImpl.getCount();
   }
 }

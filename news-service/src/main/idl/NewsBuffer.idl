@@ -3,7 +3,5 @@ module NewsBufferApp {
         boolean put(in string newsXML);
         boolean getById(in long idNews, out string newsXML);
         boolean getAll(out string allNewsXML);
-        boolean isEmpty();
-        long getCount();
     };
 };
