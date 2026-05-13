@@ -17,6 +17,8 @@ on:
 permissions:
   contents: read
   id-token: write
+  checks: write
+  pull-requests: write
 
 jobs:
   build-test-push:
@@ -26,23 +28,67 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Java 17
-        uses: actions/setup-java@v5.2.0
+        uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
+          cache: "maven"
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v5.0.5
+      - name: Ensure Maven Wrapper is executable
+        run: chmod +x mvnw
+
+      - name: Run Tests, Coverage and Static Analysis
+        run: |
+          ./mvnw test \
+          org.jacoco:jacoco-maven-plugin:prepare-agent \
+          org.jacoco:jacoco-maven-plugin:report \
+          com.github.spotbugs:spotbugs-maven-plugin:spotbugs
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: always()
         with:
-          path: ~/.m2/repository
-          key: maven-${{ hashFiles('${{ inputs.working_directory }}/pom.xml') }}
-          restore-keys: maven-
+          report_paths: "${{ inputs.working_directory }}/**/target/surefire-reports/TEST-*.xml"
 
-      - name: Run Unit Tests
-        run: ./mvnw test
+      - name: Add JaCoCo Report to PR
+        uses: madrapps/jacoco-report@v1
+        if: github.event_name == 'pull_request'
+        with:
+          paths: ${{ inputs.working_directory }}/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+
+      - name: Setup Reviewdog
+        uses: reviewdog/action-setup@v1
+        if: always()
+        with:
+          reviewdog_version: latest
+
+      - name: Reviewdog PR Code Review (SpotBugs)
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name == 'pull_request'
+        run: |
+          cat target/spotbugsXml.xml | \
+          reviewdog -f=spotbugs \
+                    -reporter=github-pr-review \
+                    -filter-mode=added \
+                    -fail-on-error=true \
+                    -level=warning
+
+      - name: Add Quality Summary to Job
+        if: always()
+        run: |
+          echo "### Reporte de Calidad - ${{ inputs.image_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "| Métrica | Resultado |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ Tests | [Ver pestaña de Checks] |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📊 Cobertura | Consultar comentario en PR |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🐶 Reviewdog | Revisar comentarios de Code Review en el PR |" >> $GITHUB_STEP_SUMMARY
 
       - name: Build image with Maven
         env:
@@ -52,14 +98,14 @@ jobs:
 
       - name: Authenticate to GCP via OIDC
         if: ${{ inputs.push }}
-        uses: google-github-actions/auth@v3
+        uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Setup Cloud SDK
         if: ${{ inputs.push }}
-        uses: google-github-actions/setup-gcloud@v3
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker for Artifact Registry
         if: ${{ inputs.push }}
@@ -76,7 +122,7 @@ jobs:
 
       - name: Azure Login
         if: ${{ inputs.push }}
-        uses: azure/login@v3.0.0
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
