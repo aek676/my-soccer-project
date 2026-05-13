@@ -1,0 +1,11 @@
+target/
+NewsBufferApp/
+src/main/java/NewsBufferApp/
+.mvn/
+mvnw
+mvnw.cmd
+.classpath
+.project
+.settings/
+.gitattributes
+.gitignore
