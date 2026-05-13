@@ -33,30 +33,6 @@ public class NewsBufferClient {
     return bufferImpl.put(newsXML);
   }
 
-  public String get() {
-    if (bufferImpl == null) {
-      System.err.println("Client not initialized");
-      return null;
-    }
-    StringHolder holder = new StringHolder();
-    if (bufferImpl.get(holder)) {
-      return holder.value;
-    }
-    return null;
-  }
-
-  public String read() {
-    if (bufferImpl == null) {
-      System.err.println("Client not initialized");
-      return null;
-    }
-    StringHolder holder = new StringHolder();
-    if (bufferImpl.read(holder)) {
-      return holder.value;
-    }
-    return null;
-  }
-
   public String getById(int idNews) {
     if (bufferImpl == null) {
       System.err.println("Client not initialized");
@@ -93,11 +69,5 @@ public class NewsBufferClient {
       return 0;
     }
     return bufferImpl.getCount();
-  }
-
-  public void shutdown() {
-    if (bufferImpl != null) {
-      bufferImpl.shutdown();
-    }
   }
 }
