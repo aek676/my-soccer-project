@@ -4,6 +4,7 @@ module NewsBufferApp {
         boolean get(out string newsXML);
         boolean read(out string newsXML);
         boolean getById(in long idNews, out string newsXML);
+        boolean getAll(out string allNewsXML);
         boolean isEmpty();
         long getCount();
         long getLimit();

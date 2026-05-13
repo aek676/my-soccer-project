@@ -80,6 +80,29 @@ services:
     networks:
       - my-soccer-network
 
+  news-service:
+    build: ./news-service
+    container_name: news-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SERVER_PORT: 8084
+      EUREKA_INSTANCE_HOSTNAME: news-service
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
+    depends_on:
+      - config-server
+      - eureka-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - my-soccer-network
+
   bun-backend:
     build: ./bun-backend
     container_name: bun-backend

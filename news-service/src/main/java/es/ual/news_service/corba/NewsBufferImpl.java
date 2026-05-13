@@ -61,6 +61,18 @@ public class NewsBufferImpl extends _NewsBufferImplBase {
         }
     }
 
+    public boolean getAll(StringHolder allNewsXML) {
+        StringBuilder xml = new StringBuilder();
+        xml.append("<newsList>");
+        for (int i = 0; i < count; i++) {
+            xml.append(buffer[i]);
+        }
+        xml.append("</newsList>");
+        allNewsXML.value = xml.toString();
+        System.out.println("GETALL: Returning " + count + " news.");
+        return true;
+    }
+
     public boolean getById(int idNews, StringHolder newsXML) {
         for (int i = 0; i < count; i++) {
             if (buffer[i] != null && buffer[i].contains("<idNews>" + idNews + "</idNews>")) {

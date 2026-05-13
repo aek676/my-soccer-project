@@ -1,6 +1,8 @@
 package es.ual.news_service.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class News {
     private int idNews;
@@ -99,6 +101,22 @@ public class News {
             e.printStackTrace();
         }
         return news;
+    }
+
+    public static List<News> listFromXML(String xml) {
+        List<News> list = new ArrayList<>();
+        if (xml == null || xml.isEmpty()) return list;
+        String startTag = "<news>";
+        String endTag = "</news>";
+        int start = xml.indexOf(startTag);
+        while (start != -1) {
+            int end = xml.indexOf(endTag, start);
+            if (end == -1) break;
+            String itemXml = xml.substring(start, end + endTag.length());
+            list.add(fromXML(itemXml));
+            start = xml.indexOf(startTag, end);
+        }
+        return list;
     }
 
     private static String extractValue(String xml, String tag) {

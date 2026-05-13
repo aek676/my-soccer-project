@@ -76,6 +76,18 @@ public class NewsBufferClient {
     return bufferImpl.isEmpty();
   }
 
+  public String getAll() {
+    if (bufferImpl == null) {
+      System.err.println("Client not initialized");
+      return null;
+    }
+    StringHolder holder = new StringHolder();
+    if (bufferImpl.getAll(holder)) {
+      return holder.value;
+    }
+    return null;
+  }
+
   public int getCount() {
     if (bufferImpl == null) {
       return 0;

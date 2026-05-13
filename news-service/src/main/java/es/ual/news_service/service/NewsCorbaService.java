@@ -6,6 +6,7 @@ import es.ual.news_service.xml.NewsSchemaValidator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class NewsCorbaService {
@@ -21,7 +22,7 @@ public class NewsCorbaService {
         if (!initialized) {
             try {
                 client = new NewsBufferClient();
-                String[] args = {"-ORBInitialPort", "1050"};
+                String[] args = {"-ORBInitialPort", "2001"};
                 client.initialize(args);
                 initialized = true;
             } catch (Exception e) {
@@ -64,6 +65,15 @@ public class NewsCorbaService {
             return News.fromXML(xml);
         }
         return null;
+    }
+
+    public List<News> getAllNews() {
+        initializeClient();
+        if (client == null) {
+            return java.util.Collections.emptyList();
+        }
+        String xml = client.getAll();
+        return News.listFromXML(xml);
     }
 
     public boolean putNews(News news) {
