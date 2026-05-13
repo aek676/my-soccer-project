@@ -1,0 +1,81 @@
+name: News Service CI
+
+on:
+  workflow_call:
+    inputs:
+      push:
+        type: boolean
+        default: false
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: news-service
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Java 8
+        uses: actions/setup-java@v5.2.0
+        with:
+          java-version: "8"
+          distribution: "temurin"
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v5.0.5
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('news-service/pom.xml') }}
+          restore-keys: maven-
+
+      - name: Run Unit Tests
+        run: ./mvnw test
+
+      - name: Authenticate to GCP via OIDC
+        if: inputs.push
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup Cloud SDK
+        if: inputs.push
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        if: inputs.push
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Set up Docker Buildx
+        if: inputs.push
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and Push Docker Image
+        if: inputs.push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./news-service
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/news-service:latest
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/news-service:${{ github.sha }}
+
+      - name: Azure Login
+        if: inputs.push
+        uses: azure/login@v3.0.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Container Apps
+        if: inputs.push
+        run: |
+          az containerapp update \
+            --name news-service \
+            --resource-group rg-my-soccer-project-eureka \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/news-service:${{ github.sha }}
