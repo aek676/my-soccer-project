@@ -60,6 +60,9 @@ public class NewsCorbaService {
         if (news.getCreated() == null) {
             news.setCreated(LocalDateTime.now());
         }
+        List<News> allNews = getAllNews();
+        int maxId = allNews.stream().mapToInt(News::getIdNews).max().orElse(0);
+        news.setIdNews(maxId + 1);
         String xml = news.toXML();
         if (!validator.validate(xml)) {
             System.err.println("XML validation failed for news: " + news.getTitle());
