@@ -18,7 +18,7 @@ public class NewsCorbaService {
         this.validator = new NewsSchemaValidator();
     }
 
-    private void initializeClient() {
+    private synchronized void initializeClient() {
         if (!initialized) {
             try {
                 client = new NewsBufferClient();
@@ -52,7 +52,7 @@ public class NewsCorbaService {
         return News.listFromXML(xml);
     }
 
-    public boolean putNews(News news) {
+    public synchronized boolean putNews(News news) {
         initializeClient();
         if (client == null) {
             return false;

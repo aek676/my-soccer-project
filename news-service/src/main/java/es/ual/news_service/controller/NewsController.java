@@ -2,6 +2,7 @@ package es.ual.news_service.controller;
 
 import es.ual.news_service.model.News;
 import es.ual.news_service.service.NewsCorbaService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,20 +40,21 @@ public class NewsController {
         } else {
             response.put("success", false);
             response.put("message", "News with id " + id + " not found");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<Map<String, Object>> putNews(@RequestBody News news) {
         boolean result = newsService.putNews(news);
         Map<String, Object> response = new HashMap<>();
         response.put("success", result);
         if (result) {
             response.put("message", "News inserted successfully");
+            return ResponseEntity.ok(response);
         } else {
             response.put("message", "Failed to insert news");
+            return ResponseEntity.badRequest().body(response);
         }
-        return ResponseEntity.ok(response);
     }
 }

@@ -86,8 +86,8 @@ public class News {
     }
 
     public static News fromXML(String xml) {
-        News news = new News();
         try {
+            News news = new News();
             news.setIdNews(Integer.parseInt(extractValue(xml, "idNews")));
             news.setTitle(extractValue(xml, "title"));
             news.setBody(extractValue(xml, "body"));
@@ -97,10 +97,11 @@ public class News {
                 news.setCreated(LocalDateTime.parse(createdStr));
             }
             news.setIdPlayer(Integer.parseInt(extractValue(xml, "idPlayer")));
+            return news;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return news;
     }
 
     public static List<News> listFromXML(String xml) {
@@ -113,7 +114,10 @@ public class News {
             int end = xml.indexOf(endTag, start);
             if (end == -1) break;
             String itemXml = xml.substring(start, end + endTag.length());
-            list.add(fromXML(itemXml));
+            News news = fromXML(itemXml);
+            if (news != null) {
+                list.add(news);
+            }
             start = xml.indexOf(startTag, end);
         }
         return list;

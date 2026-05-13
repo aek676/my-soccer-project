@@ -102,7 +102,7 @@
 							<executable>bash</executable>
 							<arguments>
 								<argument>-c</argument>
-								<argument>mkdir -p ${project.basedir}/src/main/java/NewsBufferApp &amp;&amp; cp -f ${project.basedir}/NewsBufferApp/*.java ${project.basedir}/src/main/java/NewsBufferApp/ 2>/dev/null || true</argument>
+								<argument>mkdir -p ${project.basedir}/src/main/java/NewsBufferApp &amp;&amp; cp -f ${project.basedir}/NewsBufferApp/*.java ${project.basedir}/src/main/java/NewsBufferApp/</argument>
 							</arguments>
 						</configuration>
 					</execution>

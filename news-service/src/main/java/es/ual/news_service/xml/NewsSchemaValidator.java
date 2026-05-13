@@ -2,8 +2,6 @@ package es.ual.news_service.xml;
 
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class NewsSchemaValidator {
     private javax.xml.validation.Schema schema;
