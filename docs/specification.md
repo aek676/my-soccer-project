@@ -132,8 +132,7 @@ erDiagram
     USER ||--o{ COMMENT : writes
     PLAYER ||--o{ COMMENT : receives
 
-    USER ||--o{ NEWS : creates
-
+    PLAYER ||--o{ NEWS : creates
     USER ||--o{ IDEAL_TEAM : creates
 
     IDEAL_TEAM ||--o{ TEAM_PLAYER : contains
