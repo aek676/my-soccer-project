@@ -9,7 +9,7 @@ on:
       image_name:
         required: true
         type: string
-      publish_image:
+      push:
         required: false
         type: boolean
         default: false
@@ -51,22 +51,22 @@ jobs:
           ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:latest
 
       - name: Authenticate to GCP via OIDC
-        if: ${{ inputs.publish_image }}
+        if: ${{ inputs.push }}
         uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Setup Cloud SDK
-        if: ${{ inputs.publish_image }}
+        if: ${{ inputs.push }}
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Configure Docker for Artifact Registry
-        if: ${{ inputs.publish_image }}
+        if: ${{ inputs.push }}
         run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       - name: Tag and Push images to Artifact Registry
-        if: ${{ inputs.publish_image }}
+        if: ${{ inputs.push }}
         run: |
           docker tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:latest \
             us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/${{ inputs.image_name }}:${{ github.sha }}
@@ -75,13 +75,13 @@ jobs:
           wait
 
       - name: Azure Login
-        if: ${{ inputs.publish_image }}
+        if: ${{ inputs.push }}
         uses: azure/login@v3.0.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Container Apps
-        if: ${{ inputs.publish_image }}
+        if: ${{ inputs.push }}
         run: |
           az containerapp update \
             --name ${{ inputs.image_name }} \

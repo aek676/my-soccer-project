@@ -3,9 +3,9 @@ name: Bun Backend CI
 on:
   workflow_call:
     inputs:
-      event_name:
-        type: string
-        default: ${{ github.event_name }}
+      push:
+        type: boolean
+        default: false
 
 jobs:
   build-and-test:
@@ -25,8 +25,8 @@ jobs:
       - uses: biomejs/setup-biome@v2
         with:
           version: 2.4.14
-      - uses: oven-sh/setup-bun@v2
 
+      - uses: oven-sh/setup-bun@v2
       - name: Install dependencies
         run: bun ci
 
@@ -38,7 +38,7 @@ jobs:
         continue-on-error: true
 
       - uses: mongolyy/reviewdog-action-biome@v2
-        if: inputs.event_name == 'pull_request'
+        if: ${{ !inputs.push }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
@@ -74,26 +74,26 @@ jobs:
           path: bun-backend/test/junit.xml
 
       - name: Authenticate to GCP via OIDC
-        if: inputs.event_name == 'push'
+        if: inputs.push
         uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Setup Cloud SDK
-        if: inputs.event_name == 'push'
+        if: inputs.push
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Configure Docker for Artifact Registry
-        if: inputs.event_name == 'push'
+        if: inputs.push
         run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       - name: Set up Docker Buildx
-        if: inputs.event_name == 'push'
-        uses: docker/setup-buildx-action@v3
+        if: inputs.push
+        uses: docker/setup-buildx-action@v4
 
       - name: Build and Push Docker Image
-        if: inputs.event_name == 'push'
+        if: inputs.push
         uses: docker/build-push-action@v7
         with:
           context: ./bun-backend
@@ -103,13 +103,13 @@ jobs:
             us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/soccer-artifact-repo/bun-backend:${{ github.sha }}
 
       - name: Azure Login
-        if: inputs.event_name == 'push'
+        if: inputs.push
         uses: azure/login@v3.0.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Container Apps
-        if: inputs.event_name == 'push'
+        if: inputs.push
         run: |
           az containerapp update \
             --name bun-backend \
