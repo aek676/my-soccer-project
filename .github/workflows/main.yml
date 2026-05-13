@@ -22,6 +22,7 @@ jobs:
       gateway: ${{ steps.filter.outputs.gateway }}
       ideal_team: ${{ steps.filter.outputs.ideal_team }}
       bun_backend: ${{ steps.filter.outputs.bun_backend }}
+      news_service: ${{ steps.filter.outputs.news_service }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -41,52 +42,61 @@ jobs:
               - 'ideal-team-service/**'
             bun_backend:
               - 'bun-backend/**'
+            news_service:
+              - 'news-service/**'
 
-  build-players:
+  players:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.players == 'true' }}
     uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "players-service"
       image_name: "players-service"
-      publish_image: ${{ github.event_name == 'push' }}
+      push: ${{ github.event_name == 'push' }}
     secrets: inherit
 
-  build-comments:
+  comments:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.comments == 'true' }}
     uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "comments-service"
       image_name: "comments-service"
-      publish_image: ${{ github.event_name == 'push' }}
+      push: ${{ github.event_name == 'push' }}
     secrets: inherit
 
-  build-gateway:
+  gateway:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.gateway == 'true' }}
     uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "gateway"
       image_name: "api-gateway"
-      publish_image: ${{ github.event_name == 'push' }}
+      push: ${{ github.event_name == 'push' }}
     secrets: inherit
 
-  build-ideal-team:
+  ideal-team:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.ideal_team == 'true' }}
     uses: ./.github/workflows/tmpl-java-maven-build-push-deploy.yml
     with:
       working_directory: "ideal-team-service"
       image_name: "ideal-team-service"
-      publish_image: ${{ github.event_name == 'push' }}
+      push: ${{ github.event_name == 'push' }}
     secrets: inherit
 
-  build-bun-backend:
+  bun-backend:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.bun_backend == 'true' }}
     uses: ./.github/workflows/bun-backend.yml
     with:
-      event_name: ${{ github.event_name }}
+      push: ${{ github.event_name == 'push' }}
     secrets: inherit
 
+  news-service:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.news_service == 'true' }}
+    uses: ./.github/workflows/news-service.yml
+    with:
+      push: ${{ github.event_name == 'push' }}
+    secrets: inherit
