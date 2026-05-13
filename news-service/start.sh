@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+trap 'kill $(jobs -p) 2>/dev/null' EXIT
 echo "Starting orbd..."
 orbd -ORBInitialPort 2001 -ORBInitialHost localhost &
 echo "Waiting for orbd to be ready..."

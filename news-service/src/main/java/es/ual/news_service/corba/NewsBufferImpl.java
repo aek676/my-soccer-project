@@ -31,8 +31,18 @@ public class NewsBufferImpl extends _NewsBufferImplBase {
     }
 
     public boolean getById(int idNews, StringHolder newsXML) {
+        String openTag = "<idNews>";
+        String closeTag = "</idNews>";
+        String targetId = String.valueOf(idNews);
         for (String item : buffer) {
-            if (item != null && item.contains("<idNews>" + idNews + "</idNews>")) {
+            if (item == null) continue;
+            int start = item.indexOf(openTag);
+            if (start == -1) continue;
+            start += openTag.length();
+            int end = item.indexOf(closeTag, start);
+            if (end == -1) continue;
+            String idStr = item.substring(start, end);
+            if (idStr.equals(targetId)) {
                 newsXML.value = item;
                 System.out.println("GETBYID: Found news with id: " + idNews);
                 return true;
