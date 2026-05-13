@@ -11,7 +11,6 @@ public class NewsBufferServer {
             ORB orb = ORB.init(args, null);
 
             NewsBufferImpl bufferRef = new NewsBufferImpl();
-            bufferRef.setORB(orb);
             orb.connect(bufferRef);
 
             org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");

@@ -31,30 +31,6 @@ public class NewsCorbaService {
         }
     }
 
-    public News getNews() {
-        initializeClient();
-        if (client == null) {
-            return null;
-        }
-        String xml = client.get();
-        if (xml != null && !xml.isEmpty()) {
-            return News.fromXML(xml);
-        }
-        return null;
-    }
-
-    public News readNews() {
-        initializeClient();
-        if (client == null) {
-            return null;
-        }
-        String xml = client.read();
-        if (xml != null && !xml.isEmpty()) {
-            return News.fromXML(xml);
-        }
-        return null;
-    }
-
     public News getNewsById(int idNews) {
         initializeClient();
         if (client == null) {
