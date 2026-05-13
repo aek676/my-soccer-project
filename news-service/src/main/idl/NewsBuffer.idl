@@ -1,0 +1,13 @@
+module NewsBufferApp {
+    interface NewsBuffer {
+        boolean put(in string newsXML);
+        boolean get(out string newsXML);
+        boolean read(out string newsXML);
+        boolean getById(in long idNews, out string newsXML);
+        boolean isEmpty();
+        long getCount();
+        long getLimit();
+        void setLimit(in long maxNews);
+        oneway void shutdown();
+    };
+};
