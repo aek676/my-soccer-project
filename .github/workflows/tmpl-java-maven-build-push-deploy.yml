@@ -45,7 +45,7 @@ jobs:
           ./mvnw test \
           org.jacoco:jacoco-maven-plugin:prepare-agent \
           org.jacoco:jacoco-maven-plugin:report \
-          com.github.spotbugs:spotbugs-maven-plugin:spotbugs
+          com.github.spotbugs:spotbugs-maven-plugin:check
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4
@@ -57,7 +57,7 @@ jobs:
         uses: madrapps/jacoco-report@v1
         if: github.event_name == 'pull_request'
         with:
-          paths: ${{ inputs.working_directory }}/target/site/jacoco/jacoco.xml
+          path: ${{ inputs.working_directory }}/target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80
           min-coverage-changed-files: 80
@@ -73,22 +73,16 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event_name == 'pull_request'
         run: |
-          cat target/spotbugsXml.xml | \
-          reviewdog -f=spotbugs \
-                    -reporter=github-pr-review \
-                    -filter-mode=added \
-                    -fail-on-error=true \
-                    -level=warning
-
-      - name: Add Quality Summary to Job
-        if: always()
-        run: |
-          echo "### Reporte de Calidad - ${{ inputs.image_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "| Métrica | Resultado |" >> $GITHUB_STEP_SUMMARY
-          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
-          echo "| ✅ Tests | [Ver pestaña de Checks] |" >> $GITHUB_STEP_SUMMARY
-          echo "| 📊 Cobertura | Consultar comentario en PR |" >> $GITHUB_STEP_SUMMARY
-          echo "| 🐶 Reviewdog | Revisar comentarios de Code Review en el PR |" >> $GITHUB_STEP_SUMMARY
+          if [ -f target/spotbugsXml.xml ]; then
+            cat target/spotbugsXml.xml | \
+            reviewdog -f=spotbugs \
+                      -reporter=github-pr-review \
+                      -filter-mode=added \
+                      -fail-on-error=true \
+                      -level=warning
+          else
+            echo "SpotBugs report not found, skipping Reviewdog"
+          fi
 
       - name: Build image with Maven
         env:
