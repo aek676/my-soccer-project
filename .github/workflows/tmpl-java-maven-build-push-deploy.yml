@@ -65,21 +65,28 @@ jobs:
         with:
           reviewdog_version: latest
 
-      - name: Reviewdog PR Code Review (SpotBugs)
+      - name: Reviewdog PR Code Review (Checkstyle)
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event_name == 'pull_request'
         run: |
-          if [ -f target/spotbugsXml.xml ]; then
-            cat target/spotbugsXml.xml | \
+          if [ -f target/checkstyle-result.xml ]; then
+            cat target/checkstyle-result.xml | \
             reviewdog -f=checkstyle \
                       -reporter=github-pr-review \
                       -filter-mode=added \
                       -fail-level=none \
                       -level=warning
           else
-            echo "SpotBugs report not found, skipping Reviewdog"
+            echo "Checkstyle report not found, skipping Reviewdog"
           fi
+
+      - name: SpotBugs PR Code Review
+        uses: jwgmeligmeyling/spotbugs-github-action@master
+        if: github.event_name == 'pull_request'
+        with:
+          path: ${{ inputs.working_directory }}/target/spotbugsXml.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image with Maven
         env:
