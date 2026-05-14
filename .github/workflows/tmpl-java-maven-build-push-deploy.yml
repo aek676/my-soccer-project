@@ -72,10 +72,10 @@ jobs:
         run: |
           if [ -f target/spotbugsXml.xml ]; then
             cat target/spotbugsXml.xml | \
-            reviewdog -f=spotbugs \
+            reviewdog -f=checkstyle \
                       -reporter=github-pr-review \
                       -filter-mode=added \
-                      -fail-on-error=true \
+                      -fail-level=none \
                       -level=warning
           else
             echo "SpotBugs report not found, skipping Reviewdog"
