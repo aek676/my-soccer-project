@@ -51,7 +51,7 @@ jobs:
 
       - name: Add JaCoCo Report to PR
         uses: madrapps/jacoco-report@v1
-        continue-on-error: true
+        continue-on-error: true # Remove after
         if: github.event_name == 'pull_request'
         with:
           path: ${{ inputs.working_directory }}/target/site/jacoco/jacoco.xml
