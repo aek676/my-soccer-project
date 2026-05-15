@@ -58,7 +58,7 @@ jobs:
         run: bun run build -- --configuration production
 
       - name: Save Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ionic-build-production
           path: ionic-app/www/
@@ -78,12 +78,18 @@ jobs:
           name: ionic-build-production
           path: ionic-app/www
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Firebase preview deploy
+        id: firebase-deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_SOCCER_PROJECT_494521 }}
           projectId: my-soccer-project-494521
           entryPoint: ionic-app
+
+      - name: Save preview URL to repo
+        if: ${{ !inputs.push }}
+        run: bash .github/scripts/save-preview-url.sh "${{ steps.firebase-deploy.outputs.details_url }}" "${{ secrets.GITHUB_TOKEN }}"
 
   deploy:
     needs: build-and-test
