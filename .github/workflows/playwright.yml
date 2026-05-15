@@ -26,9 +26,9 @@ jobs:
         run: bunx playwright install --with-deps
 
       - name: Set BASE_URL
-        run: |
-          eval "$(bash .github/scripts/fetch-preview-url.sh "$GITHUB_TOKEN" "$GITHUB_HEAD_REF")"
-          echo "BASE_URL=$BASE_URL" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .github/scripts/fetch-preview-url.sh "$GITHUB_TOKEN" "$GITHUB_HEAD_REF"
 
       - name: Run Playwright tests
         run: PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright test --reporter=json

@@ -11,7 +11,7 @@ RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
   "https://api.github.com/repos/${REPO}/contents/${FILE}?ref=${BRANCH}")
 
 if [ "$RESPONSE" != "200" ]; then
-  echo "Error: .env.preview not found on branch ${BRANCH}. Run ionic-app preview first."
+  echo "Error: .env.preview not found on branch ${BRANCH}. Run ionic-app preview first." >&2
   exit 1
 fi
 
@@ -21,4 +21,4 @@ CONTENT=$(curl -s \
   | jq -r '.content' | base64 -d)
 
 eval "$CONTENT"
-echo "BASE_URL=${BASE_URL}"
+echo "BASE_URL=${BASE_URL}" >> "$GITHUB_ENV"
