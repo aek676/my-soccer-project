@@ -27,18 +27,8 @@ jobs:
 
       - name: Set BASE_URL
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GITHUB_TOKEN" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/testE2E/.env.preview?ref=$GITHUB_HEAD_REF")
-          if [ "$RESPONSE" = "200" ]; then
-            curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
-              "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/testE2E/.env.preview?ref=$GITHUB_HEAD_REF" \
-              | jq -r '.content' | base64 -d > .env.preview
-            source .env.preview
-            echo "BASE_URL=$BASE_URL" >> $GITHUB_ENV
-          else
-            echo "Error: .env.preview not found. Run ionic-app preview first."
-            exit 1
-          fi
+          eval "$(bash .github/scripts/fetch-preview-url.sh "$GITHUB_TOKEN" "$GITHUB_HEAD_REF")"
+          echo "BASE_URL=$BASE_URL" >> $GITHUB_ENV
 
       - name: Run Playwright tests
         run: PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright test --reporter=json
