@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
   pull-requests: write
   checks: write
@@ -110,4 +110,10 @@ jobs:
     uses: ./.github/workflows/ionic-app.yml
     with:
       push: ${{ github.event_name == 'push' }}
+    secrets: inherit
+
+  playwright:
+    needs: [detect-changes, ionic-app]
+    if: ${{ always() && needs.detect-changes.result == 'success' }}
+    uses: ./.github/workflows/playwright.yml
     secrets: inherit

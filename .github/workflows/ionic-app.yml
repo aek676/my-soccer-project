@@ -6,10 +6,6 @@ on:
       push:
         type: boolean
         default: false
-    outputs:
-      preview_url:
-        description: "Firebase preview URL"
-        value: ${{ jobs.preview.outputs.url }}
 
 jobs:
   build-and-test:
@@ -62,7 +58,7 @@ jobs:
         run: bun run build -- --configuration production
 
       - name: Save Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ionic-build-production
           path: ionic-app/www/
@@ -72,8 +68,6 @@ jobs:
     needs: build-and-test
     if: ${{ !inputs.push }}
     runs-on: ubuntu-latest
-    outputs:
-      url: ${{ steps.firebase-deploy.outputs.details_url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
