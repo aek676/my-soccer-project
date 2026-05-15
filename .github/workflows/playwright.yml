@@ -27,7 +27,12 @@ jobs:
 
       - name: Set BASE_URL
         run: |
-          if [ -f .env.preview ]; then
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/testE2E/.env.preview?ref=$GITHUB_HEAD_REF")
+          if [ "$RESPONSE" = "200" ]; then
+            curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/testE2E/.env.preview?ref=$GITHUB_HEAD_REF" \
+              | jq -r '.content' | base64 -d > .env.preview
             source .env.preview
             echo "BASE_URL=$BASE_URL" >> $GITHUB_ENV
           else

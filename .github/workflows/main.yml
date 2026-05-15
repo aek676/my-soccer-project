@@ -114,6 +114,6 @@ jobs:
 
   playwright:
     needs: [detect-changes, ionic-app]
-    if: ${{ always() && needs.detect-changes.result == 'success' }}
+    if: ${{ github.event_name == 'pull_request' && needs.detect-changes.result == 'success' }}
     uses: ./.github/workflows/playwright.yml
     secrets: inherit
