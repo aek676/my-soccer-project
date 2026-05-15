@@ -63,3 +63,46 @@ jobs:
           name: ionic-build-production
           path: ionic-app/www/
           retention-days: 1
+
+  preview:
+    needs: build-and-test
+    if: ${{ !inputs.push }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ionic-build-production
+          path: ionic-app/www
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_SOCCER_PROJECT_494521 }}
+          projectId: my-soccer-project-494521
+          entryPoint: ionic-app
+
+  deploy:
+    needs: build-and-test
+    if: ${{ inputs.push }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ionic-build-production
+          path: ionic-app/www
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_SOCCER_PROJECT_494521 }}
+          channelId: live
+          projectId: my-soccer-project-494521
+          entryPoint: ionic-app
