@@ -23,6 +23,7 @@ jobs:
       ideal_team: ${{ steps.filter.outputs.ideal_team }}
       bun_backend: ${{ steps.filter.outputs.bun_backend }}
       news_service: ${{ steps.filter.outputs.news_service }}
+      ionic_app: ${{ steps.filter.outputs.ionic_app }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -44,6 +45,8 @@ jobs:
               - 'bun-backend/**'
             news_service:
               - 'news-service/**'
+            ionic_app:
+              - 'ionic-app/**'
 
   players:
     needs: detect-changes
@@ -97,6 +100,14 @@ jobs:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.news_service == 'true' }}
     uses: ./.github/workflows/news-service.yml
+    with:
+      push: ${{ github.event_name == 'push' }}
+    secrets: inherit
+
+  ionic-app:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.ionic_app == 'true' }}
+    uses: ./.github/workflows/ionic-app.yml
     with:
       push: ${{ github.event_name == 'push' }}
     secrets: inherit
