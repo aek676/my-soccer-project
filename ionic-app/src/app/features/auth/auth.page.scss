@@ -151,22 +151,6 @@
   padding-left: var(--spacing-xxs);
 }
 
-.forgot-link {
-  font-family: var(--ion-font-family);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--ion-color-primary);
-  text-align: right;
-  text-decoration: none;
-  margin-top: 4px;
-  transition: color 0.2s;
-
-  &:hover {
-    color: var(--ion-color-primary-shade);
-  }
-}
-
 .submit-btn {
   --border-radius: 100px;
   --background: var(--ion-color-primary);
