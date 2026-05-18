@@ -35,3 +35,44 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Typography Scale */
+.display-mega { font-family: var(--heading-font-family); font-size: 80px; font-weight: 400; line-height: 1.0; letter-spacing: -2px; }
+.display-xl { font-family: var(--heading-font-family); font-size: 64px; font-weight: 400; line-height: 1.0; letter-spacing: -1.6px; }
+.display-lg { font-family: var(--heading-font-family); font-size: 52px; font-weight: 400; line-height: 1.0; letter-spacing: -1.3px; }
+.display-md { font-family: var(--heading-font-family); font-size: 44px; font-weight: 400; line-height: 1.09; letter-spacing: -1px; }
+.display-sm { font-family: var(--ion-font-family); font-size: 36px; font-weight: 400; line-height: 1.11; letter-spacing: -0.5px; }
+.title-lg { font-family: var(--ion-font-family); font-size: 32px; font-weight: 400; line-height: 1.13; letter-spacing: -0.4px; }
+.title-md { font-family: var(--ion-font-family); font-size: 18px; font-weight: 600; line-height: 1.33; }
+.title-sm { font-family: var(--ion-font-family); font-size: 16px; font-weight: 600; line-height: 1.25; }
+.body-md { font-family: var(--ion-font-family); font-size: 16px; font-weight: 400; line-height: 1.5; }
+.body-strong { font-family: var(--ion-font-family); font-size: 16px; font-weight: 700; line-height: 1.5; }
+.body-sm { font-family: var(--ion-font-family); font-size: 14px; font-weight: 400; line-height: 1.5; }
+.caption { font-family: var(--ion-font-family); font-size: 13px; font-weight: 400; line-height: 1.5; }
+.caption-strong { font-family: var(--ion-font-family); font-size: 12px; font-weight: 600; line-height: 1.5; }
+.number-display { font-family: var(--monospace-font-family); font-size: 18px; font-weight: 500; line-height: 1.4; }
+.button-text { font-family: var(--ion-font-family); font-size: 16px; font-weight: 600; line-height: 1.15; }
+.nav-link { font-family: var(--ion-font-family); font-size: 14px; font-weight: 500; line-height: 1.4; }
+
+/* Global body */
+body {
+  font-family: var(--ion-font-family);
+  color: var(--text-ink);
+  background-color: var(--surface-canvas);
+}
+
+/* Dark mode surfaces */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #0a0b0d;
+    --ion-background-color-rgb: 10, 11, 13;
+    --ion-text-color: #ffffff;
+    --ion-text-color-rgb: 255, 255, 255;
+    --surface-canvas: #0a0b0d;
+    --surface-soft: #16181c;
+    --surface-strong: #16181c;
+  }
+}
