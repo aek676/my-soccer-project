@@ -30,7 +30,7 @@ test.describe('Auth - Registration Flow', () => {
 
     const toast = page.locator('ion-toast');
     await expect(toast).toBeVisible();
-    await expect(toast).toContainText('Network error');
+    await expect(toast).toContainText('This email is already registered');
   });
 
   test('shows error for weak password', async ({ page }) => {
@@ -75,7 +75,7 @@ test.describe('Auth - Login Flow', () => {
 
     const toast = page.locator('ion-toast');
     await expect(toast).toBeVisible();
-    await expect(toast).toContainText('Network error');
+    await expect(toast).toContainText('Invalid email or password');
   });
 });
 
