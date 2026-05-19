@@ -4,15 +4,15 @@ test.describe("Auth - Login Page", () => {
   test("displays login page at /auth/login", async ({ page }) => {
     await page.goto("/auth/login");
     await expect(page).toHaveURL(/\/auth\/login/);
-    await expect(page.getByText("Sign In")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sign In" })).toBeVisible();
   });
 
   test("displays email and password fields", async ({ page }) => {
     await page.goto("/auth/login");
     await expect(
-      page.getByRole("textbox", { name: "Email address" }),
+      page.locator('input[placeholder="Email address"]'),
     ).toBeVisible();
-    await expect(page.getByRole("textbox", { name: "Password" })).toBeVisible();
+    await expect(page.locator('input[placeholder="Password"]')).toBeVisible();
   });
 
   test("displays sign in button", async ({ page }) => {
@@ -44,7 +44,7 @@ test.describe("Auth - Login Page", () => {
 
   test("shows validation error for invalid email", async ({ page }) => {
     await page.goto("/auth/login");
-    const emailInput = page.getByRole("textbox", { name: "Email address" });
+    const emailInput = page.locator('input[placeholder="Email address"]');
     await emailInput.fill("invalid-email");
     await emailInput.blur();
     await expect(page.getByText("Please enter a valid email")).toBeVisible();
@@ -66,13 +66,13 @@ test.describe("Auth - Register Page", () => {
 
   test("displays all form fields", async ({ page }) => {
     await page.goto("/auth/register");
-    await expect(page.getByRole("textbox", { name: "Username" })).toBeVisible();
+    await expect(page.locator('input[placeholder="Username"]')).toBeVisible();
     await expect(
-      page.getByRole("textbox", { name: "Email address" }),
+      page.locator('input[placeholder="Email address"]'),
     ).toBeVisible();
-    await expect(page.getByRole("textbox", { name: "Password" })).toBeVisible();
+    await expect(page.locator('input[placeholder="Password"]')).toBeVisible();
     await expect(
-      page.getByRole("textbox", { name: "Confirm password" }),
+      page.locator('input[placeholder="Confirm password"]'),
     ).toBeVisible();
   });
 
@@ -85,7 +85,7 @@ test.describe("Auth - Register Page", () => {
     await page.goto("/auth/register");
     await page.getByRole("link", { name: "Sign in" }).click();
     await expect(page).toHaveURL(/\/auth\/login/);
-    await expect(page.getByText("Sign In")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sign In" })).toBeVisible();
   });
 
   test("shows validation error when submitting empty form", async ({
@@ -100,7 +100,7 @@ test.describe("Auth - Register Page", () => {
 
   test("shows username minlength error", async ({ page }) => {
     await page.goto("/auth/register");
-    const usernameInput = page.getByRole("textbox", { name: "Username" });
+    const usernameInput = page.locator('input[placeholder="Username"]');
     await usernameInput.fill("a");
     await usernameInput.blur();
     await expect(
@@ -110,7 +110,7 @@ test.describe("Auth - Register Page", () => {
 
   test("shows password minlength error", async ({ page }) => {
     await page.goto("/auth/register");
-    const passwordInput = page.getByRole("textbox", { name: "Password" });
+    const passwordInput = page.locator('input[placeholder="Password"]').first();
     await passwordInput.fill("short");
     await passwordInput.blur();
     await expect(
