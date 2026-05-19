@@ -19,7 +19,7 @@ describe('LoginPage', () => {
   let toastSpy: jasmine.SpyObj<HTMLIonToastElement>;
 
   beforeEach(async () => {
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['login']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['login', 'loginAsGuest']);
     toastCtrlSpy = jasmine.createSpyObj('ToastController', ['create']);
     toastSpy = jasmine.createSpyObj('HTMLIonToastElement', ['present']);
     toastCtrlSpy.create.and.returnValue(Promise.resolve(toastSpy));
@@ -215,6 +215,7 @@ describe('LoginPage', () => {
 
   describe('continueAsGuest', () => {
     it('should navigate to /tabs', fakeAsync(() => {
+      authServiceSpy.loginAsGuest.and.returnValue(of({} as any));
       const navigateSpy = spyOn(router, 'navigate').and.returnValue(
         Promise.resolve(true),
       );
