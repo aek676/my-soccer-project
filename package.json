@@ -1,0 +1,13 @@
+{
+  "name": "my-soccer-project-monorepo",
+  "private": true,
+  "scripts": {
+    "build:frontend": "cd ionic-app && bun run build",
+    "emulator": "firebase emulators:start --only auth,hosting,firestore",
+    "start:emulator": "concurrently \"firebase emulators:start --only auth,hosting,firestore\" \"cd ionic-app && ng serve --configuration emulator\"",
+    "test:e2e": "firebase emulators:exec --only auth,hosting \"cd testE2E && bunx playwright test\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
