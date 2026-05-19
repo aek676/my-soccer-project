@@ -32,6 +32,12 @@ jobs:
       - name: Install Firebase CLI
         run: bun install -g firebase-tools
 
+      - name: Setup Java 21 for Firebase Emulator
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
       - name: Run Playwright tests
         run: firebase emulators:exec "cd testE2E && bun run test"
 
