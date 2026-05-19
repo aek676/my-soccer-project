@@ -7,9 +7,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: testE2E
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -24,16 +21,19 @@ jobs:
 
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps
+        working-directory: testE2E
 
-      - name: Set BASE_URL
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash .github/scripts/fetch-preview-url.sh "$GITHUB_TOKEN" "$GITHUB_HEAD_REF"
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ionic-build-production
+          path: ionic-app/www
+
+      - name: Install Firebase CLI
+        run: bun install -g firebase-tools
 
       - name: Run Playwright tests
-        run: PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright test --reporter=json
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
+        run: bun run test:e2e
 
       - uses: daun/playwright-report-summary@v3
         with:

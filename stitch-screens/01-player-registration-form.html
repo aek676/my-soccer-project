@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Register New Player</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "tertiary-fixed-dim": "#ffb4a1",
+                "error": "#ba1a1a",
+                "surface-container-lowest": "#ffffff",
+                "on-primary": "#ffffff",
+                "secondary-container": "#e3e2e5",
+                "primary-fixed-dim": "#b7c4ff",
+                "on-secondary-fixed": "#1b1c1e",
+                "primary": "#003ec7",
+                "on-primary-fixed": "#001452",
+                "on-tertiary": "#ffffff",
+                "tertiary-container": "#bf3003",
+                "surface-container-high": "#e7e7f5",
+                "semantic-up": "#05b169",
+                "on-primary-fixed-variant": "#0038b6",
+                "surface-strong": "#eef0f3",
+                "primary-container": "#0052ff",
+                "secondary": "#5e5e61",
+                "on-error-container": "#93000a",
+                "tertiary-fixed": "#ffdbd2",
+                "outline": "#737688",
+                "hairline": "#dee1e6",
+                "error-container": "#ffdad6",
+                "on-tertiary-fixed": "#3c0800",
+                "surface-tint": "#004ced",
+                "on-error": "#ffffff",
+                "on-background": "#191b25",
+                "surface-container-highest": "#e1e1ef",
+                "inverse-on-surface": "#f0effe",
+                "canvas": "#ffffff",
+                "on-secondary-fixed-variant": "#464749",
+                "ink": "#0a0b0d",
+                "surface-bright": "#fbf8ff",
+                "on-secondary": "#ffffff",
+                "muted": "#7c828a",
+                "surface-variant": "#e1e1ef",
+                "secondary-fixed-dim": "#c7c6c9",
+                "surface": "#fbf8ff",
+                "tertiary": "#952200",
+                "surface-container-low": "#f3f2ff",
+                "on-secondary-container": "#646467",
+                "secondary-fixed": "#e3e2e5",
+                "inverse-surface": "#2e303a",
+                "surface-soft": "#f7f7f7",
+                "accent-yellow": "#f4b000",
+                "outline-variant": "#c3c5d9",
+                "surface-container": "#ededfb",
+                "primary-fixed": "#dde1ff",
+                "surface-dim": "#d9d9e7",
+                "body": "#5b616e",
+                "inverse-primary": "#b7c4ff",
+                "background": "#fbf8ff",
+                "on-surface-variant": "#434656",
+                "on-surface": "#191b25",
+                "semantic-down": "#cf202f",
+                "on-tertiary-fixed-variant": "#891e00",
+                "on-primary-container": "#dfe3ff",
+                "on-tertiary-container": "#ffddd5"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "xxl": "48px",
+                "lg": "24px",
+                "md": "20px",
+                "base": "16px",
+                "sm": "12px",
+                "section": "96px",
+                "xxs": "4px",
+                "xs": "8px",
+                "xl": "32px"
+        },
+        "fontFamily": {
+                "caption": [
+                        "'Inter', sans-serif"
+                ],
+                "title-sm": [
+                        "'Inter', sans-serif"
+                ],
+                "title-md": [
+                        "'Inter', sans-serif"
+                ],
+                "display-lg": [
+                        "'Inter', sans-serif"
+                ],
+                "body-md": [
+                        "'Inter', sans-serif"
+                ],
+                "body-sm": [
+                        "'Inter', sans-serif"
+                ],
+                "button": [
+                        "'Inter', sans-serif"
+                ],
+                "display-xl": [
+                        "'Inter', sans-serif"
+                ],
+                "number-display": [
+                        "'Inter', monospace"
+                ],
+                "display-mega": [
+                        "'Inter', sans-serif"
+                ],
+                "body-strong": [
+                        "'Inter', sans-serif"
+                ],
+                "nav-link": [
+                        "'Inter', sans-serif"
+                ],
+                "display-sm": [
+                        "'Inter', sans-serif"
+                ],
+                "caption-strong": [
+                        "'Inter', sans-serif"
+                ],
+                "title-lg": [
+                        "'Inter', sans-serif"
+                ],
+                "display-md": [
+                        "'Inter', sans-serif"
+                ]
+        },
+        "fontSize": {
+                "caption": [
+                        "13px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "title-sm": [
+                        "16px",
+                        {
+                                "lineHeight": "1.25",
+                                "fontWeight": "600"
+                        }
+                ],
+                "title-md": [
+                        "18px",
+                        {
+                                "lineHeight": "1.33",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg": [
+                        "52px",
+                        {
+                                "lineHeight": "1.0",
+                                "letterSpacing": "-1.3px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "button": [
+                        "16px",
+                        {
+                                "lineHeight": "1.15",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-xl": [
+                        "64px",
+                        {
+                                "lineHeight": "1.0",
+                                "letterSpacing": "-1.6px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "number-display": [
+                        "18px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "500"
+                        }
+                ],
+                "display-mega": [
+                        "80px",
+                        {
+                                "lineHeight": "1.0",
+                                "letterSpacing": "-2px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-strong": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "700"
+                        }
+                ],
+                "nav-link": [
+                        "14px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "500"
+                        }
+                ],
+                "display-sm": [
+                        "36px",
+                        {
+                                "lineHeight": "1.11",
+                                "letterSpacing": "-0.5px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "caption-strong": [
+                        "12px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "600"
+                        }
+                ],
+                "title-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.13",
+                                "letterSpacing": "-0.4px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-md": [
+                        "44px",
+                        {
+                                "lineHeight": "1.09",
+                                "letterSpacing": "-1px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+      }
+    }
+  }
+</script>
+<style>body {
+    background-color: #ffffff;
+  }
+  .input-field {
+    @apply w-full bg-white border-hairline rounded-[12px] px-[16px] py-[14px] font-body-md text-on-surface focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-colors border;
+  }
+  .label-text {
+    @apply block font-body-md font-semibold text-on-surface-variant mb-xs text-[14px];
+  }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased pb-32">
+<!-- TopAppBar -->
+<nav class="flex items-center justify-between px-md h-16 w-full max-w-full bg-surface border-b border-hairline sticky top-0 z-50">
+<div class="flex items-center gap-xs">
+<button aria-label="Go back" class="p-xs text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+</div>
+<div class="font-title-lg text-title-lg-mobile font-bold text-primary tracking-tight">
+    MSP
+  </div>
+<div class="w-10"></div> <!-- Placeholder for balance -->
+</nav>
+<!-- Main Content Canvas -->
+<main class="max-w-4xl mx-auto px-md md:px-lg py-xl">
+<header class="mb-xl text-center md:text-left flex flex-col md:flex-row items-center gap-lg">
+<!-- Image Upload Area -->
+<div class="relative group cursor-pointer">
+<div class="w-32 h-32 rounded-full bg-surface-strong border border-hairline flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-outline text-4xl group-hover:text-primary transition-colors">photo_camera</span>
+</div>
+<div class="absolute inset-0 rounded-full ring-2 ring-transparent group-hover:ring-primary/20 transition-all"></div>
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-2 shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+</div>
+</div>
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Register New Player</h1>
+<p class="font-body-md text-body-md text-body mt-2">Enter the details below to add a new athlete to the roster.</p>
+</div>
+</header>
+<form class="space-y-section">
+<!-- Section 1: Personal Info -->
+<section class="bg-surface p-lg md:p-xl rounded-xl border border-hairline">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg pb-sm border-b border-hairline">Personal Information</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div>
+<label class="label-text font-semibold">Alias / Nickname</label>
+<input class="input-field bg-white" placeholder="e.g. Magic" type="text">
+</div>
+<div>
+<label class="label-text font-semibold">First Name</label>
+<input class="input-field bg-white" placeholder="First Name" type="text">
+</div>
+<div>
+<label class="label-text font-semibold">Last Name</label>
+<input class="input-field bg-white" placeholder="Last Name" type="text">
+</div>
+<div>
+<label class="label-text font-semibold">Birthdate</label>
+<input class="input-field text-on-surface-variant bg-white" type="date">
+</div>
+<div>
+<label class="label-text font-semibold">Age</label>
+<input class="input-field bg-white" disabled="" placeholder="Auto-calculated" type="number">
+</div>
+<div>
+<label class="label-text font-semibold">Nationality</label>
+<select class="input-field appearance-none bg-white">
+<option disabled="" selected="" value="">Select nationality...</option>
+<option>United States</option>
+<option>Spain</option>
+<option>Brazil</option>
+<option>France</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Section 2: Physical Stats -->
+<section class="bg-surface p-lg md:p-xl rounded-xl border border-hairline">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg pb-sm border-b border-hairline">Physical Stats</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div>
+<label class="label-text font-semibold">Height (cm)</label>
+<div class="relative">
+<input class="input-field pr-12 bg-white" placeholder="185" type="number">
+<span class="absolute right-md top-1/2 -translate-y-1/2 text-muted font-body-sm">cm</span>
+</div>
+</div>
+<div>
+<label class="label-text font-semibold">Weight (kg)</label>
+<div class="relative">
+<input class="input-field pr-12 bg-white" placeholder="80" type="number">
+<span class="absolute right-md top-1/2 -translate-y-1/2 text-muted font-body-sm">kg</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Sporting Info -->
+<section class="bg-surface p-lg md:p-xl rounded-xl border border-hairline">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg pb-sm border-b border-hairline">Sporting Information</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div>
+<label class="label-text font-semibold">League</label>
+<input class="input-field bg-white" placeholder="e.g. Premier League" type="text">
+</div>
+<div>
+<label class="label-text font-semibold">Team</label>
+<input class="input-field bg-white" placeholder="e.g. Arsenal FC" type="text">
+</div>
+<div>
+<label class="label-text font-semibold">Primary Position</label>
+<select class="input-field appearance-none bg-white">
+<option disabled="" selected="" value="">Select position...</option>
+<option>Goalkeeper</option>
+<option>Defender</option>
+<option>Midfielder</option>
+<option>Forward</option>
+</select>
+</div>
+<div>
+<label class="label-text font-semibold">Shirt Number</label>
+<input class="input-field bg-white" placeholder="e.g. 10" type="number">
+</div>
+</div>
+</section>
+<!-- Section 4: Geolocation -->
+<section class="bg-surface p-lg md:p-xl rounded-xl border border-hairline">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg pb-sm border-b border-hairline">Current Location</h2>
+<p class="font-body-sm text-body mb-md">Pin the player's primary training or home location.</p>
+<div class="relative w-full h-64 bg-surface-strong rounded-[24px] border border-hairline overflow-hidden group cursor-crosshair">
+<!-- Placeholder for Map Image -->
+<img alt="Map Placeholder" class="absolute inset-0 w-full h-full object-cover opacity-70 grayscale transition-opacity group-hover:opacity-100 group-hover:grayscale-0" data-alt="A clean, modern digital map interface displaying a stylized city grid. The map uses a very light mode color palette with soft gray roads on a pure white background, avoiding strong colors to maintain a minimalist aesthetic. A single, distinct primary blue pin marker indicates a specific location in the center of the frame. The lighting is bright and even, giving it a premium, institutional application feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAglb_pC6XgHuHSo3QPXKxMlVU9_4G0H9diRLP1lt_nMA6-37PzLmDYUJEXmcZtzYIJuNdiUTxxkhWxomw7YLgF1Se61G0ULMQ3-og0HHeV2vvCN23BTswY8dWtiw1Ygzc0jzOL_bcaWK7EYVuGrkUUp6wDfKIvQ5YUyE7D8B6-aZUHm4lIlhziw4UrXyyxOvAXsQ-A7wbjKWD8z80_EjtZkaLasE1gOrRXYBNlKbk1NiE6zNoV2Lb5NLOBh79N0dyhBLkajiYX2TlJ">
+<!-- Center Pin -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-primary text-on-primary rounded-full p-2 shadow-lg animate-bounce">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="w-4 h-1 bg-ink/20 rounded-[50%] mt-1 filter blur-[1px]"></div>
+</div>
+</div>
+<div class="mt-md flex gap-sm">
+<input class="input-field flex-1 bg-white" placeholder="Search city or address..." type="text">
+<button class="px-lg bg-surface-container-high text-on-surface font-button text-button rounded-full hover:bg-surface-dim transition-colors border border-hairline" type="button">Locate</button>
+</div>
+</section>
+</form>
+</main>
+<!-- Action Footer (Fixed) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md border-t border-hairline p-md md:p-lg flex justify-end gap-md z-50">
+<button class="px-xl py-sm font-button text-button text-on-surface-variant bg-transparent border border-hairline rounded-full hover:bg-surface-container-low transition-colors" type="button">
+    Cancel
+  </button>
+<button class="px-xl py-sm font-button text-button text-on-primary bg-primary rounded-full hover:bg-primary-container transition-colors shadow-sm" type="submit">
+    Save Player
+  </button>
+</div>
+
+
+</body></html>

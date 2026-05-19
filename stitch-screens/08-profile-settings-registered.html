@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Profile &amp; Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fbf8ff",
+                        "on-background": "#191b25",
+                        "surface-container-high": "#e7e7f5",
+                        "primary-container": "#0052ff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "inverse-surface": "#2e303a",
+                        "surface-tint": "#004ced",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f3f2ff",
+                        "primary": "#003ec7",
+                        "body": "#5b616e",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191b25",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#ededfb",
+                        "on-secondary-fixed": "#1b1c1e",
+                        "primary-fixed": "#dde1ff",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "on-secondary-container": "#646467",
+                        "semantic-up": "#05b169",
+                        "accent-yellow": "#f4b000",
+                        "hairline": "#dee1e6",
+                        "on-primary-fixed": "#001452",
+                        "surface": "#fbf8ff",
+                        "on-tertiary-container": "#ffddd5",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "on-tertiary-fixed-variant": "#891e00",
+                        "on-secondary-fixed-variant": "#464749",
+                        "on-primary-container": "#dfe3ff",
+                        "on-error-container": "#93000a",
+                        "background": "#fbf8ff",
+                        "error-container": "#ffdad6",
+                        "outline": "#737688",
+                        "outline-variant": "#c3c5d9",
+                        "tertiary-fixed": "#ffdbd2",
+                        "ink": "#0a0b0d",
+                        "secondary-fixed-dim": "#c7c6c9",
+                        "secondary-fixed": "#e3e2e5",
+                        "surface-container-highest": "#e1e1ef",
+                        "surface-soft": "#f7f7f7",
+                        "secondary": "#5e5e61",
+                        "surface-variant": "#e1e1ef",
+                        "canvas": "#ffffff",
+                        "secondary-container": "#e3e2e5",
+                        "on-tertiary-fixed": "#3c0800",
+                        "inverse-on-surface": "#f0effe",
+                        "tertiary-container": "#bf3003",
+                        "semantic-down": "#cf202f",
+                        "muted": "#7c828a",
+                        "surface-dim": "#d9d9e7",
+                        "tertiary": "#952200",
+                        "inverse-primary": "#b7c4ff",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "surface-strong": "#eef0f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem", // Overriding xl to 24px per prompt
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "16px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "xxl": "48px",
+                        "md": "20px",
+                        "section": "96px",
+                        "xxs": "4px",
+                        "xs": "8px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "sans": ["Plus Jakarta Sans", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: "Plus Jakarta Sans", sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-soft min-h-screen text-ink flex flex-col">
+<!-- Header (Light top bar) -->
+<nav class="w-full top-0 sticky bg-canvas border-b border-hairline z-40">
+<div class="flex items-center justify-between px-base h-16 w-full max-w-7xl mx-auto relative">
+<button class="text-on-surface hover:bg-surface-container-low transition-colors active:scale-95 transition-transform p-2 -ml-2 rounded-full flex items-center justify-center">
+
+</button>
+<span class="font-title-md text-title-md font-bold text-primary absolute left-1/2 -translate-x-1/2">MSP</span>
+<div class="flex items-center">
+<img alt="User Avatar" class="w-8 h-8 rounded-full object-cover border border-hairline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEgEchdueh4CRF7LgreUqXhcVeaED8GQ2w48zW4ueBHmBpBuDHx6Th9fHVTEn9OkVZxYa-sKJCW6E7yn0jzfj5_m-8iO65MrhIFva834O9MU7cUh0Lq6hXv-Ng-P5BulY55tCSCEmsPaTJ6amPpgQPjy-oQUNNWKCZ4ZmKNmhkqAtWVz9b30x5uN0QZzEfU-JOeZNKu8CaTKyKECflI-VzZUHk6MPpo547XTCsN2sKT8R0krwPl1AkGAH6YBs3zX9GDeYY7_RuawGA">
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 px-base py-lg pb-32 flex flex-col gap-lg max-w-md mx-auto w-full">
+<!-- User Card -->
+<section class="bg-canvas rounded-xl p-lg flex flex-col items-center shadow-sm border border-hairline/50">
+<div class="w-24 h-24 rounded-full bg-surface-strong mb-sm overflow-hidden bg-cover bg-center" data-alt="A clean, minimalist portrait photo of a professional scout named Marcus Johnson. The setting is bright and editorial, lit with high-key lighting indicative of a modern financial services brand. The color palette is composed of pure whites, soft grays, and subtle accents of vibrant blue. The mood is confident, calm, and trustworthy, perfectly aligning with a premium institutional digital product." style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBjizhdDyX9SkQLgiZMDIj_B6Z0FFyuln4i_ND9dDSv9Vb4D8esq4uXVs__SGVaN08OWYBllxkh-ourM4QNzQSG0lRHSQcfi-824msqDZAhLw8lUUpwbsbS5t7XjLqPWWJgIDfEPW5XNnXEpVguUYM32tQFiqM6xJpDZEDqsX8SC7ik7EuA4hqs8wok2cCz6ZhO-21yNmWokxg7Pt_Yqc-AStzNAWWo-Z0riyvN-uzFnuJYRC5xuSiiGt-AzKg_WqPMIWYlI4LkUatW&quot;);">
+</div>
+<h2 class="text-title-lg font-bold tracking-tight text-ink">Marcus Johnson</h2>
+<p class="text-body text-body-md mt-xxs">marcus.j@msp.com</p>
+
+</section>
+<!-- Developer Settings -->
+<section class="flex flex-col gap-sm">
+<h3 class="text-title-sm font-semibold text-ink px-xs">Developer Settings</h3>
+<div class="bg-canvas rounded-xl border border-hairline/50 shadow-sm overflow-hidden flex flex-col">
+<!-- Backend Service Toggle -->
+<div class="flex items-center justify-between p-base">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-strong flex items-center justify-center text-ink">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">database</span>
+</div>
+<span class="text-body-strong font-medium">Backend Service</span>
+</div>
+<!-- Segmented Control Pill -->
+<div class="flex bg-surface-strong rounded-full p-xxs">
+<button class="px-sm py-xs text-caption-strong font-semibold rounded-full bg-primary text-on-primary shadow-sm transition-all">Node.js</button>
+<button class="px-sm py-xs text-caption-strong font-medium text-body hover:text-ink transition-all">SpringBoot</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Actions -->
+<section class="flex flex-col gap-sm mt-sm">
+<div class="bg-canvas rounded-xl border border-hairline/50 shadow-sm overflow-hidden">
+<button class="w-full flex items-center gap-sm p-base hover:bg-surface-soft transition-colors text-left">
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center text-semantic-down">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">logout</span>
+</div>
+<span class="text-body-strong font-semibold text-semantic-down">Log out</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Shared Bottom Navigation (Relevance: Destination Screen - Profile) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-base bg-canvas border-t border-hairline z-40 md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 w-full h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">groups</span>
+<span class="font-nav-link text-nav-link text-[10px] mt-1 font-normal">Players</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 w-full h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">newspaper</span>
+<span class="font-nav-link text-nav-link text-[10px] mt-1 font-normal">News</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 w-full h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">strategy</span>
+<span class="font-nav-link text-nav-link text-[10px] mt-1 font-normal">Ideal Team</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container font-bold hover:opacity-100 scale-95 transition-transform duration-150 w-full h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">person</span>
+<span class="font-nav-link text-nav-link text-[10px] mt-1">Profile</span>
+</a>
+</nav>
+
+
+</body></html>

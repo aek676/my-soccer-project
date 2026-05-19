@@ -1,0 +1,80 @@
+<ion-content class="auth-content" fullscreen>
+  <div class="auth-container">
+    <header class="auth-header">
+      <h1 class="brand-title">MSP</h1>
+    </header>
+
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h2 class="card-title">Sign In</h2>
+        <p class="card-subtitle">Access your sports management dashboard</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-group">
+          <ion-input
+            formControlName="email"
+            type="email"
+            placeholder="Email address"
+            autocomplete="email"
+            [clearOnEdit]="false"
+            class="auth-input"
+          ></ion-input>
+          @if (loginForm.get('email')?.invalid &&
+          loginForm.get('email')?.touched) {
+          <span class="error-text">
+            @if (loginForm.get('email')?.errors?.['required']) { Email is
+            required } @else if (loginForm.get('email')?.errors?.['email']) {
+            Please enter a valid email }
+          </span>
+          }
+        </div>
+
+        <div class="form-group">
+          <ion-input
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+            [clearOnEdit]="false"
+            toggle-password
+            class="auth-input"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
+        </div>
+
+        <ion-button
+          type="submit"
+          expand="block"
+          class="submit-btn"
+          [disabled]="submitting"
+        >
+          @if (submitting) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+          } {{ submitting ? 'Signing in...' : 'Sign In' }}
+        </ion-button>
+      </form>
+    </div>
+
+    <div class="auth-footer">
+      <p class="footer-text">
+        Don't have an account?
+        <a routerLink="/auth/register" class="footer-link">Sign up</a>
+      </p>
+
+      <div class="divider">
+        <span class="divider-text">OR</span>
+      </div>
+
+      <ion-button
+        fill="outline"
+        expand="block"
+        class="guest-btn"
+        (click)="continueAsGuest()"
+      >
+        Continue as Guest
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
