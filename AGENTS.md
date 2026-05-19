@@ -12,19 +12,19 @@ ionic-app → Firebase hosting (preview + production)
 
 ### Service boundaries
 
-| Directory | Stack | DB | Notes |
-|---|---|---|---|
-| `config-server/` | Spring Boot 4, Java 17 | — | Git-backed config server |
-| `eureka-server/` | Spring Boot 4, Java 17 | — | Service registry |
-| `gateway/` | Spring Boot 4, Java 17 | — | API gateway |
-| `players-service/` | Spring Boot 4, Java 17 | PostgreSQL | JPA + OpenFeign |
-| `comments-service/` | Spring Boot 4, Java 17 | PostgreSQL | JPA + OpenFeign |
-| `ideal-team-service/` | Spring Boot 4, Java 17 | PostgreSQL | JPA + OpenFeign |
-| `news-service/` | Spring Boot, **Java 8** | — | Different Java version; uses Dockerfile not buildpacks |
-| `bun-backend/` | Elysia + Bun + TypeScript | MongoDB | Registers with Eureka; reads config from config-server |
-| `ionic-app/` | Angular 20 + Ionic 8 | — | Firebase hosting; standalone components |
-| `testE2E/` | Playwright | — | Tests ionic-app; Firefox + Mobile Chrome |
-| `terraform/` | Terraform Cloud | — | Infra as code |
+| Directory             | Stack                     | DB         | Notes                                                  |
+| --------------------- | ------------------------- | ---------- | ------------------------------------------------------ |
+| `config-server/`      | Spring Boot 4, Java 17    | —          | Git-backed config server                               |
+| `eureka-server/`      | Spring Boot 4, Java 17    | —          | Service registry                                       |
+| `gateway/`            | Spring Boot 4, Java 17    | —          | API gateway                                            |
+| `players-service/`    | Spring Boot 4, Java 17    | PostgreSQL | JPA + OpenFeign                                        |
+| `comments-service/`   | Spring Boot 4, Java 17    | PostgreSQL | JPA + OpenFeign                                        |
+| `ideal-team-service/` | Spring Boot 4, Java 17    | PostgreSQL | JPA + OpenFeign                                        |
+| `news-service/`       | Spring Boot, **Java 8**   | —          | Different Java version; uses Dockerfile not buildpacks |
+| `bun-backend/`        | Elysia + Bun + TypeScript | MongoDB    | Registers with Eureka; reads config from config-server |
+| `ionic-app/`          | Angular 20 + Ionic 8      | —          | Firebase hosting; standalone components                |
+| `testE2E/`            | Playwright                | —          | Tests ionic-app; Firefox + Mobile Chrome               |
+| `terraform/`          | Terraform Cloud           | —          | Infra as code                                          |
 
 ## Developer commands
 
@@ -66,6 +66,12 @@ bun run build              # build to www/
 bun run build -- --configuration production   # prod build
 bun run test -- --watch=false --browsers=ChromeHeadless   # CI-style unit tests
 bun run lint               # ng lint
+
+# Scaffolding (Ionic CLI — generates standalone components by default)
+bunx ionic generate component <name>           # standalone component
+bunx ionic generate page <path>                # page with route config
+bunx ionic generate service <name>             # injectable service
+bunx ionic generate guard <name>               # functional guard
 ```
 
 ### testE2E (Playwright)
