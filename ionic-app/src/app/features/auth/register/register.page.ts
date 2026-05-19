@@ -17,6 +17,7 @@ import {
   IonInputPasswordToggle,
   ToastController,
 } from '@ionic/angular/standalone';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -77,13 +78,13 @@ export class RegisterPage {
     this.submitting = true;
 
     try {
-      await this.authService
-        .register(
+      await firstValueFrom(
+        this.authService.register(
           this.registerForm.value.email,
           this.registerForm.value.password,
           this.registerForm.value.username,
-        )
-        .toPromise();
+        ),
+      );
       this.router.navigate(['/tabs']);
     } catch (error: unknown) {
       const message = this.getErrorMessage(error);
