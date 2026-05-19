@@ -1,14 +1,11 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { provideRouter, Router } from '@angular/router';
 import {
-  IonContent,
-  IonButton,
-  IonInput,
-  IonSpinner,
-  IonInputPasswordToggle,
-  ToastController,
-} from '@ionic/angular/standalone';
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular/standalone';
 import { LoginPage } from './login.page';
 import { AuthService } from '../../../core/services/auth.service';
 import { of, throwError } from 'rxjs';
@@ -28,17 +25,8 @@ describe('LoginPage', () => {
     toastCtrlSpy.create.and.returnValue(Promise.resolve(toastSpy));
 
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        IonContent,
-        IonButton,
-        IonInput,
-        IonSpinner,
-        IonInputPasswordToggle,
-        LoginPage,
-      ],
+      imports: [LoginPage],
       providers: [
-        FormBuilder,
         provideRouter([]),
         { provide: AuthService, useValue: authServiceSpy },
         { provide: ToastController, useValue: toastCtrlSpy },
