@@ -26,14 +26,14 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v8
         with:
-          name: ionic-build-production
+          name: ionic-build-emulator
           path: ionic-app/www
 
       - name: Install Firebase CLI
         run: bun install -g firebase-tools
 
       - name: Run Playwright tests
-        run: bun run test:e2e
+        run: firebase emulators:exec "cd testE2E && bun run test"
 
       - uses: daun/playwright-report-summary@v3
         with:
