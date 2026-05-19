@@ -87,10 +87,6 @@ jobs:
           projectId: my-soccer-project-494521
           entryPoint: .
 
-      - name: Save preview URL to repo
-        if: ${{ !inputs.push }}
-        run: bash .github/scripts/save-preview-url.sh "${{ steps.firebase-deploy.outputs.details_url }}" "${{ secrets.GITHUB_TOKEN }}"
-
   deploy:
     needs: build-and-test
     if: ${{ inputs.push }}
