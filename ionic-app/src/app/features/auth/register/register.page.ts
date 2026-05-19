@@ -6,18 +6,17 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
+  AbstractControlOptions,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import {
   IonContent,
   IonButton,
   IonInput,
-  IonIcon,
   IonSpinner,
+  IonInputPasswordToggle,
   ToastController,
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { eye, eyeOff } from 'ionicons/icons';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -33,8 +32,8 @@ import { AuthService } from '../../../core/services/auth.service';
     IonContent,
     IonButton,
     IonInput,
-    IonIcon,
     IonSpinner,
+    IonInputPasswordToggle,
   ],
 })
 export class RegisterPage {
@@ -44,13 +43,9 @@ export class RegisterPage {
   private toastCtrl = inject(ToastController);
 
   registerForm: FormGroup;
-  showPassword = false;
-  showConfirmPassword = false;
   submitting = false;
 
   constructor() {
-    addIcons({ eye, eyeOff });
-
     this.registerForm = this.fb.group(
       {
         username: ['', [Validators.required, Validators.minLength(2)]],
@@ -58,7 +53,7 @@ export class RegisterPage {
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]],
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator } as AbstractControlOptions,
     );
   }
 
@@ -86,7 +81,7 @@ export class RegisterPage {
         .register(
           this.registerForm.value.email,
           this.registerForm.value.password,
-          this.registerForm.value.username
+          this.registerForm.value.username,
         )
         .toPromise();
       this.router.navigate(['/tabs']);

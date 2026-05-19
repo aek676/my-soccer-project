@@ -59,24 +59,16 @@
 
         <!-- Password -->
         <div class="form-group">
-          <div class="password-wrapper">
-            <ion-input
-              formControlName="password"
-              [type]="showPassword ? 'text' : 'password'"
-              placeholder="Password"
-              autocomplete="new-password"
-              [clearOnEdit]="false"
-              class="auth-input"
-            ></ion-input>
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="showPassword = !showPassword"
-              aria-label="Toggle password visibility"
-            >
-              <ion-icon [name]="showPassword ? 'eye-off' : 'eye'"></ion-icon>
-            </button>
-          </div>
+          <ion-input
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="new-password"
+            [clearOnEdit]="false"
+            class="auth-input"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
           @if (registerForm.get('password')?.invalid &&
           registerForm.get('password')?.touched) {
           <span class="error-text">
@@ -90,26 +82,16 @@
 
         <!-- Confirm Password -->
         <div class="form-group">
-          <div class="password-wrapper">
-            <ion-input
-              formControlName="confirmPassword"
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              placeholder="Confirm password"
-              autocomplete="new-password"
-              [clearOnEdit]="false"
-              class="auth-input"
-            ></ion-input>
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="showConfirmPassword = !showConfirmPassword"
-              aria-label="Toggle password visibility"
-            >
-              <ion-icon
-                [name]="showConfirmPassword ? 'eye-off' : 'eye'"
-              ></ion-icon>
-            </button>
-          </div>
+          <ion-input
+            formControlName="confirmPassword"
+            type="password"
+            placeholder="Confirm password"
+            autocomplete="new-password"
+            [clearOnEdit]="false"
+            class="auth-input"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
           @if (registerForm.get('confirmPassword')?.invalid &&
           registerForm.get('confirmPassword')?.touched) {
           <span class="error-text">
