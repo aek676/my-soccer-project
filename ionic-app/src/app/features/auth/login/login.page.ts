@@ -12,12 +12,11 @@ import {
   IonContent,
   IonButton,
   IonInput,
-  IonIcon,
   IonSpinner,
   ToastController,
+  IonInputPasswordToggle,
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { eye, eyeOff } from 'ionicons/icons';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -33,8 +32,8 @@ import { AuthService } from '../../../core/services/auth.service';
     IonContent,
     IonButton,
     IonInput,
-    IonIcon,
     IonSpinner,
+    IonInputPasswordToggle,
   ],
 })
 export class LoginPage {
@@ -44,12 +43,9 @@ export class LoginPage {
   private toastCtrl = inject(ToastController);
 
   loginForm: FormGroup;
-  showPassword = false;
   submitting = false;
 
   constructor() {
-    addIcons({ eye, eyeOff });
-
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -65,9 +61,10 @@ export class LoginPage {
     this.submitting = true;
 
     try {
-      await this.authService
-        .login(this.loginForm.value.email, this.loginForm.value.password)
-        .toPromise();
+      await firstValueFrom(
+        this.authService
+          .login(this.loginForm.value.email, this.loginForm.value.password),
+      );
       this.router.navigate(['/tabs']);
     } catch (error: unknown) {
       const message = this.getErrorMessage(error);

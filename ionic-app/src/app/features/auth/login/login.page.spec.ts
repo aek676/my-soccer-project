@@ -5,8 +5,8 @@ import {
   IonContent,
   IonButton,
   IonInput,
-  IonIcon,
   IonSpinner,
+  IonInputPasswordToggle,
   ToastController,
 } from '@ionic/angular/standalone';
 import { LoginPage } from './login.page';
@@ -33,8 +33,8 @@ describe('LoginPage', () => {
         IonContent,
         IonButton,
         IonInput,
-        IonIcon,
         IonSpinner,
+        IonInputPasswordToggle,
         LoginPage,
       ],
       providers: [
@@ -76,10 +76,6 @@ describe('LoginPage', () => {
     expect(passwordControl?.hasError('required')).toBeTrue();
     passwordControl?.setValue('somepassword');
     expect(passwordControl?.valid).toBeTrue();
-  });
-
-  it('should have showPassword set to false initially', () => {
-    expect(component.showPassword).toBeFalse();
   });
 
   it('should have submitting set to false initially', () => {

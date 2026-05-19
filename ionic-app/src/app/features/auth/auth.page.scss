@@ -106,42 +106,6 @@
   --border-color: var(--ion-color-danger);
 }
 
-.password-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper .auth-input {
-  --padding-end: 48px;
-  width: 100%;
-}
-
-.password-toggle {
-  position: absolute;
-  right: var(--spacing-sm);
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  transition: color 0.2s;
-
-  &:hover {
-    color: var(--text-ink);
-  }
-
-  ion-icon {
-    font-size: 20px;
-  }
-}
-
 .error-text {
   font-family: var(--ion-font-family);
   font-size: 12px;
