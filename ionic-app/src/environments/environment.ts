@@ -1,5 +1,10 @@
 export const environment = {
   production: false,
+  useEmulators: false,
+  emulatorHosts: {
+    auth: 'http://localhost:9099',
+    firestore: 'localhost:8080',
+  },
   firebase: {
     apiKey: "AIzaSyBb4WmWroMT5GHaamhKYU9xQk5BLa6dayk",
     authDomain: "my-soccer-project-494521.firebaseapp.com",
