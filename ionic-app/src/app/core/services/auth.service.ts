@@ -21,6 +21,10 @@ export class AuthService {
     );
   }
 
+  loginAsGuest() {
+    return from(this.authFns.signInAnonymously(this.auth));
+  }
+
   register(email: string, password: string, displayName: string) {
     return from(
       this.authFns

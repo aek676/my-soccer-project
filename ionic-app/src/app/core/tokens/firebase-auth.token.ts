@@ -5,6 +5,7 @@ import {
   signOut,
   updateProfile,
   user,
+  signInAnonymously,
 } from '@angular/fire/auth';
 
 export interface FirebaseAuthFunctions {
@@ -13,6 +14,7 @@ export interface FirebaseAuthFunctions {
   signOut: typeof signOut;
   updateProfile: typeof updateProfile;
   user: typeof user;
+  signInAnonymously: typeof signInAnonymously;
 }
 
 export const FIREBASE_AUTH_FUNCTIONS = new InjectionToken<FirebaseAuthFunctions>('Firebase Auth Functions', {
@@ -23,5 +25,6 @@ export const FIREBASE_AUTH_FUNCTIONS = new InjectionToken<FirebaseAuthFunctions>
     signOut,
     updateProfile,
     user,
+    signInAnonymously,
   }),
 });

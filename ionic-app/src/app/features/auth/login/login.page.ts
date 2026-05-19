@@ -62,8 +62,10 @@ export class LoginPage {
 
     try {
       await firstValueFrom(
-        this.authService
-          .login(this.loginForm.value.email, this.loginForm.value.password),
+        this.authService.login(
+          this.loginForm.value.email,
+          this.loginForm.value.password,
+        ),
       );
       this.router.navigate(['/tabs']);
     } catch (error: unknown) {
@@ -81,7 +83,22 @@ export class LoginPage {
   }
 
   async continueAsGuest() {
-    this.router.navigate(['/tabs']);
+    this.submitting = true;
+
+    try {
+      await firstValueFrom(this.authService.loginAsGuest());
+      this.router.navigate(['/tabs']);
+    } catch (error: unknown) {
+      const toast = await this.toastCtrl.create({
+        message: 'Failed to continue as guest. Please try again.',
+        duration: 3000,
+        position: 'bottom',
+        color: 'danger',
+      });
+      await toast.present();
+    } finally {
+      this.submitting = false;
+    }
   }
 
   private getErrorMessage(error: unknown): string {
