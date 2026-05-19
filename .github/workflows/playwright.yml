@@ -7,9 +7,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: testE2E
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -24,16 +21,25 @@ jobs:
 
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps
+        working-directory: testE2E
 
-      - name: Set BASE_URL
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash .github/scripts/fetch-preview-url.sh "$GITHUB_TOKEN" "$GITHUB_HEAD_REF"
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ionic-build-emulator
+          path: ionic-app/www
+
+      - name: Install Firebase CLI
+        run: bun install -g firebase-tools
+
+      - name: Setup Java 21 for Firebase Emulator
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: "21"
 
       - name: Run Playwright tests
-        run: PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright test --reporter=json
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
+        run: firebase emulators:exec "cd testE2E && bun run test"
 
       - uses: daun/playwright-report-summary@v3
         with:

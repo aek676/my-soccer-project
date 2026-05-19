@@ -1,2 +1,124 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+
+:root {
+  // Ionic color overrides
+  --ion-color-primary: #0052ff;
+  --ion-color-primary-rgb: 0, 82, 255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #003ecc;
+  --ion-color-primary-tint: #336fff;
+
+  --ion-color-secondary: #5e5e61;
+  --ion-color-secondary-rgb: 94, 94, 97;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-shade: #535355;
+  --ion-color-secondary-tint: #6e6e71;
+
+  --ion-color-tertiary: #952200;
+  --ion-color-tertiary-rgb: 149, 34, 0;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-shade: #831e00;
+  --ion-color-tertiary-tint: #a0381a;
+
+  --ion-color-success: #05b169;
+  --ion-color-success-rgb: 5, 177, 105;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-shade: #049c5c;
+  --ion-color-success-tint: #1eb978;
+
+  --ion-color-warning: #f4b000;
+  --ion-color-warning-rgb: 244, 176, 0;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-shade: #d79b00;
+  --ion-color-warning-tint: #f5b81a;
+
+  --ion-color-danger: #cf202f;
+  --ion-color-danger-rgb: 207, 32, 47;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #b61c29;
+  --ion-color-danger-tint: #d43644;
+
+  --ion-color-medium: #7c828a;
+  --ion-color-medium-rgb: 124, 130, 138;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-shade: #6d7279;
+  --ion-color-medium-tint: #898f96;
+
+  --ion-color-light: #eef0f3;
+  --ion-color-light-rgb: 238, 240, 243;
+  --ion-color-light-contrast: #0a0b0d;
+  --ion-color-light-shade: #d1d3d6;
+  --ion-color-light-tint: #f0f2f4;
+
+  // Surface & background
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: #0a0b0d;
+  --ion-text-color-rgb: 10, 11, 13;
+
+  // Custom surface tokens
+  --surface-canvas: #ffffff;
+  --surface-soft: #f7f7f7;
+  --surface-strong: #eef0f3;
+  --surface-dark: #0a0b0d;
+  --surface-dark-elevated: #16181c;
+  --surface-container: #ededfb;
+  --surface-container-high: #e7e7f5;
+  --surface-container-highest: #e1e1ef;
+
+  // Text tokens
+  --text-ink: #0a0b0d;
+  --text-body: #5b616e;
+  --text-muted: #7c828a;
+  --text-muted-soft: #a8acb3;
+  --text-on-primary: #ffffff;
+  --text-on-dark: #ffffff;
+  --text-on-dark-soft: #a8acb3;
+
+  // Semantic
+  --semantic-up: #05b169;
+  --semantic-down: #cf202f;
+  --accent-yellow: #f4b000;
+
+  // Hairlines
+  --hairline: #dee1e6;
+  --hairline-soft: #eef0f3;
+
+  // Typography
+  --ion-font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --heading-font-family: 'Inter', sans-serif;
+  --monospace-font-family: 'JetBrains Mono', 'Inter', monospace;
+
+  // Border radius
+  --ion-border-radius: 8px;
+  --ion-card-border-radius: 24px;
+  --ion-button-border-radius: 100px;
+  --ion-input-border-radius: 12px;
+
+  // Spacing
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-base: 16px;
+  --spacing-md: 20px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section: 96px;
+}
+
+// Ionic component overrides
+ion-button {
+  --border-radius: 100px;
+  --ion-font-family: 'Inter', sans-serif;
+}
+
+ion-card {
+  --border-radius: 24px;
+}
+
+ion-input, ion-textarea, ion-select, ion-searchbar {
+  --border-radius: 12px;
+}

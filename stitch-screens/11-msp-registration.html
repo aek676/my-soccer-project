@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MSP Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Minimalist Reset & Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        @font-face {
+            font-family: 'Coinbase Sans';
+            src: local('Inter'); /* Fallback for prototype */
+        }
+        @font-face {
+            font-family: 'Coinbase Display';
+            src: local('Inter'); /* Fallback for prototype */
+        }
+        
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dde1ff",
+                        "on-surface": "#191b25",
+                        "tertiary": "#952200",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "surface-variant": "#e1e1ef",
+                        "surface-container-high": "#e7e7f5",
+                        "on-secondary-fixed": "#1b1c1e",
+                        "on-background": "#191b25",
+                        "accent-yellow": "#f4b000",
+                        "surface-container-lowest": "#ffffff",
+                        "semantic-up": "#05b169",
+                        "inverse-primary": "#b7c4ff",
+                        "surface-bright": "#fbf8ff",
+                        "surface-soft": "#f7f7f7",
+                        "surface-tint": "#004ced",
+                        "surface-dim": "#d9d9e7",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "surface-strong": "#eef0f3",
+                        "on-primary-fixed": "#001452",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#dfe3ff",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e1e1ef",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#e3e2e5",
+                        "tertiary-container": "#bf3003",
+                        "ink": "#0a0b0d",
+                        "on-secondary-container": "#646467",
+                        "on-primary": "#ffffff",
+                        "hairline": "#dee1e6",
+                        "surface": "#fbf8ff",
+                        "on-surface-variant": "#434656",
+                        "background": "#fbf8ff",
+                        "on-tertiary-container": "#ffddd5",
+                        "secondary": "#5e5e61",
+                        "on-tertiary": "#ffffff",
+                        "body": "#5b616e",
+                        "secondary-container": "#e3e2e5",
+                        "surface-container-low": "#f3f2ff",
+                        "muted": "#7c828a",
+                        "canvas": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#3c0800",
+                        "primary-container": "#0052ff",
+                        "tertiary-fixed": "#ffdbd2",
+                        "error": "#ba1a1a",
+                        "primary": "#003ec7",
+                        "outline": "#737688",
+                        "surface-container": "#ededfb",
+                        "inverse-surface": "#2e303a",
+                        "outline-variant": "#c3c5d9",
+                        "on-secondary-fixed-variant": "#464749",
+                        "inverse-on-surface": "#f0effe",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "on-tertiary-fixed-variant": "#891e00",
+                        "secondary-fixed-dim": "#c7c6c9",
+                        "semantic-down": "#cf202f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "lg": "24px",
+                        "xxs": "4px",
+                        "base": "16px",
+                        "xxl": "48px",
+                        "md": "20px",
+                        "xs": "8px",
+                        "section": "96px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-strong": ["'Coinbase Sans'", "sans-serif"],
+                        "display-md": ["'Coinbase Display'", "sans-serif"],
+                        "body-md": ["'Coinbase Sans'", "sans-serif"],
+                        "display-mega": ["'Coinbase Display'", "-apple-system", "system-ui", "'Segoe UI'", "Roboto", "Helvetica", "Arial", "sans-serif"],
+                        "body-sm": ["'Coinbase Sans'", "sans-serif"],
+                        "caption-strong": ["'Coinbase Sans'", "sans-serif"],
+                        "display-lg": ["'Coinbase Display'", "sans-serif"],
+                        "title-sm": ["'Coinbase Sans'", "sans-serif"],
+                        "title-lg": ["'Coinbase Sans'", "sans-serif"],
+                        "display-xl": ["'Coinbase Display'", "sans-serif"],
+                        "display-sm": ["'Coinbase Sans'", "sans-serif"],
+                        "number-display": ["'Coinbase Mono'", "'Coinbase Sans'", "monospace"],
+                        "nav-link": ["'Coinbase Sans'", "sans-serif"],
+                        "caption": ["'Coinbase Sans'", "sans-serif"],
+                        "button": ["'Coinbase Sans'", "sans-serif"],
+                        "title-md": ["'Coinbase Sans'", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-strong": ["16px", { "lineHeight": "1.5", "fontWeight": "700" }],
+                        "display-md": ["44px", { "lineHeight": "1.09", "letterSpacing": "-1px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-mega": ["80px", { "lineHeight": "1.0", "letterSpacing": "-2px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "caption-strong": ["12px", { "lineHeight": "1.5", "fontWeight": "600" }],
+                        "display-lg": ["52px", { "lineHeight": "1.0", "letterSpacing": "-1.3px", "fontWeight": "400" }],
+                        "title-sm": ["16px", { "lineHeight": "1.25", "fontWeight": "600" }],
+                        "title-lg": ["32px", { "lineHeight": "1.13", "letterSpacing": "-0.4px", "fontWeight": "400" }],
+                        "display-xl": ["64px", { "lineHeight": "1.0", "letterSpacing": "-1.6px", "fontWeight": "400" }],
+                        "display-sm": ["36px", { "lineHeight": "1.11", "letterSpacing": "-0.5px", "fontWeight": "400" }],
+                        "number-display": ["18px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "nav-link": ["14px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "caption": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "button": ["16px", { "lineHeight": "1.15", "fontWeight": "600" }],
+                        "title-md": ["18px", { "lineHeight": "1.33", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-canvas text-on-surface flex flex-col min-h-screen">
+<!-- Linear Flow Header (Navigation Suppressed per Semantic Shell Mandate) -->
+<header class="w-full flex justify-center items-center py-lg px-base border-b border-hairline bg-canvas z-50">
+<h1 class="font-display-sm text-display-sm font-normal text-ink tracking-tight">MSP</h1>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-base py-section">
+<!-- Registration Card -->
+<div class="w-full max-w-[400px] bg-surface-soft border border-hairline rounded-[24px] p-lg">
+<!-- Heading -->
+<div class="mb-xl text-center">
+<h2 class="font-display-sm text-display-sm font-normal text-ink">Create Account</h2>
+</div>
+<!-- Registration Form -->
+<form action="#" class="flex flex-col gap-base" method="POST">
+<!-- Username Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-caption-strong text-caption-strong text-muted ml-xs" for="username">Username</label>
+<input class="w-full h-[48px] px-base rounded-xl border border-hairline bg-canvas text-body-md font-body-md text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-none" id="username" name="username" placeholder="Enter your username" type="text"/>
+</div>
+<!-- Email Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-caption-strong text-caption-strong text-muted ml-xs" for="email">Email Address</label>
+<input class="w-full h-[48px] px-base rounded-xl border border-hairline bg-canvas text-body-md font-body-md text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-none" id="email" name="email" placeholder="name@company.com" type="email"/>
+</div>
+<!-- Password Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-caption-strong text-caption-strong text-muted ml-xs" for="password">Password</label>
+<input class="w-full h-[48px] px-base rounded-xl border border-hairline bg-canvas text-body-md font-body-md text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-none" id="password" name="password" placeholder="Create a password" type="password"/>
+</div>
+<!-- Confirm Password Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-caption-strong text-caption-strong text-muted ml-xs" for="confirm_password">Confirm Password</label>
+<input class="w-full h-[48px] px-base rounded-xl border border-hairline bg-canvas text-body-md font-body-md text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-none" id="confirm_password" name="confirm_password" placeholder="Confirm your password" type="password"/>
+</div>
+<!-- CTA Button -->
+<button class="mt-md w-full h-[48px] bg-primary-container text-on-primary font-button text-button rounded-full flex items-center justify-center hover:opacity-90 active:scale-[0.98] transition-all duration-200" type="submit">
+                    Register
+                </button>
+</form>
+<!-- Footer / Sign-in Link -->
+<div class="mt-lg text-center">
+<p class="font-body-sm text-body-sm text-muted">
+                    Already have an account? 
+                    <a class="text-primary-container font-body-strong text-body-strong hover:underline ml-xs" href="#">Sign in</a>
+</p>
+</div>
+</div>
+</main>
+</body></html>

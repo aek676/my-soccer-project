@@ -1,0 +1,214 @@
+.auth-content {
+  --background: var(--surface-canvas);
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-lg) var(--spacing-base);
+  max-width: 400px;
+  margin: 0 auto;
+  gap: var(--spacing-xl);
+}
+
+.auth-header {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--spacing-lg);
+}
+
+.brand-title {
+  font-family: var(--heading-font-family);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.09;
+  letter-spacing: -1px;
+  color: var(--text-ink);
+  margin: 0;
+}
+
+.auth-card {
+  width: 100%;
+  background: var(--surface-soft);
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.auth-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-title {
+  font-family: var(--ion-font-family);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.13;
+  letter-spacing: -0.4px;
+  color: var(--text-ink);
+  margin: 0;
+}
+
+.card-subtitle {
+  font-family: var(--ion-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-base);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxs);
+}
+
+.auth-input {
+  --background: var(--surface-canvas);
+  --border-radius: 12px;
+  --border: 1px solid var(--hairline);
+  --border-color: var(--hairline);
+  --border-style: solid;
+  --border-width: 1px;
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-primary);
+  --highlight-color-invalid: var(--ion-color-danger);
+  --padding-start: var(--spacing-base);
+  --padding-end: var(--spacing-base);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 48px;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-ink);
+}
+
+.auth-input.ng-invalid.ng-touched {
+  --border-color: var(--ion-color-danger);
+}
+
+.error-text {
+  font-family: var(--ion-font-family);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ion-color-danger);
+  padding-left: var(--spacing-xxs);
+}
+
+.submit-btn {
+  --border-radius: 100px;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
+  --color: var(--text-on-primary);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 48px;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: var(--spacing-sm);
+
+  &::part(native) {
+    --padding-start: var(--spacing-base);
+    --padding-end: var(--spacing-base);
+  }
+}
+
+.auth-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.footer-text {
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.footer-link {
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--ion-color-primary);
+  text-decoration: none;
+  margin-left: 4px;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--hairline);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: var(--spacing-sm) 0;
+}
+
+.divider-text {
+  position: absolute;
+  background: var(--surface-canvas);
+  padding: 0 var(--spacing-base);
+  font-family: var(--ion-font-family);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.guest-btn {
+  --border-radius: 100px;
+  --border-color: var(--outline-variant);
+  --border-width: 1px;
+  --background: transparent;
+  --color: var(--text-ink);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 48px;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.15;
+
+  &:hover {
+    --background: var(--surface-container-low);
+  }
+
+  &:active {
+    --background: var(--surface-container);
+  }
+}
