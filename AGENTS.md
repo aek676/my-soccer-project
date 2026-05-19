@@ -46,6 +46,15 @@ cd news-service
 # Docker image built via Dockerfile, not buildpacks
 ```
 
+### JS/TS monorepo (workspaces)
+
+Root `package.json` has workspaces: `ionic-app`, `testE2E`, `bun-backend`.
+
+```bash
+bun ci                     # install ALL dependencies (root + all workspaces)
+bun install                # same as above, but updates lockfile if needed
+```
+
 ### bun-backend
 
 ```bash
@@ -96,8 +105,8 @@ Startup order is enforced by `depends_on`: config-server → eureka-server → g
 - **main.yml** uses `dorny/paths-filter` to run only affected service workflows on PR/push to `main`.
 - **Java services** use `tmpl-java-maven-build-push-deploy.yml`: `./mvnw verify` → buildpack image → push to GCP → deploy to Azure.
 - **news-service** has its own workflow: `./mvnw test` → Dockerfile build → push → deploy.
-- **bun-backend**: `bun ci` → typecheck → biome → build → `bun test` (with testcontainers) → Docker build → deploy.
-- **ionic-app**: `bun ci` → ESLint (reviewdog) → Karma headless tests → prod build → Firebase deploy (preview on PR, live on push).
+- **bun-backend**: `bun ci` at root → typecheck → biome → build → `bun test` (with testcontainers) → Docker build → deploy.
+- **ionic-app**: `bun ci` at root → ESLint (reviewdog) → Karma headless tests → prod build → Firebase deploy (preview on PR, live on push).
 - **Playwright E2E**: runs on PR only, after ionic-app job; fetches Firebase preview URL as `BASE_URL`.
 - **Terraform**: plan on PR (paths: `terraform/**`), apply on push to `main`.
 

@@ -1,6 +1,7 @@
 {
   "name": "my-soccer-project-monorepo",
   "private": true,
+  "workspaces": ["ionic-app", "testE2E", "bun-backend"],
   "scripts": {
     "build:frontend": "cd ionic-app && bun run build",
     "emulator": "firebase emulators:start --only auth,hosting,firestore",
