@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UserProfileService } from './user-profile.service';
 import { Firestore } from '@angular/fire/firestore';
 import { FIRESTORE_FUNCTIONS, FirestoreFunctions } from '../tokens/firestore.token';
@@ -35,39 +35,45 @@ describe('UserProfileService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('createProfile should call setDoc with correct data', async () => {
+  it('createProfile should call setDoc with correct data', (done) => {
     const mockUser = { uid: '123', email: 'test@test.com', displayName: 'Test' } as any;
-    await service.createProfile(mockUser, 'user');
-    expect(fnsSpy.doc).toHaveBeenCalledWith(jasmine.anything(), 'users', '123');
-    expect((fnsSpy.setDoc as jasmine.Spy).calls.argsFor(0)[1]).toEqual(
-      jasmine.objectContaining({
-        uid: '123',
-        email: 'test@test.com',
-        username: 'Test',
-        role: 'user',
-      }),
-    );
+    service.createProfile(mockUser, 'user').then(() => {
+      expect(fnsSpy.doc).toHaveBeenCalledWith(jasmine.anything(), 'users', '123');
+      expect((fnsSpy.setDoc as jasmine.Spy).calls.argsFor(0)[1]).toEqual(
+        jasmine.objectContaining({
+          uid: '123',
+          email: 'test@test.com',
+          username: 'Test',
+          role: 'user',
+        }),
+      );
+      done();
+    });
   });
 
-  it('getProfile should return undefined when no data', fakeAsync(async () => {
+  it('getProfile should return undefined when no data', (done) => {
     fnsSpy.docData.and.returnValue(of(null));
-    const result = await service.getProfile('123');
-    expect(result).toBeUndefined();
-  }));
+    service.getProfile('123').then((result) => {
+      expect(result).toBeUndefined();
+      done();
+    });
+  });
 
-  it('getProfile should return profile with Date conversion', fakeAsync(async () => {
+  it('getProfile should return profile with Date conversion', (done) => {
     const timestamp = { toDate: () => new Date('2024-01-01') };
     fnsSpy.docData.and.returnValue(
       of({ uid: '123', email: 'a@b.com', createdAt: timestamp }),
     );
-    const result = await service.getProfile('123');
-    expect(result).toEqual(
-      jasmine.objectContaining({
-        uid: '123',
-        createdAt: jasmine.any(Date),
-      }),
-    );
-  }));
+    service.getProfile('123').then((result) => {
+      expect(result).toEqual(
+        jasmine.objectContaining({
+          uid: '123',
+          createdAt: jasmine.any(Date),
+        }),
+      );
+      done();
+    });
+  });
 
   it('profile$ should emit undefined when no data', (done) => {
     fnsSpy.docData.and.returnValue(of(null));
