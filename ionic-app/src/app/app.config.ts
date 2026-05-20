@@ -12,7 +12,11 @@ import {
 import { initializeApp } from 'firebase/app';
 import { FirebaseApp, provideFirebaseApp } from '@angular/fire/app';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
-import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import {
+  connectFirestoreEmulator,
+  getFirestore,
+  provideFirestore,
+} from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 
@@ -36,7 +40,9 @@ export const appConfig: ApplicationConfig = {
       const app = inject(FirebaseApp);
       const firestore = getFirestore(app);
       if (environment.useEmulators) {
-        const [host, port] = environment.emulatorHosts.firestore.replace('http://', '').split(':');
+        const [host, port] = environment.emulatorHosts.firestore
+          .replace('http://', '')
+          .split(':');
         connectFirestoreEmulator(firestore, host, parseInt(port, 10));
       }
       return firestore;

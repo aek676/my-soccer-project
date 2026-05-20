@@ -5,11 +5,13 @@ import {
   FIREBASE_AUTH_FUNCTIONS,
   FirebaseAuthFunctions,
 } from '../tokens/firebase-auth.token';
+import { UserProfileService } from './user-profile.service';
 import { of } from 'rxjs';
 
 describe('AuthService', () => {
   let service: AuthService;
   let authFnsSpy: jasmine.SpyObj<FirebaseAuthFunctions>;
+  let userProfileServiceSpy: jasmine.SpyObj<UserProfileService>;
   const mockUser = {
     uid: '123',
     email: 'test@test.com',
@@ -32,6 +34,11 @@ describe('AuthService', () => {
       ],
     );
 
+    userProfileServiceSpy = jasmine.createSpyObj<UserProfileService>(
+      'UserProfileService',
+      ['createProfile'],
+    );
+
     authFnsSpy.user.and.returnValue(of(mockUser));
     authFnsSpy.signInWithEmailAndPassword.and.returnValue(
       Promise.resolve(mockCredential),
@@ -41,11 +48,13 @@ describe('AuthService', () => {
     );
     authFnsSpy.updateProfile.and.returnValue(Promise.resolve());
     authFnsSpy.signOut.and.returnValue(Promise.resolve());
+    userProfileServiceSpy.createProfile.and.returnValue(Promise.resolve());
 
     TestBed.configureTestingModule({
       providers: [
         { provide: Auth, useValue: mockAuth },
         { provide: FIREBASE_AUTH_FUNCTIONS, useValue: authFnsSpy },
+        { provide: UserProfileService, useValue: userProfileServiceSpy },
       ],
     });
 
@@ -76,7 +85,7 @@ describe('AuthService', () => {
     );
   });
 
-  it('register should call createUserWithEmailAndPassword and updateProfile', (done) => {
+  it('register should call createUserWithEmailAndPassword, updateProfile, and createProfile', (done) => {
     service.register('test@test.com', 'password', 'Test User').subscribe(() => {
       expect(authFnsSpy.createUserWithEmailAndPassword).toHaveBeenCalledWith(
         mockAuth,
@@ -86,6 +95,10 @@ describe('AuthService', () => {
       expect(authFnsSpy.updateProfile).toHaveBeenCalledWith(
         mockCredential.user,
         { displayName: 'Test User' },
+      );
+      expect(userProfileServiceSpy.createProfile).toHaveBeenCalledWith(
+        mockCredential.user,
+        'user',
       );
       done();
     });

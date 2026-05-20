@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth, User } from '@angular/fire/auth';
 import { from } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { FIREBASE_AUTH_FUNCTIONS } from '../tokens/firebase-auth.token';
+import { UserProfileService } from './user-profile.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +11,7 @@ import { FIREBASE_AUTH_FUNCTIONS } from '../tokens/firebase-auth.token';
 export class AuthService {
   private auth = inject(Auth);
   private authFns = inject(FIREBASE_AUTH_FUNCTIONS);
+  private userProfileService = inject(UserProfileService);
   currentUser$ = this.authFns.user(this.auth);
 
   get currentUser(): User | null {
@@ -25,15 +28,29 @@ export class AuthService {
     return from(this.authFns.signInAnonymously(this.auth));
   }
 
-  register(email: string, password: string, displayName: string) {
+  register(email: string, password: string, username: string) {
     return from(
       this.authFns
         .createUserWithEmailAndPassword(this.auth, email, password)
         .then((credential) =>
           this.authFns
-            .updateProfile(credential.user, { displayName })
+            .updateProfile(credential.user, { displayName: username })
             .then(() => credential),
         ),
+    ).pipe(
+      switchMap((credential) =>
+        from(
+          this.userProfileService.createProfile(credential.user, 'user'),
+        ).pipe(
+          tap(() => {
+            if (credential.user) {
+              credential.user = Object.assign(credential.user, {
+                displayName: username,
+              });
+            }
+          }),
+        ),
+      ),
     );
   }
 
