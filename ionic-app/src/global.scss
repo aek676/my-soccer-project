@@ -64,6 +64,20 @@ body {
   background-color: var(--surface-canvas);
 }
 
+/* Page base styles */
+ion-content {
+  --background: var(--surface-canvas);
+}
+
+ion-toolbar {
+  --background: var(--surface-canvas);
+  --border-color: var(--hairline);
+}
+
+ion-title {
+  color: var(--text-ink);
+}
+
 /* Dark mode surfaces */
 @media (prefers-color-scheme: dark) {
   :root {
