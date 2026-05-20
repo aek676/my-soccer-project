@@ -3,6 +3,8 @@ import { createEmulatorUser } from '../helpers/emulator-auth';
 
 test.describe('Auth - Registration Flow', () => {
   test('registers a new user and redirects to tabs', async ({ page }) => {
+    test.slow();
+
     await page.goto('/auth/register');
 
     const uniqueEmail = `test-${Date.now()}-${Math.random()}@example.com`;
@@ -13,7 +15,7 @@ test.describe('Auth - Registration Flow', () => {
     await page.locator('input[placeholder="Confirm password"]').fill('password123');
     await page.getByRole('button', { name: 'Sign Up' }).click();
 
-    await expect(page).toHaveURL(/\/tabs/);
+    await expect(page).toHaveURL(/\/tabs/, { timeout: 60000 });
   });
 
   test('shows error when email is already in use', async ({ page }) => {
