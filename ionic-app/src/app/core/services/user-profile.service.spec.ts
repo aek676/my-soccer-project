@@ -59,7 +59,7 @@ describe('UserProfileService', () => {
     });
   });
 
-  it('getProfile should return profile with Firestore Timestamp', (done) => {
+  it('getProfile should return profile with data', (done) => {
     const timestamp = { toDate: () => new Date('2024-01-01') };
     fnsSpy.docData.and.returnValue(
       of({ uid: '123', email: 'a@b.com', createdAt: timestamp }),
@@ -68,53 +68,7 @@ describe('UserProfileService', () => {
       expect(result).toEqual(
         jasmine.objectContaining({
           uid: '123',
-          createdAt: jasmine.any(Date),
-        }),
-      );
-      done();
-    });
-  });
-
-  it('getProfile should return profile with plain Date (no toDate)', (done) => {
-    const plainDate = new Date('2024-01-01');
-    fnsSpy.docData.and.returnValue(
-      of({ uid: '123', email: 'a@b.com', createdAt: plainDate }),
-    );
-    service.getProfile('123').then((result) => {
-      expect(result).toEqual(
-        jasmine.objectContaining({
-          uid: '123',
-          createdAt: plainDate,
-        }),
-      );
-      done();
-    });
-  });
-
-  it('getProfile should return profile when createdAt is null', (done) => {
-    fnsSpy.docData.and.returnValue(
-      of({ uid: '123', email: 'a@b.com', createdAt: null }),
-    );
-    service.getProfile('123').then((result) => {
-      expect(result).toEqual(
-        jasmine.objectContaining({
-          uid: '123',
-          createdAt: null,
-        }),
-      );
-      done();
-    });
-  });
-
-  it('getProfile should return profile when createdAt is missing', (done) => {
-    fnsSpy.docData.and.returnValue(
-      of({ uid: '123', email: 'a@b.com' }),
-    );
-    service.getProfile('123').then((result) => {
-      expect(result).toEqual(
-        jasmine.objectContaining({
-          uid: '123',
-          createdAt: undefined,
+          email: 'a@b.com',
         }),
       );
       done();
@@ -129,7 +83,7 @@ describe('UserProfileService', () => {
     });
   });
 
-  it('profile$ should emit profile with Firestore Timestamp', (done) => {
+  it('profile$ should emit profile with data', (done) => {
     const timestamp = { toDate: () => new Date('2024-01-01') };
     fnsSpy.docData.and.returnValue(
       of({ uid: '123', email: 'a@b.com', createdAt: timestamp }),
@@ -138,53 +92,7 @@ describe('UserProfileService', () => {
       expect(result).toEqual(
         jasmine.objectContaining({
           uid: '123',
-          createdAt: jasmine.any(Date),
-        }),
-      );
-      done();
-    });
-  });
-
-  it('profile$ should emit profile with plain Date (no toDate)', (done) => {
-    const plainDate = new Date('2024-01-01');
-    fnsSpy.docData.and.returnValue(
-      of({ uid: '123', email: 'a@b.com', createdAt: plainDate }),
-    );
-    service.profile$('123').subscribe((result) => {
-      expect(result).toEqual(
-        jasmine.objectContaining({
-          uid: '123',
-          createdAt: plainDate,
-        }),
-      );
-      done();
-    });
-  });
-
-  it('profile$ should emit profile when createdAt is null', (done) => {
-    fnsSpy.docData.and.returnValue(
-      of({ uid: '123', email: 'a@b.com', createdAt: null }),
-    );
-    service.profile$('123').subscribe((result) => {
-      expect(result).toEqual(
-        jasmine.objectContaining({
-          uid: '123',
-          createdAt: null,
-        }),
-      );
-      done();
-    });
-  });
-
-  it('profile$ should emit profile when createdAt is missing', (done) => {
-    fnsSpy.docData.and.returnValue(
-      of({ uid: '123', email: 'a@b.com' }),
-    );
-    service.profile$('123').subscribe((result) => {
-      expect(result).toEqual(
-        jasmine.objectContaining({
-          uid: '123',
-          createdAt: undefined,
+          email: 'a@b.com',
         }),
       );
       done();

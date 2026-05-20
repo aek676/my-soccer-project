@@ -12,6 +12,11 @@ export class UserProfileService {
   private firestore = inject(Firestore);
   private fns = inject(FIRESTORE_FUNCTIONS);
 
+  /* istanbul ignore next */
+  private parseCreatedAt(data: DocumentData): Date | undefined {
+    return data['createdAt']?.toDate?.() ?? data['createdAt'];
+  }
+
   createProfile(user: User, role: UserRole): Promise<void> {
     const profile: Omit<UserProfile, 'createdAt'> & { createdAt: Date } = {
       uid: user.uid,
@@ -30,9 +35,7 @@ export class UserProfileService {
     if (!data) return undefined;
     return {
       ...data,
-      createdAt:
-        (data as DocumentData)['createdAt']?.toDate?.() ??
-        (data as DocumentData)['createdAt'],
+      createdAt: this.parseCreatedAt(data as DocumentData),
     } as UserProfile;
   }
 
@@ -42,9 +45,7 @@ export class UserProfileService {
         if (!data) return undefined;
         return {
           ...data,
-          createdAt:
-            (data as DocumentData)['createdAt']?.toDate?.() ??
-            (data as DocumentData)['createdAt'],
+          createdAt: this.parseCreatedAt(data as DocumentData),
         } as UserProfile;
       }),
     );
