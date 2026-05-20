@@ -9,12 +9,12 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   const { user } = inject(FIREBASE_AUTH_FUNCTIONS);
 
+  if (auth.currentUser) return true;
+
   return user(auth).pipe(
     take(1),
-    map((user) => {
-      if (user) {
-        return true;
-      }
+    map((u) => {
+      if (u) return true;
       router.navigate(['/auth/login']);
       return false;
     }),
