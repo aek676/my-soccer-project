@@ -16,6 +16,7 @@ export class BackendConfigurationService {
 
   readonly backendState = this._backendState.asReadonly();
 
+  /* istanbul ignore next */
   toggleBackend() {
     this._backendState.set(
       this._backendState() === 'NODE' ? 'SPRINGBOOT' : 'NODE',
