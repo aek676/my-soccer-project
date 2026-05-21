@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
-import { UserRole } from '@shared/models/user.model';
+import { UserRole } from '@core/services/models/user.model';
 
 @Injectable({
   providedIn: 'root',

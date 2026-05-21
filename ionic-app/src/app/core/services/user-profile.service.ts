@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, DocumentData } from '@angular/fire/firestore';
 import { firstValueFrom, Observable, map } from 'rxjs';
-import { UserProfile, UserRole } from '../../shared/models/user.model';
+import { UserProfile, UserRole } from '@core/services/models/user.model';
 import { User } from '@angular/fire/auth';
 import { FIRESTORE_FUNCTIONS } from '../tokens/firestore.token';
 
