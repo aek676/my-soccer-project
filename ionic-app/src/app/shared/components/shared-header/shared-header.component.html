@@ -1,0 +1,13 @@
+<ion-toolbar>
+  <ion-title>
+    <div class="brand">
+      <ion-icon name="football" size="large" color="primary" />
+      <span class="brand-text">MSP</span>
+    </div>
+  </ion-title>
+  @if (isGuest$ | async) {
+    <ion-button slot="end" fill="outline" color="medium" (click)="goToLogin()">
+      Sign In
+    </ion-button>
+  }
+</ion-toolbar>

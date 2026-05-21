@@ -5,9 +5,11 @@ import {
   IonTabButton,
   IonIcon,
   IonLabel,
+  IonHeader,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { people, newspaper, person, clipboard } from 'ionicons/icons';
+import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { AsyncPipe } from '@angular/common';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { map, Observable } from 'rxjs';
@@ -23,7 +25,7 @@ interface TabConfig {
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, AsyncPipe],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonHeader, AsyncPipe, SharedHeaderComponent],
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);

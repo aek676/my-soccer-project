@@ -1,0 +1,12 @@
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-text {
+  font-family: var(--heading-font-family);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}

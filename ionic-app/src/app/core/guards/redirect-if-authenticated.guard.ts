@@ -12,7 +12,7 @@ export const redirectIfAuthenticated: CanActivateFn = () => {
   return user(auth).pipe(
     take(1),
     map((user) => {
-      if (user) {
+      if (user && !user.isAnonymous) {
         router.navigate(['/tabs']);
         return false;
       }
