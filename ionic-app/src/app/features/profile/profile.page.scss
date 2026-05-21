@@ -1,0 +1,25 @@
+ion-item {
+  --color: black;
+  --background: transparent;
+}
+
+.backend-class {
+  --border-radius: 16px;
+}
+
+.title-settings {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+ion-segment {
+  --background: var(--surface-strong, transparent);
+  border-radius: 20px;
+}
+
+ion-segment-button {
+  --color: var(--text-ink);
+  --color-checked: white;
+  --indicator-color: var(--ion-color-primary);
+  --border-radius: 20px;
+}
