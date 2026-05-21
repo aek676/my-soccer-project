@@ -21,8 +21,8 @@ describe('BackendConfigurationService', () => {
 
   it('should load from localStorage when valid value exists', () => {
     localStorage.setItem('selected_backend', 'SPRINGBOOT');
-    service = TestBed.inject(BackendConfigurationService);
-    expect(service.backendState()).toBe('SPRINGBOOT');
+    const freshService = new BackendConfigurationService();
+    expect(freshService.backendState()).toBe('SPRINGBOOT');
   });
 
   it('should fallback to NODE when localStorage has invalid value', () => {
