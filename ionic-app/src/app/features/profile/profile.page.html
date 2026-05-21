@@ -22,11 +22,17 @@
 
     <ion-label>Backend Service</ion-label>
 
-    <ion-segment value="NODE" mode="ios" slot="end" style="width: 220px">
+    <ion-segment
+      [value]="backendConfig.backendState()"
+      (ionChange)="backendConfig.toggleBackend()"
+      mode="ios"
+      slot="end"
+      style="width: 220px"
+    >
       <ion-segment-button value="NODE">
         <ion-label>Node.js</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="SPRING">
+      <ion-segment-button value="SPRINGBOOT">
         <ion-label>SpringBoot</ion-label>
       </ion-segment-button>
     </ion-segment>

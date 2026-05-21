@@ -15,6 +15,7 @@ import {
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
+import { BackendConfigurationService } from '@core/services/backend-configuration.service';
 import { addIcons } from 'ionicons';
 import { server } from 'ionicons/icons';
 
@@ -40,6 +41,7 @@ import { server } from 'ionicons/icons';
 })
 export class ProfilePage {
   protected authService = inject(AuthService);
+  protected backendConfig = inject(BackendConfigurationService);
 
   constructor() {
     addIcons({ server });
