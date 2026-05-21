@@ -7,8 +7,12 @@ export type BackendType = 'NODE' | 'SPRINGBOOT';
 })
 export class BackendConfigurationService {
   private readonly _backendState = signal<BackendType>(
-    (localStorage.getItem('selected_backend') as BackendType) || 'NODE',
+    this.loadInitialBackend(),
   );
+
+  private loadInitialBackend(): BackendType {
+    return (localStorage.getItem('selected_backend') as BackendType) || 'NODE';
+  }
 
   readonly backendState = this._backendState.asReadonly();
 
