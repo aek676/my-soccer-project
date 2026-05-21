@@ -1,7 +1,13 @@
 import { Component, EnvironmentInjector, inject } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import {
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { people, newspaper, grid, person } from 'ionicons/icons';
+import { people, newspaper, person, clipboard } from 'ionicons/icons';
 import { AsyncPipe } from '@angular/common';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { map, Observable } from 'rxjs';
@@ -39,13 +45,13 @@ export class TabsPage {
       return [
         ...shared,
         { tab: 'news', icon: 'newspaper', label: 'News' },
-        { tab: 'ideal-team', icon: 'grid', label: 'Ideal Team' },
+        { tab: 'ideal-team', icon: 'clipboard', label: 'Ideal Team' },
         { tab: 'profile', icon: 'person', label: 'Profile' },
       ];
     }),
   );
 
   constructor() {
-    addIcons({ people, newspaper, grid, person });
+    addIcons({ people, newspaper, clipboard, person });
   }
 }
