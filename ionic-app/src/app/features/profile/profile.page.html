@@ -1,12 +1,34 @@
 <ion-header [translucent]="true">
   <app-shared-header></app-shared-header>
 </ion-header>
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-card>
+
+<ion-content [fullscreen]="true" class="ion-padding" mode="ios">
+  @if (authService.currentUser$ | async; as user) { @if (!user.isAnonymous) {
+  <ion-card color="light" class="ion-text-center">
     <ion-card-header>
-      <ion-card-title>Anass</ion-card-title>
+      <ion-card-title>{{ user.displayName }}</ion-card-title>
     </ion-card-header>
 
-    <ion-card-content> paco@yopmail.com </ion-card-content>
+    <ion-card-content>{{ user.email }}</ion-card-content>
   </ion-card>
+  } }
+
+  <ion-item lines="none">
+    <ion-label class="title-settings">Settings</ion-label>
+  </ion-item>
+
+  <ion-item lines="none" color="light" class="backend-class">
+    <ion-icon name="server" slot="start" color="medium"></ion-icon>
+
+    <ion-label>Backend Service</ion-label>
+
+    <ion-segment value="NODE" mode="ios" slot="end" style="width: 220px">
+      <ion-segment-button value="NODE">
+        <ion-label>Node.js</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="SPRING">
+        <ion-label>SpringBoot</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-item>
 </ion-content>
