@@ -14,11 +14,14 @@ import {
   IonButton,
   IonInput,
   IonSpinner,
+  IonIcon,
   IonInputPasswordToggle,
   ToastController,
 } from '@ionic/angular/standalone';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { football } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-register',
@@ -34,6 +37,7 @@ import { AuthService } from '../../../core/services/auth.service';
     IonButton,
     IonInput,
     IonSpinner,
+    IonIcon,
     IonInputPasswordToggle,
   ],
 })
@@ -47,6 +51,7 @@ export class RegisterPage {
   submitting = false;
 
   constructor() {
+    addIcons({ football });
     this.registerForm = this.fb.group(
       {
         username: ['', [Validators.required, Validators.minLength(2)]],

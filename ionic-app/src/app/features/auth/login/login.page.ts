@@ -13,11 +13,14 @@ import {
   IonButton,
   IonInput,
   IonSpinner,
+  IonIcon,
   ToastController,
   IonInputPasswordToggle,
 } from '@ionic/angular/standalone';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { football } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +36,7 @@ import { AuthService } from '../../../core/services/auth.service';
     IonButton,
     IonInput,
     IonSpinner,
+    IonIcon,
     IonInputPasswordToggle,
   ],
 })
@@ -46,6 +50,7 @@ export class LoginPage {
   submitting = false;
 
   constructor() {
+    addIcons({ football });
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],

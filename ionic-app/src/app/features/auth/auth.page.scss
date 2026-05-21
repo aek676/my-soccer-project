@@ -22,6 +22,17 @@
   padding-top: var(--spacing-lg);
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand ion-icon {
+  font-size: 44px;
+  color: var(--ion-color-primary);
+}
+
 .brand-title {
   font-family: var(--heading-font-family);
   font-size: 44px;
