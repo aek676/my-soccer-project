@@ -11,7 +11,7 @@ import { people, newspaper, person, clipboard } from 'ionicons/icons';
 import { AsyncPipe } from '@angular/common';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { map, Observable } from 'rxjs';
-import { UserRole } from '@shared/models/user.model';
+import { UserRole } from '@core/services/models/user.model';
 
 interface TabConfig {
   tab: string;
