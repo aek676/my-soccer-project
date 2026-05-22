@@ -1,6 +1,32 @@
 <ion-header [translucent]="true">
   <app-shared-header></app-shared-header>
 </ion-header>
+
 <ion-content [fullscreen]="true">
-  <app-explore-container name="Players page"></app-explore-container>
+  <div class="ion-padding">
+    <h1 class="page-title">Player Database</h1>
+
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      placeholder="Search players..."
+      show-clear-button="focus"
+    ></ion-searchbar>
+
+    <app-filter-chips
+      [filters]="filters"
+      [(selected)]="selectedFilter"
+    ></app-filter-chips>
+  </div>
+
+  <ion-list class="ion-padding" lines="none">
+    @for (player of filteredPlayers(); track player.id) {
+    <app-player-item [player]="player"></app-player-item>
+    }
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="ion-margin">
+    <ion-fab-button (click)="openAddActionSheet()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
