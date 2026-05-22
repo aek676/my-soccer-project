@@ -1,0 +1,18 @@
+<ion-item class="player-item" button detail="false">
+  <ion-avatar slot="start">
+    @if (player.photoUrl) {
+      <img [src]="player.photoUrl" [alt]="player.name" />
+    } @else {
+      <div class="avatar-fallback">
+        <ion-icon name="person"></ion-icon>
+      </div>
+    }
+  </ion-avatar>
+
+  <ion-label class="player-info">
+    <h2 class="player-name">{{ player.name }}</h2>
+    <p class="player-position">{{ player.position }}</p>
+  </ion-label>
+
+  <ion-icon slot="end" name="chevron-forward" color="medium"></ion-icon>
+</ion-item>
