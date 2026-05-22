@@ -1,0 +1,38 @@
+.filter-chips-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+ion-chip {
+  --background: var(--surface-container-high);
+  --color: var(--text-ink);
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  transition: background 0.15s ease;
+
+  &.selected {
+    --background: var(--ion-color-primary);
+    --color: var(--text-on-primary);
+  }
+
+  ion-icon {
+    font-size: 16px;
+    margin-left: 4px;
+    color: var(--text-ink);
+  }
+
+  &.selected ion-icon {
+    color: var(--text-on-primary);
+  }
+}

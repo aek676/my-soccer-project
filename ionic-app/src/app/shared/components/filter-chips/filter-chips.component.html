@@ -1,0 +1,15 @@
+<div class="filter-chips-container">
+  @for (filter of filters; track filter) {
+    <ion-chip
+      [class.selected]="selected?.filter === filter"
+      (click)="cycleFilter(filter)"
+      [attr.aria-pressed]="selected?.filter === filter"
+      button
+    >
+      <ion-label>{{ filter }}</ion-label>
+      @if (selected?.filter === filter) {
+        <ion-icon [name]="selected?.direction === 'desc' ? 'chevron-up' : 'chevron-down'"></ion-icon>
+      }
+    </ion-chip>
+  }
+</div>
