@@ -11,6 +11,7 @@ import {
   IonLabel,
   IonIcon,
   IonItem,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { AsyncPipe } from '@angular/common';
@@ -36,6 +37,7 @@ import { server } from 'ionicons/icons';
     IonLabel,
     IonIcon,
     IonItem,
+    IonButton,
     AsyncPipe,
   ],
 })

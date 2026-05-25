@@ -11,6 +11,10 @@
 
     <ion-card-content>{{ user.email }}</ion-card-content>
   </ion-card>
+
+  <ion-button expand="block" color="danger" (click)="authService.logout()">
+    Log Out
+  </ion-button>
   } }
 
   <ion-item lines="none">
