@@ -17,9 +17,9 @@ import { NavController } from '@ionic/angular';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
-import { BackendConfigurationService } from '@core/services/backend-configuration.service';
 import { addIcons } from 'ionicons';
 import { server, logOutOutline } from 'ionicons/icons';
+import { BackendManagerService } from '@core/services/backend-manager.service';
 
 @Component({
   selector: 'app-profile',
@@ -44,7 +44,7 @@ import { server, logOutOutline } from 'ionicons/icons';
 })
 export class ProfilePage {
   protected authService = inject(AuthService);
-  protected backendConfig = inject(BackendConfigurationService);
+  protected backendManager = inject(BackendManagerService);
   private navController = inject(NavController);
 
   constructor() {
