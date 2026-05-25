@@ -178,7 +178,13 @@ flowchart TB
     end
 
     subgraph FIREBASE["FIREBASE"]
-        FA["Firebase Auth + Firestore"]
+        FA["Firebase Auth"]
+        FS["Firestore"]
+        subgraph FUNCTIONS["CLOUD FUNCTIONS"]
+            FN["rolsSync"]
+        end
+        FS -->|"onDocumentWritten"| FN
+        FN -->|"setCustomUserClaims"| FA
     end
 
     FE -->|"Header:<br/>X-Backend=Springboot/Nodejs"| GW
@@ -210,7 +216,7 @@ La aplicación sigue una **arquitectura de microservicios** con los siguientes c
 | **Descubrimiento** | Eureka Server (registro de servicios)                        |
 | **Microservicios** | players, comments, ideal-team, news                          |
 | **Datos**          | PostgreSQL o MongoDB + Firestore                             |
-| **Firebase**       | Firebase Auth + Firestore (autenticación y datos de usuario) |
+| **Firebase**       | Firebase Auth + Firestore + Cloud Functions (autenticación, datos de usuario, sincronización de roles) |
 | **CORBA**          | Servidor para noticias (productor/consumidor)                |
 | **Externos**       | API Football + Groq/Google AI (LLM)                          |
 
