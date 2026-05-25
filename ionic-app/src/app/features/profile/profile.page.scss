@@ -23,3 +23,7 @@ ion-segment-button {
   --indicator-color: var(--ion-color-primary);
   --border-radius: 20px;
 }
+
+.logout-button {
+  --color: var(--ion-color-danger);
+}

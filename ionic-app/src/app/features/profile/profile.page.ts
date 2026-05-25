@@ -18,7 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { BackendConfigurationService } from '@core/services/backend-configuration.service';
 import { addIcons } from 'ionicons';
-import { server } from 'ionicons/icons';
+import { server, logOutOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-profile',
@@ -46,6 +46,6 @@ export class ProfilePage {
   protected backendConfig = inject(BackendConfigurationService);
 
   constructor() {
-    addIcons({ server });
+    addIcons({ server, logOutOutline });
   }
 }
