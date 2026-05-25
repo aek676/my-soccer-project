@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, DocumentData } from '@angular/fire/firestore';
 import { firstValueFrom, Observable, map } from 'rxjs';
-import { UserProfile, UserRole } from '@core/services/models/user.model';
-import { User } from '@angular/fire/auth';
+import { User, UserProfile } from '@angular/fire/auth';
 import { FIRESTORE_FUNCTIONS } from '../tokens/firestore.token';
+import { UserRole } from '@core/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,12 +25,17 @@ export class UserProfileService {
       role,
       createdAt: new Date(),
     };
-    return this.fns.setDoc(this.fns.doc(this.firestore, 'users', user.uid), profile);
+    return this.fns.setDoc(
+      this.fns.doc(this.firestore, 'users', user.uid),
+      profile,
+    );
   }
 
   async getProfile(uid: string): Promise<UserProfile | undefined> {
     const data = await firstValueFrom(
-      this.fns.docData(this.fns.doc(this.firestore, 'users', uid), { idField: 'uid' }),
+      this.fns.docData(this.fns.doc(this.firestore, 'users', uid), {
+        idField: 'uid',
+      }),
     );
     if (!data) return undefined;
     return {
@@ -40,14 +45,16 @@ export class UserProfileService {
   }
 
   profile$(uid: string): Observable<UserProfile | undefined> {
-    return this.fns.docData(this.fns.doc(this.firestore, 'users', uid), { idField: 'uid' }).pipe(
-      map((data) => {
-        if (!data) return undefined;
-        return {
-          ...data,
-          createdAt: this.parseCreatedAt(data as DocumentData),
-        } as UserProfile;
-      }),
-    );
+    return this.fns
+      .docData(this.fns.doc(this.firestore, 'users', uid), { idField: 'uid' })
+      .pipe(
+        map((data) => {
+          if (!data) return undefined;
+          return {
+            ...data,
+            createdAt: this.parseCreatedAt(data as DocumentData),
+          } as UserProfile;
+        }),
+      );
   }
 }
