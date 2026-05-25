@@ -31,6 +31,7 @@ describe('AuthService', () => {
         'signOut',
         'updateProfile',
         'user',
+        'signInAnonymously',
       ],
     );
 
@@ -48,6 +49,7 @@ describe('AuthService', () => {
     );
     authFnsSpy.updateProfile.and.returnValue(Promise.resolve());
     authFnsSpy.signOut.and.returnValue(Promise.resolve());
+    authFnsSpy.signInAnonymously.and.returnValue(Promise.resolve(mockCredential));
     userProfileServiceSpy.createProfile.and.returnValue(Promise.resolve());
 
     TestBed.configureTestingModule({
@@ -99,6 +101,17 @@ describe('AuthService', () => {
       expect(userProfileServiceSpy.createProfile).toHaveBeenCalledWith(
         mockCredential.user,
         'user',
+      );
+      done();
+    });
+  });
+
+  it('loginAsGuest should call signInAnonymously and createProfile with guest role', (done) => {
+    service.loginAsGuest().subscribe(() => {
+      expect(authFnsSpy.signInAnonymously).toHaveBeenCalledWith(mockAuth);
+      expect(userProfileServiceSpy.createProfile).toHaveBeenCalledWith(
+        mockCredential.user,
+        'guest',
       );
       done();
     });
