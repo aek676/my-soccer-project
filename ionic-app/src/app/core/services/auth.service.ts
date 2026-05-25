@@ -25,7 +25,11 @@ export class AuthService {
   }
 
   loginAsGuest() {
-    return from(this.authFns.signInAnonymously(this.auth));
+    return from(this.authFns.signInAnonymously(this.auth)).pipe(
+      switchMap((credential) =>
+        from(this.userProfileService.createProfile(credential.user, 'guest')),
+      ),
+    );
   }
 
   register(email: string, password: string, username: string) {
