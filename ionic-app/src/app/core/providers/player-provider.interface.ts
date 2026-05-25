@@ -1,6 +1,7 @@
+import { Observable } from 'rxjs';
 import { PlayerModel } from '@core/models/player.model';
 
 export interface PlayerProviderInterface {
-  getPlayerById(playerId: string): PlayerModel;
-  getPlayers(): PlayerModel[];
+  getPlayerById(playerId: string): Observable<PlayerModel>;
+  getPlayers(): Observable<PlayerModel[]>;
 }

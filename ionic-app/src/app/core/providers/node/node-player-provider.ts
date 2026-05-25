@@ -1,21 +1,19 @@
+import { Observable } from 'rxjs';
 import { PlayerModel } from '@core/models/player.model';
 import { BaseProvider } from '../base-provider';
 import { PlayerProviderInterface } from '../player-provider.interface';
-import nodePlayers from '@core/mocks/nodePlayers.json';
 
 export class NodePlayerProvider
   extends BaseProvider
   implements PlayerProviderInterface
 {
-  getPlayerById(playerId: string): PlayerModel {
-    console.log(`Fetching ${this.gatewayUrl}/players-node/${playerId}`);
-    const player = nodePlayers.find((p: PlayerModel) => p.id === playerId);
-    if (!player) throw new Error(`Player with id ${playerId} not found`);
-    return player;
+  getPlayerById(playerId: string): Observable<PlayerModel> {
+    return this.http.get<PlayerModel>(
+      `${this.gatewayUrl}/players-node/${playerId}`,
+    );
   }
 
-  getPlayers(): PlayerModel[] {
-    console.log(`Fetching ${this.gatewayUrl}/players-node`);
-    return nodePlayers;
+  getPlayers(): Observable<PlayerModel[]> {
+    return this.http.get<PlayerModel[]>(`${this.gatewayUrl}/players-node`);
   }
 }
