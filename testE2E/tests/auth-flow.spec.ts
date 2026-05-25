@@ -1,5 +1,14 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { createEmulatorUser } from '../helpers/emulator-auth';
+
+async function scrollToBottom(page: Page) {
+  await page.evaluate(() => {
+    const content = document.querySelector('ion-content');
+    if (content) {
+      content.scrollTo(0, content.scrollHeight);
+    }
+  });
+}
 
 test.describe('Auth - Registration Flow', () => {
   test('registers a new user and redirects to tabs', async ({ page }) => {
@@ -13,6 +22,7 @@ test.describe('Auth - Registration Flow', () => {
     await page.locator('input[placeholder="Email address"]').fill(uniqueEmail);
     await page.locator('input[placeholder="Password"]').fill('password123');
     await page.locator('input[placeholder="Confirm password"]').fill('password123');
+    await scrollToBottom(page);
     await page.getByRole('button', { name: 'Sign Up' }).click();
 
     await expect(page).toHaveURL(/\/tabs/, { timeout: 60000 });
@@ -85,6 +95,7 @@ test.describe('Auth - Guest Flow', () => {
   test('continues as guest without authentication', async ({ page }) => {
     await page.goto('/auth/login');
 
+    await scrollToBottom(page);
     await page.getByRole('button', { name: 'Continue as Guest' }).click();
 
     await expect(page).toHaveURL(/\/tabs/);
