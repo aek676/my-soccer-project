@@ -1,10 +1,12 @@
 import { ApplicationConfig, inject } from '@angular/core';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   RouteReuseStrategy,
   provideRouter,
   withPreloading,
   PreloadAllModules,
 } from '@angular/router';
+import { authInterceptor } from '@core/interceptors/auth-interceptor';
 import {
   IonicRouteStrategy,
   provideIonicAngular,
@@ -24,6 +26,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => {
