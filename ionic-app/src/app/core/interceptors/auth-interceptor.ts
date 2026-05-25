@@ -7,7 +7,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(Auth);
 
   const getToken = async (): Promise<string | null> => {
-    return auth.currentUser?.getIdToken() ?? null;
+    return auth.currentUser?.getIdToken(true) ?? null;
   };
 
   return from(getToken()).pipe(
