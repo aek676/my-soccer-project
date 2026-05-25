@@ -1,11 +1,7 @@
 {
   "hosting": {
     "public": "ionic-app/www",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -43,8 +39,8 @@
         "*.local"
       ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
+        "bun --cwd functions run lint",
+        "bun --cwd functions run build"
       ],
       "source": "functions"
     }
