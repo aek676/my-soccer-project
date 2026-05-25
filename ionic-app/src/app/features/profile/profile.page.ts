@@ -13,6 +13,7 @@ import {
   IonItem,
   IonButton,
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
@@ -44,8 +45,15 @@ import { server, logOutOutline } from 'ionicons/icons';
 export class ProfilePage {
   protected authService = inject(AuthService);
   protected backendConfig = inject(BackendConfigurationService);
+  private navController = inject(NavController);
 
   constructor() {
     addIcons({ server, logOutOutline });
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      complete: () => this.navController.navigateRoot(['/auth/login']),
+    });
   }
 }
