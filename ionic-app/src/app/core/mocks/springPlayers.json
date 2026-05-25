@@ -1,0 +1,33 @@
+[
+  {
+    "id": "101",
+    "name": "Vinícius Júnior",
+    "position": "Forward",
+    "number": 7,
+    "age": 23,
+    "photoUrl": "https://i.pravatar.cc/64?img=14"
+  },
+  {
+    "id": "102",
+    "name": "Lamine Yamal",
+    "position": "Winger",
+    "number": 19,
+    "age": 17,
+    "photoUrl": "https://i.pravatar.cc/64?img=15"
+  },
+  {
+    "id": "103",
+    "name": "Kylian Mbappé",
+    "position": "Forward",
+    "number": 9,
+    "age": 25
+  },
+  {
+    "id": "104",
+    "name": "Federico Valverde",
+    "position": "Midfielder",
+    "number": 8,
+    "age": 25,
+    "photoUrl": "https://i.pravatar.cc/64?img=16"
+  }
+]
