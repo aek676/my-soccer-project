@@ -95,8 +95,9 @@ test.describe('Auth - Guest Flow', () => {
   test('continues as guest without authentication', async ({ page }) => {
     await page.goto('/auth/login');
 
-    await scrollToBottom(page);
-    await page.getByRole('button', { name: 'Continue as Guest' }).click();
+    const guestBtn = page.locator('ion-button.guest-btn');
+    await guestBtn.scrollIntoViewIfNeeded();
+    await guestBtn.click();
 
     await expect(page).toHaveURL(/\/tabs/);
   });
