@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { of } from 'rxjs';
@@ -13,6 +14,7 @@ describe('PlayersPage', () => {
     await TestBed.configureTestingModule({
       imports: [PlayersPage],
       providers: [
+        provideHttpClient(),
         provideRouter([]),
         { provide: AuthStateService, useValue: { isGuest$: of(true) } },
       ],
