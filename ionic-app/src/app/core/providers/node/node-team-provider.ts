@@ -10,7 +10,7 @@ export class NodeTeamProvider
     console.log(`Fetching ${this.gatewayUrl}/teams-node/${teamId}`);
     throw new Error('Method not implemented.');
   }
-  getTeam(): TeamModel[] {
+  getTeams(): TeamModel[] {
     console.log(`Fetching ${this.gatewayUrl}/teams-node`);
     throw new Error('Method not implemented.');
   }
