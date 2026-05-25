@@ -38,8 +38,13 @@
       </ion-segment-button>
     </ion-segment>
   </ion-item>
+
   @if (authService.currentUser$ | async; as user) { @if (!user.isAnonymous) {
-  <ion-button expand="block" color="light" class="logout-button" (click)="authService.logout()">
+  <ion-button
+    expand="block"
+    class="logout-button"
+    (click)="authService.logout()"
+  >
     <ion-icon name="log-out-outline" slot="start" color="danger"></ion-icon>
     Log Out
   </ion-button>

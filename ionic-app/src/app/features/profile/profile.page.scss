@@ -25,5 +25,10 @@ ion-segment-button {
 }
 
 .logout-button {
+  --background: var(--ion-color-light);
   --color: var(--ion-color-danger);
+}
+
+.logout-button::part(native) {
+  justify-content: flex-end;
 }
