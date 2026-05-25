@@ -17,13 +17,13 @@ export default defineConfig({
 
   projects: [
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      name: "Mobile Chrome",
+      use: { ...devices["iPhone 13 Mini"] },
     },
 
     {
-      name: "Mobile Chrome",
-      use: { ...devices["iPhone 13 Mini"] },
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
     },
   ],
 });
