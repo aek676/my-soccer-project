@@ -2,10 +2,10 @@ import { test, expect, type Page } from '@playwright/test';
 import { createEmulatorUser } from '../helpers/emulator-auth';
 
 async function scrollToBottom(page: Page) {
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
     const content = document.querySelector('ion-content');
     if (content) {
-      content.scrollTo(0, content.scrollHeight);
+      await (content as HTMLIonContentElement).scrollToBottom();
     }
   });
 }
