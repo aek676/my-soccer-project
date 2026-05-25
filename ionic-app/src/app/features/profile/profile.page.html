@@ -45,8 +45,10 @@
     class="logout-button"
     (click)="authService.logout()"
   >
-    <ion-icon name="log-out-outline" slot="start" color="danger"></ion-icon>
-    Log Out
+    <span class="logout-content">
+      <ion-icon name="log-out-outline" color="danger"></ion-icon>
+      Log Out
+    </span>
   </ion-button>
   } }
 </ion-content>

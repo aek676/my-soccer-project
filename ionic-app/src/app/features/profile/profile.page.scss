@@ -30,6 +30,9 @@ ion-segment-button {
   margin-inline: 10px;
 }
 
-.logout-button::part(native) {
-  justify-content: flex-start;
+.logout-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
