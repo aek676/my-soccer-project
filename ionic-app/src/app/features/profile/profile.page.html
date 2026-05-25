@@ -24,8 +24,8 @@
     <ion-label>Backend Service</ion-label>
 
     <ion-segment
-      [value]="backendConfig.backendState()"
-      (ionChange)="backendConfig.toggleBackend()"
+      [value]="backendManager.currentBackend()"
+      (ionChange)="backendManager.toggleBackend()"
       mode="ios"
       slot="end"
       style="width: 220px"
@@ -33,7 +33,7 @@
       <ion-segment-button value="NODE">
         <ion-label>Node.js</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="SPRINGBOOT">
+      <ion-segment-button value="SPRING">
         <ion-label>SpringBoot</ion-label>
       </ion-segment-button>
     </ion-segment>

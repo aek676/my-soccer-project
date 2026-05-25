@@ -14,42 +14,11 @@ import { addIcons } from 'ionicons';
 import { FormsModule } from '@angular/forms';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { PlayerItemComponent } from '@shared/components/player-item/player-item.component';
-import { FilterChipsComponent, FilterSelection } from '@shared/components/filter-chips/filter-chips.component';
-import { Player } from '@core/services/models/player.model';
-
-const MOCK_PLAYERS: Player[] = [
-  {
-    id: '1',
-    name: 'Marcus Rashford',
-    position: 'Forward',
-    number: 10,
-    age: 26,
-    photoUrl: 'https://i.pravatar.cc/64?img=11',
-  },
-  {
-    id: '2',
-    name: 'Jude Bellingham',
-    position: 'Midfielder',
-    number: 5,
-    age: 20,
-  },
-  {
-    id: '3',
-    name: 'Bukayo Saka',
-    position: 'Winger',
-    number: 7,
-    age: 22,
-    photoUrl: 'https://i.pravatar.cc/64?img=12',
-  },
-  {
-    id: '4',
-    name: 'Declan Rice',
-    position: 'Defensive Midfielder',
-    number: 41,
-    age: 25,
-    photoUrl: 'https://i.pravatar.cc/64?img=13',
-  },
-];
+import {
+  FilterChipsComponent,
+  FilterSelection,
+} from '@shared/components/filter-chips/filter-chips.component';
+import { BackendManagerService } from '@core/services/backend-manager.service';
 
 @Component({
   selector: 'app-players',
@@ -71,19 +40,21 @@ const MOCK_PLAYERS: Player[] = [
 })
 export class PlayersPage {
   private actionSheetCtrl = inject(ActionSheetController);
+  private backendManager = inject(BackendManagerService);
+
+  players = this.backendManager.players;
 
   searchQuery = '';
   filters = ['Team', 'League', 'Date Added'];
   selectedFilter = signal<FilterSelection | null>(null);
-  players = MOCK_PLAYERS;
 
   filteredPlayers = computed(() => {
     const query = this.searchQuery.toLowerCase();
-    if (!query) return this.players;
-    return this.players.filter(
+    if (!query) return this.players();
+    return this.players().filter(
       (p) =>
         p.name.toLowerCase().includes(query) ||
-        p.position.toLowerCase().includes(query)
+        p.position.toLowerCase().includes(query),
     );
   });
 
