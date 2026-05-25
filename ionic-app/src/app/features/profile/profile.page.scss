@@ -28,10 +28,10 @@ ion-segment-button {
   --background: var(--ion-color-light);
   --color: var(--ion-color-danger);
   --border-radius: 16px;
-  --background-hover: var(--ion-color-light);
-  --background-focused: var(--ion-color-light);
+  --background-hover: var(--ion-color-light-shade);
+  --background-focused: var(--ion-color-light-shade);
   --box-shadow: none;
-  margin: 10px;
+  margin-top: 50px;
 }
 
 .logout-content {
