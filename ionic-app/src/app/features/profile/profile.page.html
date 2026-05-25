@@ -11,6 +11,7 @@
 
     <ion-card-content>{{ user.email }}</ion-card-content>
   </ion-card>
+
   } }
 
   <ion-item lines="none">
@@ -37,4 +38,13 @@
       </ion-segment-button>
     </ion-segment>
   </ion-item>
+
+  @if (authService.currentUser$ | async; as user) { @if (!user.isAnonymous) {
+  <ion-button expand="block" class="logout-button" (click)="logout()">
+    <span class="logout-content">
+      <ion-icon name="log-out-outline" color="danger"></ion-icon>
+      Log Out
+    </span>
+  </ion-button>
+  } }
 </ion-content>

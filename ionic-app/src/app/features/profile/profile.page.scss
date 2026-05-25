@@ -23,3 +23,20 @@ ion-segment-button {
   --indicator-color: var(--ion-color-primary);
   --border-radius: 20px;
 }
+
+.logout-button {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-danger);
+  --border-radius: 16px;
+  --background-hover: var(--ion-color-light-shade);
+  --background-focused: var(--ion-color-light-shade);
+  --box-shadow: none;
+  margin-top: 50px;
+}
+
+.logout-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
