@@ -1,6 +1,7 @@
 package es.ual.gateway.config;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -16,6 +17,9 @@ import reactor.core.publisher.Flux;
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
+
+  @Value("${cors.allowed-origin-patterns:http://localhost:8100}")
+  private List<String> allowedOriginPatterns;
 
   @Bean
   SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -46,7 +50,7 @@ public class SecurityConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     var configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("http://localhost:8100"));
+    configuration.setAllowedOriginPatterns(allowedOriginPatterns);
     configuration.setAllowedMethods(List.of("*"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
