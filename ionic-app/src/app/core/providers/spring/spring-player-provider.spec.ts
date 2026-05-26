@@ -39,7 +39,7 @@ describe('SpringPlayerProvider', () => {
     let players: unknown;
     provider.getPlayers().subscribe((p) => (players = p));
 
-    const req = httpMock.expectOne('http://localhost:8080/players-spring');
+    const req = httpMock.expectOne('http://localhost:8080/players-service/players');
     expect(req.request.method).toBe('GET');
     req.flush(mockPlayers);
 
@@ -58,7 +58,7 @@ describe('SpringPlayerProvider', () => {
     let player: unknown;
     provider.getPlayerById('101').subscribe((p) => (player = p));
 
-    const req = httpMock.expectOne('http://localhost:8080/players-spring/101');
+    const req = httpMock.expectOne('http://localhost:8080/players-service/players/101');
     expect(req.request.method).toBe('GET');
     req.flush(mockPlayer);
 
