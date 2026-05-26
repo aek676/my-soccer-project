@@ -6,9 +6,9 @@ import { SpringTeamProvider } from '@core/providers/spring/spring-team-provider'
 
 export class NodeBackend extends BackendFactory {
   public override createPlayerProvider(): PlayerProviderInterface {
-    return new NodePlayerProvider(this.config);
+    return new NodePlayerProvider(this.config, this.http);
   }
   public override createTeamProvider(): TeamProviderInterface {
-    return new SpringTeamProvider(this.config);
+    return new SpringTeamProvider(this.config, this.http);
   }
 }

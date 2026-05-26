@@ -13,4 +13,5 @@ export const environment = {
     auth: 'http://127.0.0.1:9099',
     firestore: '127.0.0.1:8088',
   },
+  gatewayUrl: 'http://localhost:8080',
 };

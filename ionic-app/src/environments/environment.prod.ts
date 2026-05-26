@@ -13,4 +13,6 @@ export const environment = {
     messagingSenderId: '429251394544',
     appId: '1:429251394544:web:fcbb8c5cbb8f1b3ee9fb35',
   },
+  gatewayUrl:
+    'https://api-gateway.redhill-c215be00.norwayeast.azurecontainerapps.io',
 };
