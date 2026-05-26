@@ -3,6 +3,7 @@ import { TeamModel } from '@core/models/team.model';
 import { BaseProvider } from '../base-provider';
 import { TeamProviderInterface } from '../team-provider.interface';
 
+// TODO: modify the endpoint to match the actual backend API for teams
 export class SpringTeamProvider
   extends BaseProvider
   implements TeamProviderInterface
