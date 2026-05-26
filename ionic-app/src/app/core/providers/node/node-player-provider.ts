@@ -10,11 +10,13 @@ export class NodePlayerProvider
 {
   getPlayerById(playerId: string): Observable<PlayerModel> {
     return this.http.get<PlayerModel>(
-      `${this.gatewayUrl}/players-node/${playerId}`,
+      `${this.gatewayUrl}/bun-backend/players/${playerId}`,
     );
   }
 
   getPlayers(): Observable<PlayerModel[]> {
-    return this.http.get<PlayerModel[]>(`${this.gatewayUrl}/players-node`);
+    return this.http.get<PlayerModel[]>(
+      `${this.gatewayUrl}/bun-backend/players`,
+    );
   }
 }

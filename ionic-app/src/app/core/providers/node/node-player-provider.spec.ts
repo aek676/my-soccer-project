@@ -39,7 +39,7 @@ describe('NodePlayerProvider', () => {
     let players: unknown;
     provider.getPlayers().subscribe((p) => (players = p));
 
-    const req = httpMock.expectOne('http://localhost:8080/players-node');
+    const req = httpMock.expectOne('http://localhost:8080/bun-backend/players');
     expect(req.request.method).toBe('GET');
     req.flush(mockPlayers);
 
@@ -58,7 +58,7 @@ describe('NodePlayerProvider', () => {
     let player: unknown;
     provider.getPlayerById('1').subscribe((p) => (player = p));
 
-    const req = httpMock.expectOne('http://localhost:8080/players-node/1');
+    const req = httpMock.expectOne('http://localhost:8080/bun-backend/players/1');
     expect(req.request.method).toBe('GET');
     req.flush(mockPlayer);
 
