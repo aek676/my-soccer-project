@@ -7,7 +7,7 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:8-jdk
+FROM eclipse-temurin:8-jdk AS runner
 
 RUN groupadd -r newsService && useradd -r -g newsService -d /app newsService
 

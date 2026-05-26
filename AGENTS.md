@@ -10,6 +10,21 @@ bun-backend → eureka + config-server + MongoDB
 ionic-app → Firebase hosting (preview + production)
 ```
 
+### Gateway routes (auto-discovery via Eureka)
+
+| Service                | Gateway URL                                   | Notes                                                           |
+| ---------------------- | --------------------------------------------- | --------------------------------------------------------------- |
+| Players Service        | `http://localhost:8080/players-service/**`    |                                                                 |
+| Comments Service       | `http://localhost:8080/comments-service/**`   |                                                                 |
+| Ideal Team Service     | `http://localhost:8080/ideal-team-service/**` |                                                                 |
+| News Service           | `http://localhost:8080/news-service/**`       |                                                                 |
+| Bun Backend            | `http://localhost:8080/bun-backend/**`        | Consolidates all services (players, comments, ideal-team, news) |
+| Config Server (direct) | `http://localhost:8888/`                      | Git-backed config                                               |
+| Eureka (direct)        | `http://localhost:8761/`                      | Service registry dashboard                                      |
+| Gateway actuator       | `http://localhost:8080/actuator/health`       | Health check                                                    |
+
+The gateway injects JWT-derived headers (`X-User-Id`, `X-User-Role`, `X-User-Email`, `X-User-Token`) into all proxied requests downstream.
+
 ### Service boundaries
 
 | Directory             | Stack                     | DB         | Notes                                                  |
@@ -76,7 +91,7 @@ bun run build -- --configuration production   # prod build
 bun run test -- --watch=false --browsers=ChromeHeadless   # CI-style unit tests
 bun run lint               # ng lint
 
-# Scaffolding (Ionic CLI — generates standalone components by default)
+# Create Pages, components, & Angular Features
 bunx ionic generate component <name>           # standalone component
 bunx ionic generate page <path>                # page with route config
 bunx ionic generate service <name>             # injectable service
