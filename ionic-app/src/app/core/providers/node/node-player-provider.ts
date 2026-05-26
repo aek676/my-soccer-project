@@ -15,6 +15,8 @@ export class NodePlayerProvider
   }
 
   getPlayers(): Observable<PlayerModel[]> {
-    return this.http.get<PlayerModel[]>(`${this.gatewayUrl}/players-node`);
+    return this.http.get<PlayerModel[]>(
+      `${this.gatewayUrl}/bun-backend/players`,
+    );
   }
 }

@@ -4,5 +4,5 @@ export interface PlayerModel {
   position: string;
   number: number;
   age: number;
-  photoUrl?: string;
+  photo?: string;
 }
