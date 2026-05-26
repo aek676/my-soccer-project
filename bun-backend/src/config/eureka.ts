@@ -22,7 +22,9 @@ interface EurekaRegistrationPayload {
 function getLocalIpAddress(): string {
 	const interfaces = os.networkInterfaces();
 	for (const name of Object.keys(interfaces)) {
-		for (const iface of interfaces[name]!) {
+		const ifaces = interfaces[name];
+		if (!ifaces) continue;
+		for (const iface of ifaces) {
 			if (iface.family === "IPv4" && !iface.internal) {
 				return iface.address;
 			}
