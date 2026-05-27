@@ -1,4 +1,4 @@
-<ion-item class="player-item" button detail="false">
+<ion-item class="player-item" [button]="!selectable" detail="false">
   <ion-avatar slot="start">
     @if (player.photo) {
       <img [src]="player.photo" [alt]="player.name" />
@@ -11,8 +11,22 @@
 
   <ion-label class="player-info">
     <h2 class="player-name">{{ player.name }}</h2>
-    <p class="player-position">{{ player.position }}</p>
+    <p class="player-position">
+      {{ player.position }}
+      @if (player.age) {
+        <span> • {{ player.age }} yrs</span>
+      }
+    </p>
   </ion-label>
 
-  <ion-icon slot="end" name="chevron-forward" color="medium"></ion-icon>
+  @if (selectable) {
+    <ion-checkbox
+      slot="end"
+      [checked]="selected"
+      (click)="$event.stopPropagation()"
+      (ionChange)="onCheckboxChange($event)"
+    ></ion-checkbox>
+  } @else {
+    <ion-icon slot="end" name="chevron-forward" color="medium"></ion-icon>
+  }
 </ion-item>
