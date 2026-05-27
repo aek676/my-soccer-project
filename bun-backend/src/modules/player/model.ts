@@ -6,7 +6,7 @@ const LocationSchema = t.Object({
 });
 
 export const PlayerResponse = t.Object({
-	_id: t.String(),
+	id: t.String(),
 	name: t.String(),
 	firstName: t.Optional(t.String()),
 	lastName: t.Optional(t.String()),
