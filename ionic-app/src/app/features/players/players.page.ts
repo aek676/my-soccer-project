@@ -9,6 +9,7 @@ import {
   IonIcon,
   ActionSheetController,
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { add, personAdd, cloudDownload } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { FormsModule } from '@angular/forms';
@@ -41,6 +42,7 @@ import { BackendManagerService } from '@core/services/backend-manager.service';
 export class PlayersPage {
   private actionSheetCtrl = inject(ActionSheetController);
   private backendManager = inject(BackendManagerService);
+  private navController = inject(NavController);
 
   players = this.backendManager.players;
 
@@ -74,7 +76,10 @@ export class PlayersPage {
         {
           text: 'Import from API',
           icon: 'cloud-download',
-          handler: () => {},
+          handler: async () => {
+            await sheet.dismiss();
+            this.navController.navigateForward('/import-players');
+          },
         },
         {
           text: 'Cancel',
