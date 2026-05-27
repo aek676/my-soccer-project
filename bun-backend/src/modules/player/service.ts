@@ -7,7 +7,7 @@ export abstract class PlayerService {
 			const players = await Player.find({}).lean();
 			return players.map((p) => ({
 				...p,
-				_id: p._id.toString(),
+				id: p._id.toString(),
 			})) as PlayerResponseType[];
 		} catch (_error) {
 			return new Error("Failed to fetch players");
