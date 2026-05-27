@@ -42,11 +42,7 @@ export class ImportPlayersPage {
   filteredPlayers = computed(() => {
     const q = this.searchQuery().toLowerCase();
     return q
-      ? this.players().filter(
-          (p) =>
-            p.name.toLowerCase().includes(q) ||
-            p.position.toLowerCase().includes(q),
-        )
+      ? this.players().filter((p) => p.name.toLowerCase().includes(q))
       : this.players();
   });
 
@@ -67,6 +63,10 @@ export class ImportPlayersPage {
   }
 
   confirmImport() {
+    const selected = this.players().filter((p) =>
+      this.selectedPlayers().has(p.id),
+    );
+    console.log('Selected players:', selected);
     this.nav.navigateBack('/tabs/players');
   }
 }
