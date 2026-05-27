@@ -14,6 +14,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'import-players',
+    loadComponent: () =>
+      import('./features/players/import-players/import-players.page').then(
+        (m) => m.ImportPlayersPage,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: '**',
     redirectTo: '',
   },
