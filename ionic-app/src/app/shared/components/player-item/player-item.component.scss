@@ -66,4 +66,11 @@ ion-avatar {
   }
 }
 
-
+ion-checkbox {
+  --size: 20px;
+  --checkbox-background: transparent;
+  --border-color: var(--hairline);
+  --checkbox-background-checked: var(--ion-color-primary);
+  --border-color-checked: var(--ion-color-primary);
+  --checkmark-color: var(--text-on-primary);
+}

@@ -1,11 +1,16 @@
 <ion-toolbar>
+  @if (showBackButton) {
+    <ion-button slot="start" fill="clear" (click)="goBack()" aria-label="Back">
+      <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+    </ion-button>
+  }
   <ion-title>
-    <div class="brand">
+    <div class="brand" [class.centered]="showBackButton">
       <ion-icon name="football" size="large" color="primary" />
       <span class="brand-text">MSP</span>
     </div>
   </ion-title>
-  @if (isGuest$ | async) {
+  @if (!showBackButton && (isGuest$ | async)) {
     <ion-button slot="end" fill="outline" color="medium" (click)="goToLogin()">
       Sign In
     </ion-button>
