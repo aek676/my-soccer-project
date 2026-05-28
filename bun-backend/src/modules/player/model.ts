@@ -1,4 +1,5 @@
 import { t, type UnwrapSchema } from "elysia";
+import type { ApiSportsPlayer } from "../../types/football-api";
 
 const LocationSchema = t.Object({
 	type: t.String(),
@@ -33,3 +34,23 @@ export const PlayerModel = {
 export type PlayerModel = {
 	[k in keyof typeof PlayerModel]: UnwrapSchema<(typeof PlayerModel)[k]>;
 };
+
+export function mapApiSportsPlayer(
+	api: ApiSportsPlayer,
+): PlayerModel["playerResponse"] {
+	const { player } = api;
+	return {
+		id: player.id.toString(),
+		name: player.name,
+		firstName: player.firstname ?? undefined,
+		lastName: player.lastname ?? undefined,
+		age: player.age ?? undefined,
+		birthdate: player.birth.date ? new Date(player.birth.date) : undefined,
+		nationality: player.nationality ?? undefined,
+		height: player.height ?? undefined,
+		weight: player.weight ?? undefined,
+		number: player.number ?? undefined,
+		position: player.position ?? undefined,
+		photo: player.photo ?? undefined,
+	};
+}
