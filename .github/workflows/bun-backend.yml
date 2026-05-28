@@ -18,7 +18,6 @@ jobs:
       id-token: write
       pull-requests: write
       checks: write
-      actions: read
     steps:
       - uses: actions/checkout@v6
         with:
@@ -74,12 +73,13 @@ jobs:
           update-comment: true
 
       - name: Upload test results
-        uses: dorny/test-reporter@v3
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
-          name: Bun Backend Tests
-          path: bun-backend/reports/junit.xml
-          reporter: jest-junit
+          check_name: Bun Backend Tests
+          report_paths: bun-backend/reports/junit.xml
+          comment: true
+          update_check: true
 
       - name: Upload Artifacts (Binary)
         uses: actions/upload-artifact@v4

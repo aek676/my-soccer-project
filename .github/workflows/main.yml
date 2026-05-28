@@ -11,7 +11,6 @@ permissions:
   id-token: write
   pull-requests: write
   checks: write
-  actions: read
 
 jobs:
   detect-changes:
