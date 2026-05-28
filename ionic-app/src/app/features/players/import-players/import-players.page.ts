@@ -35,6 +35,7 @@ export class ImportPlayersPage {
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
 
+  // TODO: Replace with the query to search players from the api
   players = this.backendManager.players;
   searchQuery = signal('');
   selectedPlayers = signal<Set<string>>(new Set());
