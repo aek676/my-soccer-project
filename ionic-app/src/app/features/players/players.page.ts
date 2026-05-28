@@ -19,6 +19,7 @@ import {
   FilterChipsComponent,
   FilterSelection,
 } from '@shared/components/filter-chips/filter-chips.component';
+import { PlayerModel } from '@core/models/player.model';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 
 @Component({
@@ -91,6 +92,10 @@ export class PlayersPage {
 
   constructor() {
     addIcons({ add, personAdd, cloudDownload });
+  }
+
+  navigateToProfile(player: PlayerModel) {
+    this.navController.navigateForward('/profile-player/' + player.id);
   }
 
   async openAddActionSheet() {
