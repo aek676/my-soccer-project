@@ -76,11 +76,11 @@ export class PlayersPage {
           case 'League':
             cmp = (a.league ?? '').localeCompare(b.league ?? '');
             break;
-          case 'Date Added':
-            cmp =
-              (a.created ? new Date(a.created).getTime() : 0) -
-              (b.created ? new Date(b.created).getTime() : 0);
+          case 'Date Added': {
+            const toTime = (d?: string) => (d ? new Date(d).getTime() : 0);
+            cmp = toTime(a.created) - toTime(b.created);
             break;
+          }
         }
         return filter.direction === 'desc' ? -cmp : cmp;
       });
