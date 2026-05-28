@@ -7,7 +7,8 @@
     <h1 class="page-title">Player Database</h1>
 
     <ion-searchbar
-      [(ngModel)]="searchQuery"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
       placeholder="Search players..."
       show-clear-button="focus"
     ></ion-searchbar>

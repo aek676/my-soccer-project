@@ -46,18 +46,47 @@ export class PlayersPage {
 
   players = this.backendManager.players;
 
-  searchQuery = '';
+  searchQuery = signal('');
   filters = ['Team', 'League', 'Date Added'];
   selectedFilter = signal<FilterSelection | null>(null);
 
   filteredPlayers = computed(() => {
-    const query = this.searchQuery.toLowerCase();
-    if (!query) return this.players();
-    return this.players().filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.position.toLowerCase().includes(query),
-    );
+    const query = this.searchQuery().toLowerCase();
+    const filter = this.selectedFilter();
+    let result = this.players();
+
+    if (query) {
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.position?.toLowerCase().includes(query) ||
+          p.team?.toLowerCase().includes(query) ||
+          p.league?.toLowerCase().includes(query) ||
+          p.nationality?.toLowerCase().includes(query),
+      );
+    }
+
+    if (filter) {
+      result = [...result].sort((a, b) => {
+        let cmp = 0;
+        switch (filter.filter) {
+          case 'Team':
+            cmp = (a.team ?? '').localeCompare(b.team ?? '');
+            break;
+          case 'League':
+            cmp = (a.league ?? '').localeCompare(b.league ?? '');
+            break;
+          case 'Date Added': {
+            const toTime = (d?: string) => (d ? new Date(d).getTime() : 0);
+            cmp = toTime(a.created) - toTime(b.created);
+            break;
+          }
+        }
+        return filter.direction === 'desc' ? -cmp : cmp;
+      });
+    }
+
+    return result;
   });
 
   constructor() {
