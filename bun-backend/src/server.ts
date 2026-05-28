@@ -15,6 +15,8 @@ await connectDB(config.datasource.url, config.datasource.db);
 
 const app = new Elysia()
 	.onError(({ error, code }) => {
+		if (code === "VALIDATION")
+			return { code: 400, message: error.all[0].message };
 		console.error(
 			`[${code}]`,
 			error instanceof Error ? error.message : "Unknown error",

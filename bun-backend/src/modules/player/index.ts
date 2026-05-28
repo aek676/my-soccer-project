@@ -18,10 +18,11 @@ export const PlayerModule = new Elysia({ name: "player" })
 		async ({ params: { id } }) => await PlayerService.getPlayerById(id),
 		{
 			params: t.Object({
-				id: t.String(),
+				id: t.String({ pattern: "^[0-9a-fA-F]{24}$" }),
 			}),
 			response: {
 				200: "player.response",
+				400: "player.error",
 				404: "player.error",
 				500: "player.error",
 			},
