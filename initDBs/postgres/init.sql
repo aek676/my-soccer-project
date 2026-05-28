@@ -17,21 +17,21 @@ CREATE TABLE IF NOT EXISTS players (
     created TIMESTAMP(6)
 );
 
-INSERT INTO players (name, position, number, age, photo, location, created)
+INSERT INTO players (name, first_name, last_name, age, birthdate, nationality, height, weight, number, team, league, position, photo, location, created)
 VALUES
-  ('Vinícius Júnior', 'Forward', 7, 23,
+  ('Vinícius Júnior', 'Vinícius', 'Júnior', 23, '2000-07-12', 'Brazil', '1.76m', '73kg', 7, 'Real Madrid', 'La Liga', 'Forward',
    'https://i.pravatar.cc/64?img=14',
    '{"type": "Point", "coordinates": [-3.7038, 40.4168]}'::jsonb,
    NOW()),
-  ('Lamine Yamal', 'Winger', 19, 17,
+  ('Lamine Yamal', 'Lamine', 'Yamal', 17, '2007-07-13', 'Spain', '1.80m', '72kg', 19, 'FC Barcelona', 'La Liga', 'Winger',
    'https://i.pravatar.cc/64?img=15',
    '{"type": "Point", "coordinates": [2.1686, 41.3874]}'::jsonb,
    NOW()),
-  ('Kylian Mbappé', 'Forward', 9, 25,
+  ('Kylian Mbappé', 'Kylian', 'Mbappé', 25, '1998-12-20', 'France', '1.78m', '75kg', 9, 'Real Madrid', 'La Liga', 'Forward',
    NULL,
    '{"type": "Point", "coordinates": [2.3522, 48.8566]}'::jsonb,
    NOW()),
-  ('Federico Valverde', 'Midfielder', 8, 25,
+  ('Federico Valverde', 'Federico', 'Valverde', 25, '1998-07-22', 'Uruguay', '1.82m', '78kg', 8, 'Real Madrid', 'La Liga', 'Midfielder',
    'https://i.pravatar.cc/64?img=16',
    '{"type": "Point", "coordinates": [-3.7038, 40.4168]}'::jsonb,
    NOW());

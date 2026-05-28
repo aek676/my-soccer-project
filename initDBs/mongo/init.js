@@ -38,6 +38,7 @@ db.players.insertMany([
 		team: "Real Madrid",
 		league: "La Liga",
 		position: "Midfielder",
+		photo: "https://i.pravatar.cc/64?img=17",
 		location: {
 			type: "Point",
 			coordinates: [-3.7038, 40.4168],
