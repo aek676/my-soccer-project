@@ -14,6 +14,20 @@ export const PlayerModule = new Elysia({ name: "player" })
 		},
 	})
 	.get(
+		"/players/search/:name",
+		async ({ params: { name } }) =>
+			await PlayerService.searchPlayerByName(name),
+		{
+			params: t.Object({
+				name: t.String({ minLength: 1 }),
+			}),
+			response: {
+				200: t.Array(PlayerModel.playerResponse),
+				500: "player.error",
+			},
+		},
+	)
+	.get(
 		"/players/:id",
 		async ({ params: { id } }) => await PlayerService.getPlayerById(id),
 		{
