@@ -4,7 +4,7 @@ db.createCollection("players");
 
 db.players.insertMany([
 	{
-		_id: "1",
+		_id: ObjectId("507f1f77bcf86cd799439011"),
 		name: "Marcus Rashford",
 		firstName: "Marcus",
 		lastName: "Rashford",
@@ -25,7 +25,7 @@ db.players.insertMany([
 		created: new Date(),
 	},
 	{
-		_id: "2",
+		_id: ObjectId("507f1f77bcf86cd799439012"),
 		name: "Jude Bellingham",
 		firstName: "Jude",
 		lastName: "Bellingham",
@@ -45,7 +45,7 @@ db.players.insertMany([
 		created: new Date(),
 	},
 	{
-		_id: "3",
+		_id: ObjectId("507f1f77bcf86cd799439013"),
 		name: "Bukayo Saka",
 		firstName: "Bukayo",
 		lastName: "Saka",
@@ -66,7 +66,7 @@ db.players.insertMany([
 		created: new Date(),
 	},
 	{
-		_id: "4",
+		_id: ObjectId("507f1f77bcf86cd799439014"),
 		name: "Declan Rice",
 		firstName: "Declan",
 		lastName: "Rice",

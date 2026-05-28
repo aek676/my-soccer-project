@@ -17,6 +17,7 @@ jobs:
       contents: read
       id-token: write
       pull-requests: write
+      checks: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -56,13 +57,29 @@ jobs:
         env:
           DOCKER_HOST: unix:///var/run/docker.sock
 
+      - name: Setup LCOV
+        if: always()
+        uses: hrishikesh-kadam/setup-lcov@v1
+
+      - name: Report code Coverage
+        if: always() && !inputs.push
+        uses: zgosalvez/github-actions-report-lcov@v7
+        with:
+          working-directory: bun-backend
+          coverage-files: bun-backend/reports/coverage/lcov.info
+          minimum-coverage: 80
+          artifact-name: bun-backend-coverage-report
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment: true
+
       - name: Upload test results
-        uses: dorny/test-reporter@v3
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
-          name: Bun Backend Tests
-          path: bun-backend/test/junit.xml
-          reporter: java-junit
+          check_name: Bun Backend Tests
+          report_paths: bun-backend/reports/junit.xml
+          comment: true
+          update_check: true
 
       - name: Upload Artifacts (Binary)
         uses: actions/upload-artifact@v4
@@ -75,7 +92,7 @@ jobs:
         if: always()
         with:
           name: test-report
-          path: bun-backend/test/junit.xml
+          path: bun-backend/reports/junit.xml
 
       - name: Authenticate to GCP via OIDC
         if: inputs.push

@@ -14,6 +14,15 @@ const port = Number(config.app.port);
 await connectDB(config.datasource.url, config.datasource.db);
 
 const app = new Elysia()
+	.onError(({ error, code }) => {
+		if (code === "VALIDATION")
+			return { code: 400, message: error.all[0].message };
+		console.error(
+			`[${code}]`,
+			error instanceof Error ? error.message : "Unknown error",
+		);
+		return { code: 500, message: "Internal server error" };
+	})
 	.use(
 		healthcheckPlugin({
 			checks: {
