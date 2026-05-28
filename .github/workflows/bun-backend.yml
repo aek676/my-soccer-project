@@ -56,12 +56,27 @@ jobs:
         env:
           DOCKER_HOST: unix:///var/run/docker.sock
 
+      - name: Setup LCOV
+        if: always()
+        uses: hrishikesh-kadam/setup-lcov@v1
+
+      - name: Report code Coverage
+        if: always() && !inputs.push
+        uses: zgosalvez/github-actions-report-lcov@v7
+        with:
+          working-directory: bun-backend
+          coverage-files: reports/coverage/lcov.info
+          minimum-coverage: 80
+          artifact-name: bun-backend-coverage-report
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment: true
+
       - name: Upload test results
         uses: dorny/test-reporter@v3
         if: always()
         with:
           name: Bun Backend Tests
-          path: bun-backend/test/junit.xml
+          path: bun-backend/reports/junit.xml
           reporter: java-junit
 
       - name: Upload Artifacts (Binary)
@@ -75,7 +90,7 @@ jobs:
         if: always()
         with:
           name: test-report
-          path: bun-backend/test/junit.xml
+          path: bun-backend/reports/junit.xml
 
       - name: Authenticate to GCP via OIDC
         if: inputs.push

@@ -1,5 +1,9 @@
 [test]
 preload = ["./test/setup.ts"]
+coverage = true
+coverageThreshold = 0.8
+coverageReporter = ["text", "lcov"]
+coverageDir = "reports/coverage"
 
 [test.reporter]
-junit = "./test/junit.xml"
+junit = "./reports/junit.xml"
