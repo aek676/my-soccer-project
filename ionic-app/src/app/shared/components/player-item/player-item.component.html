@@ -1,4 +1,4 @@
-<ion-item class="player-item" [button]="!selectable" detail="false">
+<ion-item class="player-item" [button]="!selectable" detail="false" (click)="onTap()">
   <ion-avatar slot="start">
     @if (player.photo) {
       <img [src]="player.photo" [alt]="player.name" />
