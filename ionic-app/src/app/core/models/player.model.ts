@@ -1,8 +1,21 @@
 export interface PlayerModel {
-  id: string;
+  id: string | number;
   name: string;
-  position: string;
-  number: number;
-  age: number;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  birthdate?: string;
+  nationality?: string;
+  height?: string;
+  weight?: string;
+  number?: number;
+  team?: string;
+  league?: string;
+  position?: string;
   photo?: string;
+  location?: {
+    type: string;
+    coordinates: number[];
+  };
+  created?: string;
 }

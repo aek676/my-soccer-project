@@ -56,7 +56,7 @@ export class PlayersPage {
     return this.players().filter(
       (p) =>
         p.name.toLowerCase().includes(query) ||
-        p.position.toLowerCase().includes(query),
+        p.position?.toLowerCase().includes(query),
     );
   });
 
