@@ -38,7 +38,7 @@ export class ImportPlayersPage {
   // TODO: Replace with the query to search players from the api
   players = this.backendManager.players;
   searchQuery = signal('');
-  selectedPlayers = signal<Set<string>>(new Set());
+  selectedPlayers = signal<Set<string | number>>(new Set());
 
   filteredPlayers = computed(() => {
     const q = this.searchQuery().toLowerCase();
@@ -47,7 +47,7 @@ export class ImportPlayersPage {
       : this.players();
   });
 
-  togglePlayer(id: string, checked: boolean) {
+  togglePlayer(id: string | number, checked: boolean) {
     this.selectedPlayers.update((s) => {
       const next = new Set(s);
       checked ? next.add(id) : next.delete(id);
@@ -55,7 +55,7 @@ export class ImportPlayersPage {
     });
   }
 
-  isSelected(id: string) {
+  isSelected(id: string | number) {
     return this.selectedPlayers().has(id);
   }
 
