@@ -67,7 +67,7 @@ jobs:
         uses: zgosalvez/github-actions-report-lcov@v7
         with:
           working-directory: bun-backend
-          coverage-files: reports/coverage/lcov.info
+          coverage-files: bun-backend/reports/coverage/lcov.info
           minimum-coverage: 80
           artifact-name: bun-backend-coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
