@@ -79,7 +79,7 @@ jobs:
         with:
           name: Bun Backend Tests
           path: bun-backend/reports/junit.xml
-          reporter: java-junit
+          reporter: jest-junit
 
       - name: Upload Artifacts (Binary)
         uses: actions/upload-artifact@v4
