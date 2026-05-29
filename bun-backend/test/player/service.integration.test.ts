@@ -109,6 +109,7 @@ describe("PlayerService - Integration Tests", () => {
 			league: "Major League Soccer",
 			position: "Forward",
 			photo: "https://example.com/messi.jpg",
+			location: { type: "Point" as const, coordinates: [0, 0] },
 		};
 
 		test("creates player and returns 201", async () => {

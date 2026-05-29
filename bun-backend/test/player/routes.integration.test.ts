@@ -33,8 +33,14 @@ const spyOnFetch = (): FetchSpy =>
 	) as unknown as FetchSpy;
 
 const get = (url: string) => app.handle(new Request(`http://localhost${url}`));
-const post = (url: string) =>
-	app.handle(new Request(`http://localhost${url}`, { method: "POST" }));
+const post = (url: string, body?: Record<string, unknown>) =>
+	app.handle(
+		new Request(`http://localhost${url}`, {
+			method: "POST",
+			headers: body ? { "content-type": "application/json" } : undefined,
+			body: body ? JSON.stringify(body) : undefined,
+		}),
+	);
 const postWithBody = (url: string, body: Record<string, unknown>) =>
 	app.handle(
 		new Request(`http://localhost${url}`, {
@@ -43,6 +49,8 @@ const postWithBody = (url: string, body: Record<string, unknown>) =>
 			body: JSON.stringify(body),
 		}),
 	);
+
+const testLocation = { type: "Point", coordinates: [0, 0] };
 
 describe("PlayerModule Routes - Integration Tests", () => {
 	beforeAll(async () => {
@@ -194,6 +202,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 			league: "Major League Soccer",
 			position: "Forward",
 			photo: "https://example.com/messi.jpg",
+			location: testLocation,
 		};
 
 		test("returns 201 with valid body", async () => {
@@ -329,7 +338,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		});
 
 		test("returns 201 and creates player when valid API player ID", async () => {
-			const res = await post("/players/import/154");
+			const res = await post("/players/import/154", { location: testLocation });
 
 			expect(res.status).toBe(201);
 			const data = await res.json();
@@ -353,8 +362,8 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		});
 
 		test("returns 200 with existing player on duplicate import", async () => {
-			await post("/players/import/154");
-			const res = await post("/players/import/154");
+			await post("/players/import/154", { location: testLocation });
+			const res = await post("/players/import/154", { location: testLocation });
 
 			expect(res.status).toBe(200);
 			const data = await res.json();
@@ -363,7 +372,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		});
 
 		test("player is persisted in database after import", async () => {
-			await post("/players/import/154");
+			await post("/players/import/154", { location: testLocation });
 
 			const dbPlayer = (await Player.findOne({ externalId: 154 }).lean()) as {
 				name: string;
@@ -382,7 +391,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 					new Response(JSON.stringify({ response: [] }), { status: 200 }),
 			);
 
-			const res = await post("/players/import/999999");
+			const res = await post("/players/import/999999", { location: testLocation });
 
 			expect(res.status).toBe(404);
 			const data = await res.json();
@@ -393,7 +402,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		test("returns 500 when API key is missing", async () => {
 			Bun.env.API_KEY_API_FOOTBALL = undefined as unknown as string;
 
-			const res = await post("/players/import/154");
+			const res = await post("/players/import/154", { location: testLocation });
 
 			expect(res.status).toBe(500);
 			const data = await res.json();
@@ -407,7 +416,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				async () => new Response("Server Error", { status: 500 }),
 			);
 
-			const res = await post("/players/import/154");
+			const res = await post("/players/import/154", { location: testLocation });
 
 			expect(res.status).toBe(500);
 			const data = await res.json();

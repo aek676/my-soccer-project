@@ -30,6 +30,8 @@ const makeDoc = (data: Record<string, unknown>, id: string) => ({
 	toObject: () => ({ ...data, _id: { toString: () => id } }),
 });
 
+const testLocation = { type: "Point" as const, coordinates: [0, 0] };
+
 type FetchLike = (
 	input: string | URL | Request,
 	init?: RequestInit,
@@ -192,6 +194,7 @@ describe("PlayerService - Unit Tests", () => {
 			league: "Major League Soccer",
 			position: "Forward",
 			photo: "https://example.com/messi.jpg",
+			location: { type: "Point" as const, coordinates: [0, 0] },
 		};
 
 		afterEach(() => {
@@ -221,6 +224,7 @@ describe("PlayerService - Unit Tests", () => {
 				league: "Major League Soccer",
 				position: "Forward",
 				photo: "https://example.com/messi.jpg",
+				location: { type: "Point" as const, coordinates: [0, 0] },
 			});
 		});
 
@@ -297,8 +301,7 @@ describe("PlayerService - Unit Tests", () => {
 					const urlStr =
 						typeof url === "string" ? url : url instanceof URL ? url.href : "";
 					expect(urlStr).toContain("search=Messi");
-					expect(urlStr).toContain("players?");
-					expect(urlStr).toContain("season=2024");
+					expect(urlStr).toContain("players/profiles?");
 					return new Response(JSON.stringify({ response: [] }), {
 						status: 200,
 					});
@@ -515,7 +518,9 @@ describe("PlayerService - Unit Tests", () => {
 			};
 			spyOn(Player, "findOne").mockReturnValue(mockFindOne(existing));
 
-			const result = await PlayerService.importPlayerFromApi(154);
+			const result = await PlayerService.importPlayerFromApi(154, {
+				location: testLocation,
+			});
 
 			expect(result).not.toHaveProperty("code");
 			expect(result).toHaveProperty("id", "existingId");
@@ -526,7 +531,9 @@ describe("PlayerService - Unit Tests", () => {
 			spyOn(Player, "findOne").mockReturnValue(mockFindOne(null));
 			Bun.env.API_KEY_API_FOOTBALL = undefined as unknown as string;
 
-			const result = await PlayerService.importPlayerFromApi(154);
+			const result = await PlayerService.importPlayerFromApi(154, {
+				location: testLocation,
+			});
 			const resultWithStatus = result as {
 				code: number;
 				response: { code: number; message: string };
@@ -560,7 +567,7 @@ describe("PlayerService - Unit Tests", () => {
 				) as unknown as ReturnType<typeof Player.create>,
 			);
 
-			await PlayerService.importPlayerFromApi(154);
+			await PlayerService.importPlayerFromApi(154, { location: testLocation });
 
 			expect(fetchSpy).toHaveBeenCalledTimes(1);
 		});
@@ -599,7 +606,7 @@ describe("PlayerService - Unit Tests", () => {
 				) as unknown as ReturnType<typeof Player.create>,
 			);
 
-			await PlayerService.importPlayerFromApi(154);
+			await PlayerService.importPlayerFromApi(154, { location: testLocation });
 
 			expect(createSpy).toHaveBeenCalledWith({
 				name: "Lionel Messi",
@@ -616,6 +623,7 @@ describe("PlayerService - Unit Tests", () => {
 				team: "Inter Miami",
 				league: "Major League Soccer",
 				externalId: 154,
+				location: testLocation,
 			});
 		});
 
@@ -626,7 +634,9 @@ describe("PlayerService - Unit Tests", () => {
 					new Response(JSON.stringify({ response: [] }), { status: 200 }),
 			);
 
-			const result = await PlayerService.importPlayerFromApi(999999);
+			const result = await PlayerService.importPlayerFromApi(999999, {
+				location: testLocation,
+			});
 			const resultWithStatus = result as {
 				code: number;
 				response: { code: number; message: string };
@@ -644,7 +654,9 @@ describe("PlayerService - Unit Tests", () => {
 				async () => new Response("Server Error", { status: 500 }),
 			);
 
-			const result = await PlayerService.importPlayerFromApi(154);
+			const result = await PlayerService.importPlayerFromApi(154, {
+				location: testLocation,
+			});
 			const resultWithStatus = result as {
 				code: number;
 				response: { code: number; message: string };
@@ -690,7 +702,9 @@ describe("PlayerService - Unit Tests", () => {
 				) as unknown as ReturnType<typeof Player.create>,
 			);
 
-			const result = await PlayerService.importPlayerFromApi(154);
+			const result = await PlayerService.importPlayerFromApi(154, {
+				location: testLocation,
+			});
 			const resultWithStatus = result as {
 				code: number;
 				response: {
