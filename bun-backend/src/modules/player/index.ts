@@ -41,4 +41,20 @@ export const PlayerModule = new Elysia({ name: "player" })
 				500: "player.error",
 			},
 		},
+	)
+	.post(
+		"/players/import/:apiPlayerId",
+		async ({ params: { apiPlayerId } }) =>
+			await PlayerService.importPlayerFromApi(apiPlayerId),
+		{
+			params: t.Object({
+				apiPlayerId: t.Number({ minimum: 1 }),
+			}),
+			response: {
+				200: "player.response",
+				201: "player.response",
+				404: "player.error",
+				500: "player.error",
+			},
+		},
 	);

@@ -22,6 +22,7 @@ export const PlayerModel = {
 		league: t.Optional(t.String()),
 		position: t.Optional(t.String()),
 		photo: t.Optional(t.String()),
+		externalId: t.Optional(t.Number()),
 		location: t.Optional(LocationSchema),
 		created: t.Optional(t.Date()),
 	}),
@@ -52,5 +53,6 @@ export function mapApiSportsPlayer(
 		number: player.number ?? undefined,
 		position: player.position ?? undefined,
 		photo: player.photo ?? undefined,
+		externalId: player.id,
 	};
 }
