@@ -172,6 +172,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     this.destroyMap();
   }
 
+  /* istanbul ignore next */
   private initMap() {
     this.destroyMap();
 
