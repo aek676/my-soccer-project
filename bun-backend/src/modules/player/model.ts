@@ -2,7 +2,7 @@ import { t, type UnwrapSchema } from "elysia";
 import type { ApiSportsPlayer } from "../../types/football-api";
 
 const LocationSchema = t.Object({
-	type: t.String(),
+	type: t.Literal("Point"),
 	coordinates: t.Array(t.Number()),
 });
 
@@ -21,6 +21,10 @@ export const PlayerModel = {
 		league: t.String(),
 		position: t.String(),
 		photo: t.String(),
+		location: LocationSchema,
+	}),
+	playerImportBody: t.Object({
+		location: LocationSchema,
 	}),
 	playerResponse: t.Object({
 		id: t.String(),

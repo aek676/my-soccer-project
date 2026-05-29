@@ -5,20 +5,10 @@ import { PlayerService } from "./service";
 export const PlayerModule = new Elysia({ name: "player" })
 	.model({
 		"player.createBody": PlayerModel.playerCreateBody,
+		"player.importBody": PlayerModel.playerImportBody,
 		"player.response": PlayerModel.playerResponse,
 		"player.error": PlayerModel.errorResponse,
 	})
-	.post(
-		"/players",
-		async ({ body }) => await PlayerService.createPlayer(body),
-		{
-			body: "player.createBody",
-			response: {
-				201: "player.response",
-				500: "player.error",
-			},
-		},
-	)
 	.get("/players", async () => await PlayerService.getAllPlayers(), {
 		response: {
 			200: t.Array(PlayerModel.playerResponse),
@@ -55,13 +45,25 @@ export const PlayerModule = new Elysia({ name: "player" })
 		},
 	)
 	.post(
+		"/players",
+		async ({ body }) => await PlayerService.createPlayer(body),
+		{
+			body: "player.createBody",
+			response: {
+				201: "player.response",
+				500: "player.error",
+			},
+		},
+	)
+	.post(
 		"/players/import/:apiPlayerId",
-		async ({ params: { apiPlayerId } }) =>
-			await PlayerService.importPlayerFromApi(apiPlayerId),
+		async ({ params: { apiPlayerId }, body }) =>
+			await PlayerService.importPlayerFromApi(apiPlayerId, body),
 		{
 			params: t.Object({
 				apiPlayerId: t.Number({ minimum: 1 }),
 			}),
+			body: "player.importBody",
 			response: {
 				200: "player.response",
 				201: "player.response",

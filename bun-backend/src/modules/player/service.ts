@@ -33,6 +33,7 @@ export abstract class PlayerService {
 		league,
 		position,
 		photo,
+		location,
 	}: PlayerModel["playerCreateBody"]) {
 		const playerDoc = await Player.create({
 			name: name,
@@ -48,6 +49,7 @@ export abstract class PlayerService {
 			league: league,
 			position: position,
 			photo: photo,
+			location: location,
 		});
 
 		const obj = playerDoc.toObject();
@@ -91,7 +93,10 @@ export abstract class PlayerService {
 		return data.response.map(mapApiSportsPlayer);
 	}
 
-	static async importPlayerFromApi(apiPlayerId: number) {
+	static async importPlayerFromApi(
+		apiPlayerId: number,
+		{ location }: PlayerModel["playerImportBody"],
+	) {
 		const existing = await Player.findOne({
 			externalId: apiPlayerId,
 		}).lean();
@@ -162,6 +167,7 @@ export abstract class PlayerService {
 			team: teamName,
 			league: leagueName,
 			externalId: apiPlayerId,
+			location: location,
 		});
 
 		const obj = playerDoc.toObject();
