@@ -5,16 +5,47 @@ import { signal } from '@angular/core';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { PlayerModel } from '@core/models/player.model';
-import { FilterSelection } from '@shared/components/filter-chips/filter-chips.component';
 import { of } from 'rxjs';
 
 import { PlayersPage } from './players.page';
 
 const mockPlayers: PlayerModel[] = [
-  { id: '1', name: 'Marcus Rashford', position: 'Forward', team: 'Manchester United', league: 'Premier League', nationality: 'England', created: '2024-01-01T00:00:00' },
-  { id: '2', name: 'Jude Bellingham', position: 'Midfielder', team: 'Real Madrid', league: 'La Liga', nationality: 'England', created: '2024-02-01T00:00:00' },
-  { id: '3', name: 'Bukayo Saka', position: 'Winger', team: 'Arsenal', league: 'Premier League', nationality: 'England', created: '2024-03-01T00:00:00' },
-  { id: '4', name: 'Kylian Mbappé', position: 'Forward', team: 'Real Madrid', league: 'La Liga', nationality: 'France', created: '2024-04-01T00:00:00' },
+  {
+    id: '1',
+    name: 'Marcus Rashford',
+    position: 'Forward',
+    team: 'Manchester United',
+    league: 'Premier League',
+    nationality: 'England',
+    created: '2024-01-01T00:00:00',
+  },
+  {
+    id: '2',
+    name: 'Jude Bellingham',
+    position: 'Midfielder',
+    team: 'Real Madrid',
+    league: 'La Liga',
+    nationality: 'England',
+    created: '2024-02-01T00:00:00',
+  },
+  {
+    id: '3',
+    name: 'Bukayo Saka',
+    position: 'Winger',
+    team: 'Arsenal',
+    league: 'Premier League',
+    nationality: 'England',
+    created: '2024-03-01T00:00:00',
+  },
+  {
+    id: '4',
+    name: 'Kylian Mbappé',
+    position: 'Forward',
+    team: 'Real Madrid',
+    league: 'La Liga',
+    nationality: 'France',
+    created: '2024-04-01T00:00:00',
+  },
 ];
 
 describe('PlayersPage', () => {
@@ -91,25 +122,45 @@ describe('PlayersPage', () => {
     it('should sort by Team ascending', () => {
       component.selectedFilter.set({ filter: 'Team', direction: 'asc' });
       const names = component.filteredPlayers().map((p) => p.team);
-      expect(names).toEqual(['Arsenal', 'Manchester United', 'Real Madrid', 'Real Madrid']);
+      expect(names).toEqual([
+        'Arsenal',
+        'Manchester United',
+        'Real Madrid',
+        'Real Madrid',
+      ]);
     });
 
     it('should sort by Team descending', () => {
       component.selectedFilter.set({ filter: 'Team', direction: 'desc' });
       const names = component.filteredPlayers().map((p) => p.team);
-      expect(names).toEqual(['Real Madrid', 'Real Madrid', 'Manchester United', 'Arsenal']);
+      expect(names).toEqual([
+        'Real Madrid',
+        'Real Madrid',
+        'Manchester United',
+        'Arsenal',
+      ]);
     });
 
     it('should sort by League ascending', () => {
       component.selectedFilter.set({ filter: 'League', direction: 'asc' });
       const leagues = component.filteredPlayers().map((p) => p.league);
-      expect(leagues).toEqual(['La Liga', 'La Liga', 'Premier League', 'Premier League']);
+      expect(leagues).toEqual([
+        'La Liga',
+        'La Liga',
+        'Premier League',
+        'Premier League',
+      ]);
     });
 
     it('should sort by League descending', () => {
       component.selectedFilter.set({ filter: 'League', direction: 'desc' });
       const leagues = component.filteredPlayers().map((p) => p.league);
-      expect(leagues).toEqual(['Premier League', 'Premier League', 'La Liga', 'La Liga']);
+      expect(leagues).toEqual([
+        'Premier League',
+        'Premier League',
+        'La Liga',
+        'La Liga',
+      ]);
     });
 
     it('should sort by Date Added ascending', () => {

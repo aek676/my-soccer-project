@@ -38,6 +38,7 @@ import { CommentModel } from '@core/models/comment.model';
 import { UserRole } from '@core/models/user.model';
 import { AuthService } from '@core/services/auth.service';
 import { AuthStateService } from '@core/services/auth-state.service';
+import { GeolocationService } from '@core/services/geolocation.service';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 
 const MOCK_COMMENTS: CommentModel[] = [
@@ -99,6 +100,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   private alertController = inject(AlertController);
   private authState = inject(AuthStateService);
   private authService = inject(AuthService);
+  private geoService = inject(GeolocationService);
 
   @ViewChild(IonModal) modal!: IonModal;
 
@@ -205,7 +207,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
 
     L.marker([lat, lng])
       .addTo(this.map)
-      .bindPopup(p.nationality || 'Unknown');
+      .bindPopup(`Imported at ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
   }
 
   private destroyMap() {
@@ -234,7 +236,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     this.newComment.update((c) => ({ ...c, rating: stars }));
   }
 
-  submitComment() {
+  async submitComment() {
     const form = this.newComment();
     if (!form.text || !form.rating) return;
 
@@ -242,40 +244,38 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     const idPlayer = this.route.snapshot.paramMap.get('id') || '';
     const idUser = role !== 'guest' ? this.authService.currentUser?.uid || '' : '';
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const comment: CommentModel = {
-          id: Date.now().toString(),
-          author: form.author,
-          text: form.text,
-          rating: form.rating,
-          created: new Date().toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-          }),
-          idPlayer,
-          idUser,
-          location: {
-            type: 'Point',
-            coordinates: [position.coords.longitude, position.coords.latitude],
-          },
-        };
-        console.log('Submitting comment:', comment);
-        // TODO: Sustituir por this.backendManager.providers().commentProvider.createComment(comment).subscribe(...)
-        this.comments.update((list) => [...list, comment]);
-        this.closeModal();
+    const pos = await this.geoService.getCurrentPosition();
+    if (!pos) {
+      const alert = await this.alertController.create({
+        header: 'Location Required',
+        message:
+          'Location access is required to post a comment. Please enable location services and try again.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return;
+    }
+
+    const comment: CommentModel = {
+      id: Date.now().toString(),
+      author: form.author,
+      text: form.text,
+      rating: form.rating,
+      created: new Date().toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+      idPlayer,
+      idUser,
+      location: {
+        type: 'Point',
+        coordinates: [pos.longitude, pos.latitude],
       },
-      async () => {
-        const alert = await this.alertController.create({
-          header: 'Location Required',
-          message:
-            'Location access is required to post a comment. Please enable location services and try again.',
-          buttons: ['OK'],
-        });
-        await alert.present();
-      },
-    );
+    };
+    console.log('Submitting comment:', comment);
+    this.comments.update((list) => [...list, comment]);
+    this.closeModal();
   }
 
   confirmDelete(comment: CommentModel) {

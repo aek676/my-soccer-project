@@ -91,7 +91,7 @@ export class LoginPage {
     this.submitting = true;
 
     try {
-      await firstValueFrom(this.authService.loginAsGuest());
+      await this.authService.loginAsGuest();
       this.router.navigate(['/tabs']);
     } catch (error: unknown) {
       const toast = await this.toastCtrl.create({

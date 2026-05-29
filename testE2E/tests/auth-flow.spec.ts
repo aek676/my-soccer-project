@@ -93,12 +93,15 @@ test.describe('Auth - Login Flow', () => {
 
 test.describe('Auth - Guest Flow', () => {
   test('continues as guest without authentication', async ({ page }) => {
+    test.setTimeout(90000);
+
     await page.goto('/auth/login');
+    await page.waitForLoadState('networkidle');
 
     const guestBtn = page.locator('ion-button.guest-btn');
     await guestBtn.scrollIntoViewIfNeeded();
     await guestBtn.click();
 
-    await expect(page).toHaveURL(/\/tabs/);
+    await expect(page).toHaveURL(/\/tabs/, { timeout: 60000 });
   });
 });

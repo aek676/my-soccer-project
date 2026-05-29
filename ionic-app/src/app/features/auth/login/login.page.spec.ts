@@ -215,7 +215,7 @@ describe('LoginPage', () => {
 
   describe('continueAsGuest', () => {
     it('should navigate to /tabs', fakeAsync(() => {
-      authServiceSpy.loginAsGuest.and.returnValue(of({} as any));
+      authServiceSpy.loginAsGuest.and.returnValue(Promise.resolve());
       const navigateSpy = spyOn(router, 'navigate').and.returnValue(
         Promise.resolve(true),
       );

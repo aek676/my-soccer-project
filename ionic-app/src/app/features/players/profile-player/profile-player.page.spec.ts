@@ -1,10 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { AuthService } from '@core/services/auth.service';
 import { BackendManagerService } from '@core/services/backend-manager.service';
+import { GeolocationService } from '@core/services/geolocation.service';
 import { PlayerModel } from '@core/models/player.model';
 import { CommentModel } from '@core/models/comment.model';
 import { ProfilePlayerPage } from './profile-player.page';
@@ -46,11 +47,17 @@ const mockBackendManager = {
   }),
 };
 
+const mockGeoService = {
+  getCurrentPosition: jasmine.createSpy('getCurrentPosition').and.resolveTo({ latitude: 51.51, longitude: -0.12 }),
+};
+
 describe('ProfilePlayerPage', () => {
   let component: ProfilePlayerPage;
   let fixture: ComponentFixture<ProfilePlayerPage>;
 
   beforeEach(async () => {
+    mockGeoService.getCurrentPosition = jasmine.createSpy('getCurrentPosition').and.resolveTo({ latitude: 51.51, longitude: -0.12 });
+
     await TestBed.configureTestingModule({
       imports: [ProfilePlayerPage],
       providers: [
@@ -61,6 +68,7 @@ describe('ProfilePlayerPage', () => {
         { provide: AuthStateService, useValue: { role$: of('guest'), isGuest$: of(true) } },
         { provide: AuthService, useValue: { currentUser: null } },
         { provide: BackendManagerService, useValue: mockBackendManager },
+        { provide: GeolocationService, useValue: mockGeoService },
       ],
     }).compileComponents();
 
@@ -153,39 +161,22 @@ describe('ProfilePlayerPage', () => {
   });
 
   describe('submitComment with valid data', () => {
-    beforeEach(() => {
-      spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(
-        (success: PositionCallback) => {
-          success({
-            coords: {
-              latitude: 51.51,
-              longitude: -0.12,
-              accuracy: 10,
-              altitude: null,
-              altitudeAccuracy: null,
-              heading: null,
-              speed: null,
-            },
-            timestamp: Date.now(),
-          } as GeolocationPosition);
-        },
-      );
-    });
-
-    it('should submit comment and add to list', () => {
+    it('should submit comment and add to list', fakeAsync(() => {
       const initialLength = component.comments().length;
       component.newComment.set({ author: 'Tester', text: 'Nice player', rating: 4 });
       component.submitComment();
+      flush();
       expect(component.comments().length).toBe(initialLength + 1);
       expect(component.showModal()).toBeFalse();
-    });
+    }));
 
-    it('should include geolocation coordinates in new comment', () => {
+    it('should include geolocation coordinates in new comment', fakeAsync(() => {
       component.newComment.set({ author: 'Tester', text: 'Nice player', rating: 4 });
       component.submitComment();
+      flush();
       const latest = component.comments()[component.comments().length - 1];
       expect(latest.location).toBeDefined();
       expect(latest.location!.coordinates).toEqual([-0.12, 51.51]);
-    });
+    }));
   });
 });

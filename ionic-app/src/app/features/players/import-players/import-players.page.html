@@ -8,7 +8,7 @@
 <ion-content [fullscreen]="true">
   <ion-searchbar
     [ngModel]="searchQuery()"
-    (ngModelChange)="searchQuery.set($event)"
+    (ngModelChange)="onSearchChange($event)"
     placeholder="Search by player name..."
     show-clear-button="focus"
     class="ion-padding"
@@ -19,8 +19,8 @@
     <app-player-item
       [player]="player"
       [selectable]="true"
-      [selected]="isSelected(player.id)"
-      (selectionChange)="togglePlayer(player.id, $event)"
+      [selected]="isSelected('' + player.id)"
+      (selectionChange)="togglePlayer('' + player.id, $event)"
     ></app-player-item>
     }
   </ion-list>
@@ -29,11 +29,14 @@
 <ion-footer>
   <ion-toolbar>
     <div class="footer-actions">
-      <ion-button fill="outline" color="medium" (click)="goBack()"
+      <ion-button fill="outline" color="medium" (click)="goBack()" [disabled]="importing()"
         >Cancel</ion-button
       >
-      <ion-button fill="solid" color="primary" (click)="confirmImport()"
-        >Confirm Import</ion-button
+      <ion-button fill="solid" color="primary" (click)="confirmImport()" [disabled]="importing()">
+        @if (importing()) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+        }
+        Confirm Import</ion-button
       >
     </div>
   </ion-toolbar>
