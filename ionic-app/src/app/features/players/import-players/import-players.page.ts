@@ -125,10 +125,12 @@ export class ImportPlayersPage {
           const response = await firstValueFrom(
             provider.importPlayer(apiPlayerId, location),
           );
+          const importMessage = response.status === 200
+            ? `${player.name} already imported`
+            : `${player.name} imported successfully`;
+
           const toast = await this.toastCtrl.create({
-            message: response.status === 200
-              ? `${player.name} already imported`
-              : `${player.name} imported successfully`,
+            message: importMessage,
             duration: 2000,
             position: 'bottom',
             color: 'success',
