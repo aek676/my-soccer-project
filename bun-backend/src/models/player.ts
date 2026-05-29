@@ -1,4 +1,5 @@
 import { type InferSchemaType, model, Schema } from "mongoose";
+import { LocationSchema } from "./location";
 
 const PlayerSchema = new Schema(
 	{
@@ -16,17 +17,7 @@ const PlayerSchema = new Schema(
 		position: { type: String },
 		photo: { type: String },
 		externalId: { type: Number, sparse: true, unique: true },
-		location: {
-			type: {
-				type: String,
-				enum: ["Point"],
-				default: "Point",
-			},
-			coordinates: {
-				type: [Number],
-				required: true,
-			},
-		},
+		location: LocationSchema,
 		created: { type: Date, default: Date.now },
 	},
 	{
