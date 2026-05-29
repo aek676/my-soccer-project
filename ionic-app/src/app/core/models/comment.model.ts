@@ -4,10 +4,10 @@ export interface CommentModel {
   text: string;
   rating: number;
   created: string;
-  location?: {
+  location: {
     type: string;
     coordinates: number[];
   };
   idPlayer: string;
-  idUser: string;
+  idUser?: string;
 }

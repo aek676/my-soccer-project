@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs';
 import { BackendContext } from '@core/context/backend-context';
 import { NodeBackend } from '@core/creators/backends/node-backend';
 import { SpringBackend } from '@core/creators/backends/spring-backend';
+import { CommentProviderInterface } from '@core/providers/comment-provider.interface';
 import { PlayerProviderInterface } from '@core/providers/player-provider.interface';
 import { TeamProviderInterface } from '@core/providers/team-provider.interface';
 import { BackendConfigType } from '@core/types/backend-config.type';
@@ -13,9 +14,11 @@ import { environment } from 'src/environments/environment';
 export type BackenType = 'NODE' | 'SPRING';
 const CONFIG: BackendConfigType = { gatewayUrl: environment.gatewayUrl };
 
+// TODO: Cuando el backend de comentarios esté listo, usar commentProvider aquí
 interface Providers {
   playerProvider: PlayerProviderInterface;
   teamProvider: TeamProviderInterface;
+  commentProvider: CommentProviderInterface;
 }
 @Injectable({
   providedIn: 'root',

@@ -17,7 +17,7 @@ import {
   IonButtons,
   IonAlert,
 } from '@ionic/angular/standalone';
-import { NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { AlertController, NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import L from 'leaflet';
 import { addIcons } from 'ionicons';
 import {
@@ -96,6 +96,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   private route = inject(ActivatedRoute);
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
+  private alertController = inject(AlertController);
   private authState = inject(AuthStateService);
   private authService = inject(AuthService);
 
@@ -155,6 +156,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
         error: () => this.player.set(null),
       });
 
+    // TODO: Sustituir por this.backendManager.providers().commentProvider.getCommentsByPlayer(id).subscribe(...)
     this.comments.set(MOCK_COMMENTS);
 
     this.authState.role$.pipe(take(1)).subscribe((role) => {
@@ -234,23 +236,42 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   submitComment() {
     const form = this.newComment();
     if (!form.text || !form.rating) return;
-    const role = this.userRole();
-    const comment: CommentModel = {
-      id: Date.now().toString(),
-      author: form.author,
-      text: form.text,
-      rating: form.rating,
-      created: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }),
-      idPlayer: this.route.snapshot.paramMap.get('id') || '',
-      idUser: role !== 'guest' ? this.authService.currentUser?.uid || '' : '',
-    };
-    console.log('Submitting comment:', comment);
-    this.comments.update((list) => [...list, comment]);
-    this.closeModal();
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const role = this.userRole();
+        const comment: CommentModel = {
+          id: Date.now().toString(),
+          author: form.author,
+          text: form.text,
+          rating: form.rating,
+          created: new Date().toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          }),
+          idPlayer: this.route.snapshot.paramMap.get('id') || '',
+          idUser: role !== 'guest' ? this.authService.currentUser?.uid || '' : '',
+          location: {
+            type: 'Point',
+            coordinates: [position.coords.longitude, position.coords.latitude],
+          },
+        };
+        console.log('Submitting comment:', comment);
+        // TODO: Sustituir por this.backendManager.providers().commentProvider.createComment(comment).subscribe(...)
+        this.comments.update((list) => [...list, comment]);
+        this.closeModal();
+      },
+      async () => {
+        const alert = await this.alertController.create({
+          header: 'Location Required',
+          message:
+            'Location access is required to post a comment. Please enable location services and try again.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+      },
+    );
   }
 
   confirmDelete(comment: CommentModel) {
@@ -266,6 +287,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   }
 
   deleteComment(id: string) {
+    // TODO: Sustituir por this.backendManager.providers().commentProvider.deleteComment(id).subscribe(...)
     this.comments.update((list) => list.filter((c) => c.id !== id));
   }
 
