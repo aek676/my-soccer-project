@@ -19,6 +19,45 @@ export abstract class PlayerService {
 		return { ...rest, id: _id.toString() } as PlayerModel["playerResponse"];
 	}
 
+	static async createPlayer(body: {
+		name: string;
+		firstName: string;
+		lastName: string;
+		age: number;
+		birthdate: Date;
+		nationality: string;
+		height: string;
+		weight: string;
+		number: number;
+		team: string;
+		league: string;
+		position: string;
+		photo: string;
+	}) {
+		const playerDoc = await Player.create({
+			name: body.name,
+			firstName: body.firstName,
+			lastName: body.lastName,
+			age: body.age,
+			birthdate: new Date(body.birthdate),
+			nationality: body.nationality,
+			height: body.height,
+			weight: body.weight,
+			number: body.number,
+			team: body.team,
+			league: body.league,
+			position: body.position,
+			photo: body.photo,
+		});
+
+		const obj = playerDoc.toObject();
+		const { _id, ...rest } = obj;
+		return status(201, {
+			...rest,
+			id: _id.toString(),
+		} as PlayerModel["playerResponse"]);
+	}
+
 	static async searchPlayerByName(name: string) {
 		const apiKey = Bun.env.API_KEY_API_FOOTBALL;
 		console.log(

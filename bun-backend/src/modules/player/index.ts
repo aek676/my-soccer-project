@@ -4,9 +4,21 @@ import { PlayerService } from "./service";
 
 export const PlayerModule = new Elysia({ name: "player" })
 	.model({
+		"player.createBody": PlayerModel.playerCreateBody,
 		"player.response": PlayerModel.playerResponse,
 		"player.error": PlayerModel.errorResponse,
 	})
+	.post(
+		"/players",
+		async ({ body }) => await PlayerService.createPlayer(body),
+		{
+			body: "player.createBody",
+			response: {
+				201: "player.response",
+				500: "player.error",
+			},
+		},
+	)
 	.get("/players", async () => await PlayerService.getAllPlayers(), {
 		response: {
 			200: t.Array(PlayerModel.playerResponse),

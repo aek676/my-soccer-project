@@ -7,6 +7,21 @@ const LocationSchema = t.Object({
 });
 
 export const PlayerModel = {
+	playerCreateBody: t.Object({
+		name: t.String(),
+		firstName: t.String(),
+		lastName: t.String(),
+		age: t.Number(),
+		birthdate: t.Date(),
+		nationality: t.String(),
+		height: t.String(),
+		weight: t.String(),
+		number: t.Number(),
+		team: t.String(),
+		league: t.String(),
+		position: t.String(),
+		photo: t.String(),
+	}),
 	playerResponse: t.Object({
 		id: t.String(),
 		name: t.String(),
