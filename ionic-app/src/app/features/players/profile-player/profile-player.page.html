@@ -110,6 +110,9 @@
         <div class="comments-list">
           @for (comment of comments(); track comment.id) {
           <div class="comment-card">
+            <button class="delete-btn" (click)="confirmDelete(comment)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
             <div class="comment-top">
               <div class="stars-display">
                 @for (i of [0,1,2,3,4]; track i) {
@@ -155,11 +158,12 @@
       <ion-toolbar>
         <ion-title>Add Comment</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="submitComment()">
-            <ion-icon name="send"></ion-icon>
-          </ion-button>
-          <ion-button (click)="closeModal()">
-            <ion-icon name="close"></ion-icon>
+          <ion-button
+            (click)="submitComment()"
+            class="submit-btn"
+            shape="round"
+          >
+            <strong>Post</strong>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -168,9 +172,9 @@
       <div class="modal-card">
         <div class="auth-form">
           <div class="form-group">
-            <label>Author Name</label>
+            <label>Author</label>
             <ion-input
-              placeholder="Enter your name (Guest)"
+              placeholder="Enter your name"
               [(ngModel)]="newComment().author"
               class="auth-input"
             />
@@ -191,9 +195,8 @@
           </div>
 
           <div class="form-group">
-            <label>Note</label>
+            <label>Comment</label>
             <ion-textarea
-              placeholder="Enter detailed observations regarding performance, tactical understanding, or physical condition..."
               rows="4"
               [(ngModel)]="newComment().text"
               class="auth-input"

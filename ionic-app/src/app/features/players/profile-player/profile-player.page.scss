@@ -257,6 +257,31 @@ ion-toolbar {
   position: relative;
 }
 
+.delete-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--ion-color-danger);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--surface-container);
+  }
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
 .comment-top {
   display: flex;
   justify-content: space-between;
@@ -322,6 +347,27 @@ ion-toolbar {
   opacity: 0.7;
 }
 
+.submit-btn {
+  --border-radius: 100px;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
+  --color: var(--text-on-primary);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 36px;
+  font-family: var(--ion-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.15;
+  min-width: 70px;
+
+  &::part(native) {
+    --padding-start: var(--spacing-md);
+    --padding-end: var(--spacing-md);
+  }
+}
+
 .empty-state {
   display: flex;
   align-items: center;
@@ -365,6 +411,12 @@ ion-toolbar {
   font-weight: 400;
   line-height: 1.5;
   color: var(--text-ink);
+}
+
+ion-textarea.auth-input {
+  height: auto;
+  min-height: 120px;
+  --padding-top: 44px;
 }
 
 .form-group {

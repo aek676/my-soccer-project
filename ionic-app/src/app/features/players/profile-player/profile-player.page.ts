@@ -7,18 +7,29 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonButtons,
   IonIcon,
   IonButton,
   IonAvatar,
   IonModal,
   IonInput,
   IonTextarea,
+  IonButtons,
 } from '@ionic/angular/standalone';
-import { NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { AlertController, NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import L from 'leaflet';
 import { addIcons } from 'ionicons';
-import { star, starHalf, close, location, footballOutline, shieldOutline, trophyOutline, person, chatbubble, send } from 'ionicons/icons';
+import {
+  star,
+  starHalf,
+  close,
+  location,
+  footballOutline,
+  shieldOutline,
+  trophyOutline,
+  person,
+  chatbubble,
+  trash,
+} from 'ionicons/icons';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { PlayerModel } from '@core/models/player.model';
 import { CommentModel } from '@core/models/comment.model';
@@ -63,7 +74,6 @@ interface NewCommentForm {
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonButtons,
     IonIcon,
     IonButton,
     IonAvatar,
@@ -73,12 +83,14 @@ interface NewCommentForm {
     CommonModule,
     FormsModule,
     SharedHeaderComponent,
+    IonButtons,
   ],
 })
 export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   private route = inject(ActivatedRoute);
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
+  private alertController = inject(AlertController);
 
   @ViewChild(IonModal) modal!: IonModal;
 
@@ -90,13 +102,26 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   private map?: L.Map;
 
   constructor() {
-    addIcons({ star, starHalf, close, location, footballOutline, shieldOutline, trophyOutline, person, chatbubble, send });
+    addIcons({
+      star,
+      starHalf,
+      close,
+      location,
+      footballOutline,
+      shieldOutline,
+      trophyOutline,
+      person,
+      chatbubble,
+      trash,
+    });
 
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      iconRetinaUrl:
+        'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
       iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      shadowUrl:
+        'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
     });
   }
 
@@ -104,13 +129,16 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
 
-    this.backendManager.providers().playerProvider.getPlayerById(id).subscribe({
-      next: (player) => {
-        this.player.set(player);
-        setTimeout(() => this.initMap(), 50);
-      },
-      error: () => this.player.set(null),
-    });
+    this.backendManager
+      .providers()
+      .playerProvider.getPlayerById(id)
+      .subscribe({
+        next: (player) => {
+          this.player.set(player);
+          setTimeout(() => this.initMap(), 50);
+        },
+        error: () => this.player.set(null),
+      });
 
     this.comments.set(MOCK_COMMENTS);
   }
@@ -140,12 +168,18 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
       keyboard: false,
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    }).addTo(this.map);
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      },
+    ).addTo(this.map);
 
-    L.marker([lat, lng]).addTo(this.map).bindPopup(p.nationality || 'Unknown');
+    L.marker([lat, lng])
+      .addTo(this.map)
+      .bindPopup(p.nationality || 'Unknown');
   }
 
   private destroyMap() {
@@ -177,6 +211,26 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     if (!form.text || !form.rating) return;
     console.log('Submitting comment:', form);
     this.closeModal();
+  }
+
+  async confirmDelete(comment: CommentModel) {
+    const alert = await this.alertController.create({
+      header: 'Delete Comment',
+      message: 'Are you sure you want to delete this comment?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: () => this.deleteComment(comment.id),
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  deleteComment(id: string) {
+    this.comments.update((list) => list.filter((c) => c.id !== id));
   }
 
   getStarIcons(rating: number): string[] {
