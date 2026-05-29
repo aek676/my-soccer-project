@@ -94,6 +94,88 @@ describe("PlayerService - Integration Tests", () => {
 		});
 	});
 
+	describe("createPlayer", () => {
+		const validBody = {
+			name: "Lionel Messi",
+			firstName: "Lionel",
+			lastName: "Messi",
+			age: 36,
+			birthdate: new Date("1987-06-24"),
+			nationality: "Argentina",
+			height: "170 cm",
+			weight: "72 kg",
+			number: 10,
+			team: "Inter Miami",
+			league: "Major League Soccer",
+			position: "Forward",
+			photo: "https://example.com/messi.jpg",
+			location: { type: "Point" as const, coordinates: [0, 0] },
+		};
+
+		test("creates player and returns 201", async () => {
+			const result = await PlayerService.createPlayer(validBody);
+			const resultWithStatus = result as {
+				code: number;
+				response: { id: string; name: string };
+			};
+
+			expect(resultWithStatus.code).toBe(201);
+			expect(resultWithStatus.response.name).toBe("Lionel Messi");
+		});
+
+		test("persists player to database", async () => {
+			await PlayerService.createPlayer(validBody);
+
+			const dbPlayer = await Player.findOne({ name: "Lionel Messi" }).lean();
+			expect(dbPlayer).not.toBeNull();
+			expect(dbPlayer?.team).toBe("Inter Miami");
+		});
+
+		test("returns valid MongoDB ObjectId as id", async () => {
+			const result = await PlayerService.createPlayer(validBody);
+			const resultWithStatus = result as {
+				code: number;
+				response: { id: string };
+			};
+
+			expect(resultWithStatus.response.id).toMatch(/^[0-9a-f]{24}$/);
+		});
+
+		test("response has no _id or __v", async () => {
+			const result = await PlayerService.createPlayer(validBody);
+			const resultWithStatus = result as {
+				code: number;
+				response: Record<string, unknown>;
+			};
+
+			expect(resultWithStatus.response).not.toHaveProperty("_id");
+			expect(resultWithStatus.response).not.toHaveProperty("__v");
+		});
+
+		test("returns all provided fields", async () => {
+			const result = await PlayerService.createPlayer(validBody);
+			const resultWithStatus = result as {
+				code: number;
+				response: Record<string, unknown>;
+			};
+
+			expect(resultWithStatus.response).toMatchObject({
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				nationality: "Argentina",
+				height: "170 cm",
+				weight: "72 kg",
+				number: 10,
+				team: "Inter Miami",
+				league: "Major League Soccer",
+				position: "Forward",
+				photo: "https://example.com/messi.jpg",
+			});
+		});
+	});
+
 	describe("getPlayerById", () => {
 		test("throws CastError for invalid ObjectId", async () => {
 			expect(() => PlayerService.getPlayerById("not-a-valid-id")).toThrow();

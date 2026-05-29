@@ -23,7 +23,7 @@ const CommentSchema = new Schema(
 			required: true,
 			index: true,
 		},
-		idUser: { type: String, required: true, index: true },
+		idUser: { type: String, index: true },
 	},
 	{
 		timestamps: false,

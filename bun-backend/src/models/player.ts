@@ -15,6 +15,7 @@ const PlayerSchema = new Schema(
 		league: { type: String },
 		position: { type: String },
 		photo: { type: String },
+		externalId: { type: Number, sparse: true, unique: true },
 		location: {
 			type: {
 				type: String,

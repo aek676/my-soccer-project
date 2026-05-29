@@ -80,6 +80,7 @@ jobs:
           report_paths: bun-backend/reports/junit.xml
           comment: true
           update_check: true
+          detailed_summary: true
 
       - name: Upload Artifacts (Binary)
         uses: actions/upload-artifact@v4
