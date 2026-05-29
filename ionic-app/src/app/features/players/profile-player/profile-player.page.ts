@@ -237,9 +237,12 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     const form = this.newComment();
     if (!form.text || !form.rating) return;
 
+    const role = this.userRole();
+    const idPlayer = this.route.snapshot.paramMap.get('id') || '';
+    const idUser = role !== 'guest' ? this.authService.currentUser?.uid || '' : '';
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const role = this.userRole();
         const comment: CommentModel = {
           id: Date.now().toString(),
           author: form.author,
@@ -250,10 +253,8 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
             day: 'numeric',
             year: 'numeric',
           }),
-          // istanbul ignore next
-          idPlayer: this.route.snapshot.paramMap.get('id') || '',
-          // istanbul ignore next
-          idUser: role !== 'guest' ? this.authService.currentUser?.uid || '' : '',
+          idPlayer,
+          idUser,
           location: {
             type: 'Point',
             coordinates: [position.coords.longitude, position.coords.latitude],
