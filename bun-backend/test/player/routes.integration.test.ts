@@ -391,7 +391,9 @@ describe("PlayerModule Routes - Integration Tests", () => {
 					new Response(JSON.stringify({ response: [] }), { status: 200 }),
 			);
 
-			const res = await post("/players/import/999999", { location: testLocation });
+			const res = await post("/players/import/999999", {
+				location: testLocation,
+			});
 
 			expect(res.status).toBe(404);
 			const data = await res.json();
