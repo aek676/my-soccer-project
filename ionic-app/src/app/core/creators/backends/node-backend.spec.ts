@@ -22,4 +22,10 @@ describe('NodeBackend', () => {
     const provider = backend.createTeamProvider();
     expect(provider).toBeDefined();
   });
+
+  it('should create a comment provider (mock)', () => {
+    const backend = new NodeBackend(config, httpMock);
+    const provider = backend.createCommentProvider();
+    expect(provider).toBeDefined();
+  });
 });
