@@ -16,25 +16,20 @@ import { mongoUrl } from "../setup";
 
 const app = new Elysia().use(PlayerModule);
 
-type FetchLike = (
-	input: string | URL | Request,
-	init?: RequestInit,
-) => Promise<Response>;
-
-interface FetchSpy {
-	mockImplementation: (fn: FetchLike) => FetchSpy;
-	mockRestore: () => void;
-}
-
-const spyOnFetch = (): FetchSpy =>
-	spyOn(
-		globalThis as unknown as { fetch: FetchLike },
-		"fetch",
-	) as unknown as FetchSpy;
+const spyOnFetch = () =>
+	spyOn(globalThis as unknown as { fetch: typeof fetch }, "fetch");
 
 const get = (url: string) => app.handle(new Request(`http://localhost${url}`));
 const post = (url: string) =>
 	app.handle(new Request(`http://localhost${url}`, { method: "POST" }));
+const postWithBody = (url: string, body: Record<string, unknown>) =>
+	app.handle(
+		new Request(`http://localhost${url}`, {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(body),
+		}),
+	);
 
 describe("PlayerModule Routes - Integration Tests", () => {
 	beforeAll(async () => {
@@ -94,6 +89,161 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		});
 	});
 
+	describe("GET /players/search/:name", () => {
+		let fetchSpy: ReturnType<typeof spyOnFetch>;
+
+		beforeAll(() => {
+			Bun.env.API_KEY_API_FOOTBALL = "test-api-key";
+		});
+
+		afterAll(() => {
+			Bun.env.API_KEY_API_FOOTBALL = undefined as unknown as string;
+		});
+
+		afterEach(() => {
+			fetchSpy?.mockRestore();
+		});
+
+		test("returns 200 with mapped players", async () => {
+			fetchSpy = spyOnFetch().mockImplementation(
+				async () =>
+					new Response(
+						JSON.stringify({
+							response: [
+								{
+									player: {
+										id: 154,
+										name: "Lionel Messi",
+										firstname: "Lionel",
+										lastname: "Messi",
+										age: 36,
+										birth: { date: "1987-06-24" },
+										nationality: "Argentina",
+										height: "170 cm",
+										weight: "72 kg",
+										number: 10,
+										position: "Forward",
+										photo: "https://example.com/messi.jpg",
+									},
+								},
+							],
+						}),
+						{ status: 200 },
+					),
+			);
+
+			const res = await get("/players/search/Messi");
+
+			expect(res.status).toBe(200);
+			const data = await res.json();
+			expect(data).toHaveLength(1);
+			expect(data[0].name).toBe("Lionel Messi");
+			expect(data[0].id).toBe("154");
+		});
+
+		test("returns 500 when API key is missing", async () => {
+			Bun.env.API_KEY_API_FOOTBALL = undefined as unknown as string;
+
+			const res = await get("/players/search/Messi");
+
+			expect(res.status).toBe(500);
+			const data = await res.json();
+			expect(data.code).toBe(500);
+
+			Bun.env.API_KEY_API_FOOTBALL = "test-api-key";
+		});
+
+		test("returns 500 when external API fails", async () => {
+			fetchSpy = spyOnFetch().mockImplementation(
+				async () => new Response("Server Error", { status: 500 }),
+			);
+
+			const res = await get("/players/search/Messi");
+
+			expect(res.status).toBe(500);
+			const data = await res.json();
+			expect(data.code).toBe(500);
+		});
+	});
+
+	describe("POST /players", () => {
+		const validBody = {
+			name: "Lionel Messi",
+			firstName: "Lionel",
+			lastName: "Messi",
+			age: 36,
+			birthdate: "1987-06-24",
+			nationality: "Argentina",
+			height: "170 cm",
+			weight: "72 kg",
+			number: 10,
+			team: "Inter Miami",
+			league: "Major League Soccer",
+			position: "Forward",
+			photo: "https://example.com/messi.jpg",
+		};
+
+		test("returns 201 with valid body", async () => {
+			const res = await postWithBody("/players", validBody);
+
+			expect(res.status).toBe(201);
+			const data = await res.json();
+			expect(data.name).toBe("Lionel Messi");
+		});
+
+		test("response contains id field", async () => {
+			const res = await postWithBody("/players", validBody);
+			const data = await res.json();
+
+			expect(data).toHaveProperty("id");
+			expect(typeof data.id).toBe("string");
+			expect(data.id).toMatch(/^[0-9a-f]{24}$/);
+		});
+
+		test("response has no _id or __v", async () => {
+			const res = await postWithBody("/players", validBody);
+			const data = await res.json();
+
+			expect(data).not.toHaveProperty("_id");
+			expect(data).not.toHaveProperty("__v");
+		});
+
+		test("returns all fields in response", async () => {
+			const res = await postWithBody("/players", validBody);
+			const data = await res.json();
+
+			expect(data).toMatchObject({
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				nationality: "Argentina",
+				height: "170 cm",
+				weight: "72 kg",
+				number: 10,
+				team: "Inter Miami",
+				league: "Major League Soccer",
+				position: "Forward",
+				photo: "https://example.com/messi.jpg",
+			});
+		});
+
+		test("persists player to database", async () => {
+			await postWithBody("/players", validBody);
+
+			const dbPlayer = await Player.findOne({ name: "Lionel Messi" }).lean();
+			expect(dbPlayer).not.toBeNull();
+			expect(dbPlayer!.team).toBe("Inter Miami");
+			expect(dbPlayer!.league).toBe("Major League Soccer");
+		});
+
+		test("returns error for missing required fields", async () => {
+			const res = await postWithBody("/players", { name: "Only Name" });
+
+			expect(res.status).toBe(422);
+		});
+	});
+
 	describe("POST /players/import/:apiPlayerId", () => {
 		const mockPlayer = {
 			id: 154,
@@ -139,7 +289,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 			goals: { total: 21, conceded: 0, assists: 11, saves: null },
 		};
 
-		let fetchSpy: FetchSpy;
+		let fetchSpy: ReturnType<typeof spyOnFetch>;
 
 		beforeAll(() => {
 			Bun.env.API_KEY_API_FOOTBALL = "test-api-key";
@@ -208,9 +358,9 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				league: string;
 			} | null;
 			expect(dbPlayer).not.toBeNull();
-			expect(dbPlayer?.name).toBe("Lionel Messi");
-			expect(dbPlayer?.team).toBe("Inter Miami");
-			expect(dbPlayer?.league).toBe("Major League Soccer");
+			expect(dbPlayer!.name).toBe("Lionel Messi");
+			expect(dbPlayer!.team).toBe("Inter Miami");
+			expect(dbPlayer!.league).toBe("Major League Soccer");
 		});
 
 		test("returns 404 when player not found in external API", async () => {

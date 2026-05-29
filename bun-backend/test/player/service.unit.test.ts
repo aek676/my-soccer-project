@@ -9,6 +9,8 @@ import {
 } from "bun:test";
 import { Player } from "../../src/models/player";
 import { PlayerService } from "../../src/modules/player/service";
+import { mapApiSportsPlayer } from "../../src/modules/player/model";
+import type { ApiSportsPlayer } from "../../src/types/football-api";
 
 type MongooseQuery = ReturnType<typeof Player.find>;
 type MongooseFindByIdQuery = ReturnType<typeof Player.findById>;
@@ -50,6 +52,7 @@ describe("PlayerService - Unit Tests", () => {
 	afterEach(() => {
 		spyOn(Player, "find").mockRestore();
 		spyOn(Player, "findById").mockRestore();
+		spyOn(Player, "create").mockRestore();
 	});
 
 	describe("getAllPlayers", () => {
@@ -171,6 +174,277 @@ describe("PlayerService - Unit Tests", () => {
 			});
 			expect(result).not.toHaveProperty("_id");
 			expect(result).not.toHaveProperty("__v");
+		});
+	});
+
+	describe("createPlayer", () => {
+		const validBody = {
+			name: "Lionel Messi",
+			firstName: "Lionel",
+			lastName: "Messi",
+			age: 36,
+			birthdate: new Date("1987-06-24"),
+			nationality: "Argentina",
+			height: "170 cm",
+			weight: "72 kg",
+			number: 10,
+			team: "Inter Miami",
+			league: "Major League Soccer",
+			position: "Forward",
+			photo: "https://example.com/messi.jpg",
+		};
+
+		afterEach(() => {
+			spyOn(Player, "create").mockRestore();
+		});
+
+		test("calls Player.create with correct fields", async () => {
+			const createSpy = spyOn(Player, "create").mockReturnValue(
+				Promise.resolve(
+					makeDoc({ ...validBody }, "newId"),
+				) as unknown as ReturnType<typeof Player.create>,
+			);
+
+			await PlayerService.createPlayer(validBody);
+
+			expect(createSpy).toHaveBeenCalledWith({
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				birthdate: new Date("1987-06-24"),
+				nationality: "Argentina",
+				height: "170 cm",
+				weight: "72 kg",
+				number: 10,
+				team: "Inter Miami",
+				league: "Major League Soccer",
+				position: "Forward",
+				photo: "https://example.com/messi.jpg",
+			});
+		});
+
+		test("returns 201 with created player data", async () => {
+			spyOn(Player, "create").mockReturnValue(
+				Promise.resolve(
+					makeDoc({ ...validBody }, "createdId"),
+				) as unknown as ReturnType<typeof Player.create>,
+			);
+
+			const result = await PlayerService.createPlayer(validBody);
+			const resultWithStatus = result as {
+				code: number;
+				response: { id: string; name: string };
+			};
+
+			expect(resultWithStatus.code).toBe(201);
+			expect(resultWithStatus.response.id).toBe("createdId");
+			expect(resultWithStatus.response.name).toBe("Lionel Messi");
+		});
+
+		test("transforms _id to id and removes __v", async () => {
+			spyOn(Player, "create").mockReturnValue(
+				Promise.resolve(
+					makeDoc({ ...validBody }, "abc123def456abc123def4"),
+				) as unknown as ReturnType<typeof Player.create>,
+			);
+
+			const result = await PlayerService.createPlayer(validBody);
+			const resultWithStatus = result as {
+				code: number;
+				response: Record<string, unknown>;
+			};
+
+			expect(resultWithStatus.response.id).toBe("abc123def456abc123def4");
+			expect(resultWithStatus.response).not.toHaveProperty("_id");
+			expect(resultWithStatus.response).not.toHaveProperty("__v");
+		});
+	});
+
+	describe("searchPlayerByName", () => {
+		let fetchSpy: FetchSpy;
+
+		beforeAll(() => {
+			Bun.env.API_KEY_API_FOOTBALL = "test-api-key";
+		});
+
+		afterAll(() => {
+			Bun.env.API_KEY_API_FOOTBALL = undefined as unknown as string;
+		});
+
+		afterEach(() => {
+			fetchSpy?.mockRestore();
+		});
+
+		test("returns 500 when API key is missing", async () => {
+			Bun.env.API_KEY_API_FOOTBALL = undefined as unknown as string;
+
+			const result = await PlayerService.searchPlayerByName("Messi");
+			const resultWithStatus = result as {
+				code: number;
+				response: { code: number; message: string };
+			};
+
+			expect(resultWithStatus.code).toBe(500);
+			expect(resultWithStatus.response.message).toBe(
+				"API key not configured",
+			);
+
+			Bun.env.API_KEY_API_FOOTBALL = "test-api-key";
+		});
+
+		test("calls external API with correct URL", async () => {
+			fetchSpy = spyOnFetch().mockImplementation(
+				async (url: string | URL | Request) => {
+					const urlStr =
+						typeof url === "string" ? url : url instanceof URL ? url.href : "";
+					expect(urlStr).toContain("search=Messi");
+					expect(urlStr).toContain("players/profiles");
+					return new Response(
+						JSON.stringify({ response: [] }),
+						{ status: 200 },
+					);
+				},
+			);
+
+			await PlayerService.searchPlayerByName("Messi");
+
+			expect(fetchSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test("returns 500 when external API call fails", async () => {
+			fetchSpy = spyOnFetch().mockImplementation(
+				async () => new Response("Server Error", { status: 500 }),
+			);
+
+			const result = await PlayerService.searchPlayerByName("Messi");
+			const resultWithStatus = result as {
+				code: number;
+				response: { code: number; message: string };
+			};
+
+			expect(resultWithStatus.code).toBe(500);
+			expect(resultWithStatus.response.message).toBe(
+				"Failed to fetch from external API",
+			);
+		});
+
+		test("returns mapped players on success", async () => {
+			const apiResponse = {
+				response: [
+					{
+						player: {
+							id: 154,
+							name: "Lionel Messi",
+							firstname: "Lionel",
+							lastname: "Messi",
+							age: 36,
+							birth: { date: "1987-06-24", place: "Rosario", country: "Argentina" },
+							nationality: "Argentina",
+							height: "170 cm",
+							weight: "72 kg",
+							number: 10,
+							position: "Forward",
+							photo: "https://example.com/messi.jpg",
+						},
+					},
+				],
+			};
+			fetchSpy = spyOnFetch().mockImplementation(
+				async () => new Response(JSON.stringify(apiResponse), { status: 200 }),
+			);
+
+			const result = await PlayerService.searchPlayerByName("Messi");
+			const resultArray = result as Array<{ id: string; name: string }>;
+
+			expect(resultArray).toHaveLength(1);
+			expect(resultArray[0].name).toBe("Lionel Messi");
+			expect(resultArray[0].id).toBe("154");
+		});
+
+		test("returns empty array when no players found", async () => {
+			fetchSpy = spyOnFetch().mockImplementation(
+				async () =>
+					new Response(JSON.stringify({ response: [] }), { status: 200 }),
+			);
+
+			const result = await PlayerService.searchPlayerByName("Unknown");
+
+			expect(result).toEqual([]);
+		});
+	});
+
+	describe("mapApiSportsPlayer", () => {
+		test("maps API response to playerResponse format", () => {
+			const apiPlayer: ApiSportsPlayer = {
+				player: {
+					id: 154,
+					name: "Lionel Messi",
+					firstname: "Lionel",
+					lastname: "Messi",
+					age: 36,
+					birth: { date: "1987-06-24", place: "Rosario", country: "Argentina" },
+					nationality: "Argentina",
+					height: "170 cm",
+					weight: "72 kg",
+					number: 10,
+					position: "Forward",
+					photo: "https://example.com/messi.jpg",
+				},
+			};
+
+			const result = mapApiSportsPlayer(apiPlayer);
+
+			expect(result).toEqual({
+				id: "154",
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				birthdate: new Date("1987-06-24"),
+				nationality: "Argentina",
+				height: "170 cm",
+				weight: "72 kg",
+				number: 10,
+				position: "Forward",
+				photo: "https://example.com/messi.jpg",
+				externalId: 154,
+			});
+		});
+
+		test("handles null optional fields", () => {
+			const apiPlayer: ApiSportsPlayer = {
+				player: {
+					id: 999,
+					name: "Unknown Player",
+					firstname: null,
+					lastname: null,
+					age: null,
+					birth: { date: null, place: null, country: "Unknown" },
+					nationality: null,
+					height: null,
+					weight: null,
+					number: null,
+					position: null,
+					photo: null,
+				},
+			};
+
+			const result = mapApiSportsPlayer(apiPlayer);
+
+			expect(result.id).toBe("999");
+			expect(result.name).toBe("Unknown Player");
+			expect(result.firstName).toBeUndefined();
+			expect(result.lastName).toBeUndefined();
+			expect(result.age).toBeUndefined();
+			expect(result.birthdate).toBeUndefined();
+			expect(result.nationality).toBeUndefined();
+			expect(result.height).toBeUndefined();
+			expect(result.weight).toBeUndefined();
+			expect(result.number).toBeUndefined();
+			expect(result.position).toBeUndefined();
+			expect(result.photo).toBeUndefined();
+			expect(result.externalId).toBe(999);
 		});
 	});
 
