@@ -53,8 +53,8 @@
       </div>
 
       <div class="location-card">
-        <div class="map-placeholder">
-          <div class="map-overlay"></div>
+        <div class="map-wrapper">
+          <div #mapContainer class="map"></div>
           <div class="map-label">
             <ion-icon name="location"></ion-icon>
             <span>Origin: {{ p.nationality || 'Unknown' }}</span>
@@ -97,7 +97,14 @@
       <!-- Scout Notes -->
       <div class="scout-section">
         <div class="scout-header">
-          <h3>Scout Notes &amp; Comments</h3>
+          <h3>Comments</h3>
+          <ion-button
+            fill="clear"
+            class="add-comment-btn"
+            (click)="openModal()"
+          >
+            <ion-icon name="chatbubble" slot="icon-only"></ion-icon>
+          </ion-button>
         </div>
 
         <div class="comments-list">
@@ -113,15 +120,16 @@
                 ></ion-icon>
                 }
               </div>
-              @if (comment.location) {
-              <span class="location-badge">
-                <ion-icon name="location"></ion-icon>
-                Added from {{ comment.author }}
-              </span>
-              }
+              <span class="comment-author">{{ comment.author }}</span>
             </div>
             <p class="comment-text">{{ comment.text }}</p>
             <span class="comment-date">{{ comment.created }}</span>
+            @if (comment.location) {
+            <span class="comment-coords">
+              {{ comment.location.coordinates[1] }}°, {{
+              comment.location.coordinates[0] }}°
+            </span>
+            }
           </div>
           }
         </div>
@@ -133,18 +141,11 @@
     <p>Player not found</p>
   </div>
   }
-
-  <!-- FAB -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="ion-margin">
-    <ion-fab-button (click)="openModal()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
 
 <!-- Bottom Sheet Modal -->
 <ion-modal
-  [isOpen]="showModal"
+  [isOpen]="showModal()"
   (didDismiss)="closeModal()"
   [breakpoints]="[0.5, 0.8]"
   [initialBreakpoint]="0.5"
@@ -152,8 +153,11 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Add Scout Note</ion-title>
+        <ion-title>Add Comment</ion-title>
         <ion-buttons slot="end">
+          <ion-button (click)="submitComment()">
+            <ion-icon name="send"></ion-icon>
+          </ion-button>
           <ion-button (click)="closeModal()">
             <ion-icon name="close"></ion-icon>
           </ion-button>
@@ -161,41 +165,41 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <div class="modal-form">
-        <div class="form-group">
-          <label>Author Name</label>
-          <ion-input
-            placeholder="Enter your name (Guest)"
-            [(ngModel)]="newComment().author"
-          ></ion-input>
-        </div>
+      <div class="modal-card">
+        <div class="auth-form">
+          <div class="form-group">
+            <label>Author Name</label>
+            <ion-input
+              placeholder="Enter your name (Guest)"
+              [(ngModel)]="newComment().author"
+              class="auth-input"
+            />
+          </div>
 
-        <div class="form-group">
-          <label>Overall Rating</label>
-          <div class="star-selector">
-            @for (i of [1,2,3,4,5]; track i) {
-            <ion-icon
-              name="star"
-              (click)="setRating(i)"
-              [class.star-selected]="i <= newComment().rating"
-              [class.star-unselected]="i > newComment().rating"
-            ></ion-icon>
-            }
+          <div class="form-group">
+            <label>Rating</label>
+            <div class="star-selector">
+              @for (i of [1,2,3,4,5]; track i) {
+              <ion-icon
+                name="star"
+                (click)="setRating(i)"
+                [class.star-selected]="i <= newComment().rating"
+                [class.star-unselected]="i > newComment().rating"
+              ></ion-icon>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Note</label>
+            <ion-textarea
+              placeholder="Enter detailed observations regarding performance, tactical understanding, or physical condition..."
+              rows="4"
+              [(ngModel)]="newComment().text"
+              class="auth-input"
+            ></ion-textarea>
           </div>
         </div>
-
-        <div class="form-group">
-          <label>Note</label>
-          <ion-textarea
-            placeholder="Enter detailed observations regarding performance, tactical understanding, or physical condition..."
-            rows="4"
-            [(ngModel)]="newComment().text"
-          ></ion-textarea>
-        </div>
-
-        <ion-button expand="block" class="submit-btn" (click)="submitComment()">
-          Submit Note
-        </ion-button>
       </div>
     </ion-content>
   </ng-template>

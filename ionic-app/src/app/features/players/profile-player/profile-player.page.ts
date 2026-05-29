@@ -14,12 +14,11 @@ import {
   IonModal,
   IonInput,
   IonTextarea,
-  IonFab,
-  IonFabButton,
 } from '@ionic/angular/standalone';
-import { NavController, ViewWillEnter } from '@ionic/angular';
+import { NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import L from 'leaflet';
 import { addIcons } from 'ionicons';
-import { star, starHalf, close, location, add, footballOutline, shieldOutline, trophyOutline, person } from 'ionicons/icons';
+import { star, starHalf, close, location, footballOutline, shieldOutline, trophyOutline, person, chatbubble, send } from 'ionicons/icons';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { PlayerModel } from '@core/models/player.model';
 import { CommentModel } from '@core/models/comment.model';
@@ -71,14 +70,12 @@ interface NewCommentForm {
     IonModal,
     IonInput,
     IonTextarea,
-    IonFab,
-    IonFabButton,
     CommonModule,
     FormsModule,
     SharedHeaderComponent,
   ],
 })
-export class ProfilePlayerPage implements ViewWillEnter {
+export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   private route = inject(ActivatedRoute);
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
@@ -90,9 +87,17 @@ export class ProfilePlayerPage implements ViewWillEnter {
 
   showModal = signal(false);
   newComment = signal<NewCommentForm>({ author: '', text: '', rating: 0 });
+  private map?: L.Map;
 
   constructor() {
-    addIcons({ star, starHalf, close, location, add, footballOutline, shieldOutline, trophyOutline, person });
+    addIcons({ star, starHalf, close, location, footballOutline, shieldOutline, trophyOutline, person, chatbubble, send });
+
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    });
   }
 
   ionViewWillEnter() {
@@ -100,11 +105,54 @@ export class ProfilePlayerPage implements ViewWillEnter {
     if (!id) return;
 
     this.backendManager.providers().playerProvider.getPlayerById(id).subscribe({
-      next: (player) => this.player.set(player),
+      next: (player) => {
+        this.player.set(player);
+        setTimeout(() => this.initMap(), 50);
+      },
       error: () => this.player.set(null),
     });
 
-    this.comments.set(MOCK_COMMENTS.filter((c) => c.idPlayer === id));
+    this.comments.set(MOCK_COMMENTS);
+  }
+
+  ionViewWillLeave() {
+    this.destroyMap();
+  }
+
+  private initMap() {
+    this.destroyMap();
+
+    const container = document.querySelector<HTMLElement>('.map');
+    const p = this.player();
+    if (!container || !p?.location?.coordinates) return;
+
+    const [lng, lat] = p.location.coordinates;
+
+    this.map = L.map(container, {
+      center: [lat, lng],
+      zoom: 8,
+      zoomControl: false,
+      attributionControl: false,
+      dragging: false,
+      touchZoom: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      keyboard: false,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    }).addTo(this.map);
+
+    L.marker([lat, lng]).addTo(this.map).bindPopup(p.nationality || 'Unknown');
+  }
+
+  private destroyMap() {
+    if (this.map) {
+      this.map.remove();
+      this.map = undefined;
+    }
   }
 
   goBack() {

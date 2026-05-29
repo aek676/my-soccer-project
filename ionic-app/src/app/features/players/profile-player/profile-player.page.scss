@@ -122,45 +122,50 @@ ion-toolbar {
 
 .location-card {
   background: var(--surface-container-low);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--hairline);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  width: 100%;
 
-  .map-placeholder {
-    height: 160px;
+  .map-wrapper {
+    height: 360px;
     width: 100%;
-    background: var(--surface-variant);
     position: relative;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e1e1ef"/><circle cx="50" cy="50" r="10" fill="%23737688" opacity="0.3"/></svg>');
-    background-size: cover;
-    background-position: center;
-  }
+    overflow: hidden;
 
-  .map-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, var(--surface-container-low) 0%, transparent 60%);
+    .map {
+      height: 100%;
+      width: 100%;
+      display: block;
+      z-index: 1;
+    }
   }
 
   .map-label {
     position: absolute;
     bottom: var(--spacing-md);
     left: var(--spacing-md);
+    z-index: 3; // Mantiene el label por encima del mapa reajustado
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    padding: 6px 12px;
+    border-radius: 8px;
     color: var(--text-ink);
     font-family: var(--ion-font-family);
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
     line-height: 1.5;
 
     ion-icon {
-      font-size: 20px;
+      font-size: 16px;
+      color: var(--ion-color-primary);
     }
   }
 }
-
 .right-col {
   width: 100%;
   display: flex;
@@ -249,12 +254,7 @@ ion-toolbar {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  transition: background 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    background: var(--surface-soft);
-  }
+  position: relative;
 }
 
 .comment-top {
@@ -281,10 +281,9 @@ ion-toolbar {
   }
 }
 
-.location-badge {
+.comment-author {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
   background: var(--surface-container);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: 9999px;
@@ -293,10 +292,6 @@ ion-toolbar {
   font-weight: 600;
   line-height: 1.5;
   color: var(--text-body);
-
-  ion-icon {
-    font-size: 14px;
-  }
 }
 
 .comment-text {
@@ -317,6 +312,16 @@ ion-toolbar {
   margin-top: var(--spacing-xs);
 }
 
+.comment-coords {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  font-family: var(--monospace-font-family);
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
 .empty-state {
   display: flex;
   align-items: center;
@@ -327,11 +332,39 @@ ion-toolbar {
   font-size: 16px;
 }
 
-.modal-form {
+.modal-card {
+  background: var(--surface-soft);
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: var(--spacing-lg);
+}
+
+.modal-card .auth-form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-  padding-top: var(--spacing-base);
+  gap: var(--spacing-base);
+}
+
+.modal-card .auth-input {
+  --background: var(--surface-canvas);
+  --border-radius: 12px;
+  --border: 1px solid var(--hairline);
+  --border-color: var(--hairline);
+  --border-style: solid;
+  --border-width: 1px;
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-primary);
+  --highlight-color-invalid: var(--ion-color-danger);
+  --padding-start: var(--spacing-base);
+  --padding-end: var(--spacing-base);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 48px;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-ink);
 }
 
 .form-group {
@@ -351,6 +384,11 @@ ion-toolbar {
 .star-selector {
   display: flex;
   gap: var(--spacing-xs);
+  background: var(--surface-canvas);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: var(--spacing-sm) var(--spacing-base);
+  justify-content: center;
 
   ion-icon {
     font-size: 32px;
@@ -369,9 +407,4 @@ ion-toolbar {
   .star-unselected {
     color: var(--outline-variant, var(--hairline));
   }
-}
-
-.submit-btn {
-  --border-radius: 9999px;
-  margin-top: var(--spacing-sm);
 }
