@@ -207,7 +207,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
 
     L.marker([lat, lng])
       .addTo(this.map)
-      .bindPopup(p.nationality || 'Unknown');
+      .bindPopup(`Imported at ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
   }
 
   private destroyMap() {
