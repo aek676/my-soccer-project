@@ -47,3 +47,7 @@ info:
   application:
     name: ${spring.application.name}
     description: Players Service with Eureka
+
+api:
+  football:
+    key: ${API_FOOTBALL_KEY:}
