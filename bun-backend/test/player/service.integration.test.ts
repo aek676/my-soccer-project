@@ -127,7 +127,7 @@ describe("PlayerService - Integration Tests", () => {
 
 			const dbPlayer = await Player.findOne({ name: "Lionel Messi" }).lean();
 			expect(dbPlayer).not.toBeNull();
-			expect(dbPlayer!.team).toBe("Inter Miami");
+			expect(dbPlayer?.team).toBe("Inter Miami");
 		});
 
 		test("returns valid MongoDB ObjectId as id", async () => {

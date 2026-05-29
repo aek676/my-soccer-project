@@ -16,8 +16,21 @@ import { mongoUrl } from "../setup";
 
 const app = new Elysia().use(PlayerModule);
 
-const spyOnFetch = () =>
-	spyOn(globalThis as unknown as { fetch: typeof fetch }, "fetch");
+type FetchLike = (
+	input: string | URL | Request,
+	init?: RequestInit,
+) => Promise<Response>;
+
+interface FetchSpy {
+	mockImplementation: (fn: FetchLike) => FetchSpy;
+	mockRestore: () => void;
+}
+
+const spyOnFetch = (): FetchSpy =>
+	spyOn(
+		globalThis as unknown as { fetch: FetchLike },
+		"fetch",
+	) as unknown as FetchSpy;
 
 const get = (url: string) => app.handle(new Request(`http://localhost${url}`));
 const post = (url: string) =>
@@ -233,8 +246,8 @@ describe("PlayerModule Routes - Integration Tests", () => {
 
 			const dbPlayer = await Player.findOne({ name: "Lionel Messi" }).lean();
 			expect(dbPlayer).not.toBeNull();
-			expect(dbPlayer!.team).toBe("Inter Miami");
-			expect(dbPlayer!.league).toBe("Major League Soccer");
+			expect(dbPlayer?.team).toBe("Inter Miami");
+			expect(dbPlayer?.league).toBe("Major League Soccer");
 		});
 
 		test("returns error for missing required fields", async () => {
@@ -358,9 +371,9 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				league: string;
 			} | null;
 			expect(dbPlayer).not.toBeNull();
-			expect(dbPlayer!.name).toBe("Lionel Messi");
-			expect(dbPlayer!.team).toBe("Inter Miami");
-			expect(dbPlayer!.league).toBe("Major League Soccer");
+			expect(dbPlayer?.name).toBe("Lionel Messi");
+			expect(dbPlayer?.team).toBe("Inter Miami");
+			expect(dbPlayer?.league).toBe("Major League Soccer");
 		});
 
 		test("returns 404 when player not found in external API", async () => {

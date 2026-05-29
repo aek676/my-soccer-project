@@ -8,8 +8,8 @@ import {
 	test,
 } from "bun:test";
 import { Player } from "../../src/models/player";
-import { PlayerService } from "../../src/modules/player/service";
 import { mapApiSportsPlayer } from "../../src/modules/player/model";
+import { PlayerService } from "../../src/modules/player/service";
 import type { ApiSportsPlayer } from "../../src/types/football-api";
 
 type MongooseQuery = ReturnType<typeof Player.find>;
@@ -286,9 +286,7 @@ describe("PlayerService - Unit Tests", () => {
 			};
 
 			expect(resultWithStatus.code).toBe(500);
-			expect(resultWithStatus.response.message).toBe(
-				"API key not configured",
-			);
+			expect(resultWithStatus.response.message).toBe("API key not configured");
 
 			Bun.env.API_KEY_API_FOOTBALL = "test-api-key";
 		});
@@ -299,11 +297,11 @@ describe("PlayerService - Unit Tests", () => {
 					const urlStr =
 						typeof url === "string" ? url : url instanceof URL ? url.href : "";
 					expect(urlStr).toContain("search=Messi");
-					expect(urlStr).toContain("players/profiles");
-					return new Response(
-						JSON.stringify({ response: [] }),
-						{ status: 200 },
-					);
+					expect(urlStr).toContain("players?");
+					expect(urlStr).toContain("season=2024");
+					return new Response(JSON.stringify({ response: [] }), {
+						status: 200,
+					});
 				},
 			);
 
@@ -339,7 +337,11 @@ describe("PlayerService - Unit Tests", () => {
 							firstname: "Lionel",
 							lastname: "Messi",
 							age: 36,
-							birth: { date: "1987-06-24", place: "Rosario", country: "Argentina" },
+							birth: {
+								date: "1987-06-24",
+								place: "Rosario",
+								country: "Argentina",
+							},
 							nationality: "Argentina",
 							height: "170 cm",
 							weight: "72 kg",
