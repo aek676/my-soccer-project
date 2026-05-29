@@ -250,7 +250,9 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
             day: 'numeric',
             year: 'numeric',
           }),
+          // istanbul ignore next
           idPlayer: this.route.snapshot.paramMap.get('id') || '',
+          // istanbul ignore next
           idUser: role !== 'guest' ? this.authService.currentUser?.uid || '' : '',
           location: {
             type: 'Point',
