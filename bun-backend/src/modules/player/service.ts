@@ -19,35 +19,35 @@ export abstract class PlayerService {
 		return { ...rest, id: _id.toString() } as PlayerModel["playerResponse"];
 	}
 
-	static async createPlayer(body: {
-		name: string;
-		firstName: string;
-		lastName: string;
-		age: number;
-		birthdate: Date;
-		nationality: string;
-		height: string;
-		weight: string;
-		number: number;
-		team: string;
-		league: string;
-		position: string;
-		photo: string;
-	}) {
+	static async createPlayer({
+		name,
+		firstName,
+		lastName,
+		age,
+		birthdate,
+		nationality,
+		height,
+		weight,
+		number,
+		team,
+		league,
+		position,
+		photo,
+	}: PlayerModel["playerCreateBody"]) {
 		const playerDoc = await Player.create({
-			name: body.name,
-			firstName: body.firstName,
-			lastName: body.lastName,
-			age: body.age,
-			birthdate: new Date(body.birthdate),
-			nationality: body.nationality,
-			height: body.height,
-			weight: body.weight,
-			number: body.number,
-			team: body.team,
-			league: body.league,
-			position: body.position,
-			photo: body.photo,
+			name: name,
+			firstName: firstName,
+			lastName: lastName,
+			age: age,
+			birthdate: new Date(birthdate),
+			nationality: nationality,
+			height: height,
+			weight: weight,
+			number: number,
+			team: team,
+			league: league,
+			position: position,
+			photo: photo,
 		});
 
 		const obj = playerDoc.toObject();
