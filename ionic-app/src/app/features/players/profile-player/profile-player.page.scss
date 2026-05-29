@@ -419,6 +419,26 @@ ion-textarea.auth-input {
   --padding-top: 44px;
 }
 
+ion-input.readonly-input {
+  --color: var(--text-ink);
+  opacity: 0.85;
+}
+
+ion-alert {
+  --background: var(--surface-canvas);
+  --backdrop-opacity: 0.4;
+  --ion-text-color: var(--text-ink);
+
+  .alert-title {
+    color: var(--text-ink) !important;
+    font-weight: 600;
+  }
+
+  .alert-button {
+    color: var(--ion-color-primary) !important;
+  }
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

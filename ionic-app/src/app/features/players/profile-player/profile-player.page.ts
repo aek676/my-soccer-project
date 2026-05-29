@@ -2,6 +2,7 @@ import { Component, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs';
 import {
   IonContent,
   IonHeader,
@@ -14,8 +15,9 @@ import {
   IonInput,
   IonTextarea,
   IonButtons,
+  IonAlert,
 } from '@ionic/angular/standalone';
-import { AlertController, NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import L from 'leaflet';
 import { addIcons } from 'ionicons';
 import {
@@ -33,6 +35,9 @@ import {
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { PlayerModel } from '@core/models/player.model';
 import { CommentModel } from '@core/models/comment.model';
+import { UserRole } from '@core/models/user.model';
+import { AuthService } from '@core/services/auth.service';
+import { AuthStateService } from '@core/services/auth-state.service';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 
 const MOCK_COMMENTS: CommentModel[] = [
@@ -84,21 +89,31 @@ interface NewCommentForm {
     FormsModule,
     SharedHeaderComponent,
     IonButtons,
+    IonAlert,
   ],
 })
 export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   private route = inject(ActivatedRoute);
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
-  private alertController = inject(AlertController);
+  private authState = inject(AuthStateService);
+  private authService = inject(AuthService);
 
   @ViewChild(IonModal) modal!: IonModal;
 
   player = signal<PlayerModel | null>(null);
   comments = signal<CommentModel[]>([]);
+  userRole = signal<UserRole>('guest');
+  authorName = signal('');
 
   showModal = signal(false);
   newComment = signal<NewCommentForm>({ author: '', text: '', rating: 0 });
+  showDeleteAlert = signal(false);
+  deleteCommentId = signal('');
+  deleteAlertButtons = [
+    { text: 'Cancel', role: 'cancel' },
+    { text: 'Delete', role: 'destructive' },
+  ];
   private map?: L.Map;
 
   constructor() {
@@ -141,6 +156,14 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
       });
 
     this.comments.set(MOCK_COMMENTS);
+
+    this.authState.role$.pipe(take(1)).subscribe((role) => {
+      this.userRole.set(role);
+      if (role !== 'guest') {
+        const user = this.authService.currentUser;
+        this.authorName.set(user?.displayName || '');
+      }
+    });
   }
 
   ionViewWillLeave() {
@@ -194,7 +217,9 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   }
 
   openModal() {
-    this.newComment.set({ author: '', text: '', rating: 0 });
+    const role = this.userRole();
+    const author = role !== 'guest' ? this.authorName() : '';
+    this.newComment.set({ author, text: '', rating: 0 });
     this.showModal.set(true);
   }
 
@@ -209,24 +234,35 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   submitComment() {
     const form = this.newComment();
     if (!form.text || !form.rating) return;
-    console.log('Submitting comment:', form);
+    const role = this.userRole();
+    const comment: CommentModel = {
+      id: Date.now().toString(),
+      author: form.author,
+      text: form.text,
+      rating: form.rating,
+      created: new Date().toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+      idPlayer: this.route.snapshot.paramMap.get('id') || '',
+      idUser: role !== 'guest' ? this.authService.currentUser?.uid || '' : '',
+    };
+    console.log('Submitting comment:', comment);
+    this.comments.update((list) => [...list, comment]);
     this.closeModal();
   }
 
-  async confirmDelete(comment: CommentModel) {
-    const alert = await this.alertController.create({
-      header: 'Delete Comment',
-      message: 'Are you sure you want to delete this comment?',
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        {
-          text: 'Delete',
-          role: 'destructive',
-          handler: () => this.deleteComment(comment.id),
-        },
-      ],
-    });
-    await alert.present();
+  confirmDelete(comment: CommentModel) {
+    this.deleteCommentId.set(comment.id);
+    this.showDeleteAlert.set(true);
+  }
+
+  onDeleteDismiss(detail: any) {
+    if (detail.detail.role === 'destructive') {
+      this.deleteComment(this.deleteCommentId());
+    }
+    this.showDeleteAlert.set(false);
   }
 
   deleteComment(id: string) {
