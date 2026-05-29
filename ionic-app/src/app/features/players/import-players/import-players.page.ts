@@ -7,12 +7,22 @@ import {
   IonButton,
   IonFooter,
   IonToolbar,
+  IonSpinner,
 } from '@ionic/angular/standalone';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { Subject, of, firstValueFrom } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  catchError,
+} from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { PlayerItemComponent } from '@shared/components/player-item/player-item.component';
 import { BackendManagerService } from '@core/services/backend-manager.service';
+import { PlayerModel } from '@core/models/player.model';
 
 @Component({
   selector: 'app-import-players',
@@ -26,6 +36,7 @@ import { BackendManagerService } from '@core/services/backend-manager.service';
     IonButton,
     IonFooter,
     IonToolbar,
+    IonSpinner,
     FormsModule,
     SharedHeaderComponent,
     PlayerItemComponent,
@@ -34,20 +45,37 @@ import { BackendManagerService } from '@core/services/backend-manager.service';
 export class ImportPlayersPage {
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
+  private toastCtrl = inject(ToastController);
 
-  // TODO: Replace with the query to search players from the api
-  players = this.backendManager.players;
   searchQuery = signal('');
-  selectedPlayers = signal<Set<string | number>>(new Set());
+  selectedPlayers = signal<Set<string>>(new Set());
+  importing = signal(false);
 
-  filteredPlayers = computed(() => {
-    const q = this.searchQuery().toLowerCase();
-    return q
-      ? this.players().filter((p) => p.name.toLowerCase().includes(q))
-      : this.players();
-  });
+  private searchSubject = new Subject<string>();
 
-  togglePlayer(id: string | number, checked: boolean) {
+  searchResults = toSignal(
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((q) => {
+        if (q.length === 0) return of([] as PlayerModel[]);
+        return this.backendManager
+          .providers()
+          .playerProvider.searchPlayers(q)
+          .pipe(catchError(() => of([] as PlayerModel[])));
+      }),
+    ),
+    { initialValue: [] as PlayerModel[] },
+  );
+
+  filteredPlayers = computed(() => this.searchResults());
+
+  onSearchChange(query: string) {
+    this.searchQuery.set(query);
+    this.searchSubject.next(query);
+  }
+
+  togglePlayer(id: string, checked: boolean) {
     this.selectedPlayers.update((s) => {
       const next = new Set(s);
       checked ? next.add(id) : next.delete(id);
@@ -55,7 +83,7 @@ export class ImportPlayersPage {
     });
   }
 
-  isSelected(id: string | number) {
+  isSelected(id: string) {
     return this.selectedPlayers().has(id);
   }
 
@@ -63,11 +91,89 @@ export class ImportPlayersPage {
     this.nav.back();
   }
 
-  confirmImport() {
-    const selected = this.players().filter((p) =>
-      this.selectedPlayers().has(p.id),
+  async confirmImport() {
+    // TODO: Use Capacitor Geolocation for Android/iOS
+    this.importing.set(true);
+
+    const location = await this.getLocation();
+    if (!location) {
+      this.importing.set(false);
+      const toast = await this.toastCtrl.create({
+        message: 'Location is required to import players',
+        duration: 3000,
+        position: 'bottom',
+        color: 'danger',
+      });
+      await toast.present();
+      return;
+    }
+
+    const selected = this.searchResults().filter((p) =>
+      this.selectedPlayers().has(String(p.id)),
     );
-    console.log('Selected players:', selected);
+
+    if (selected.length === 0) return;
+
+    this.importing.set(true);
+
+    const provider = this.backendManager.providers().playerProvider;
+
+    await Promise.all(
+      selected.map(async (player) => {
+        const apiPlayerId = Number(player.id);
+        try {
+          const response = await firstValueFrom(
+            provider.importPlayer(apiPlayerId, location),
+          );
+          const toast = await this.toastCtrl.create({
+            message: response.status === 200
+              ? `${player.name} already imported`
+              : `${player.name} imported successfully`,
+            duration: 2000,
+            position: 'bottom',
+            color: 'success',
+          });
+          await toast.present();
+        } catch {
+          const toast = await this.toastCtrl.create({
+            message: `${player.name} could not be imported`,
+            duration: 3000,
+            position: 'bottom',
+            color: 'danger',
+          });
+          await toast.present();
+        }
+      }),
+    );
+
+    this.importing.set(false);
+    this.selectedPlayers.set(new Set());
     this.nav.navigateBack('/tabs/players');
+  }
+
+  private getLocation(): Promise<{
+    type: 'Point';
+    coordinates: number[];
+  } | null> {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve(null);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            type: 'Point',
+            coordinates: [position.coords.longitude, position.coords.latitude],
+          });
+        },
+        (err) => {
+          console.error('Geolocation error:', err);
+          resolve(null);
+        },
+        { timeout: 10000, maximumAge: 0 },
+      );
+    });
   }
 }
