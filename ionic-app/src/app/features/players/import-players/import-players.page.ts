@@ -22,6 +22,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { PlayerItemComponent } from '@shared/components/player-item/player-item.component';
 import { BackendManagerService } from '@core/services/backend-manager.service';
+import { GeolocationService } from '@core/services/geolocation.service';
 import { PlayerModel } from '@core/models/player.model';
 
 @Component({
@@ -46,6 +47,7 @@ export class ImportPlayersPage {
   private nav = inject(NavController);
   private backendManager = inject(BackendManagerService);
   private toastCtrl = inject(ToastController);
+  private geoService = inject(GeolocationService);
 
   searchQuery = signal('');
   selectedPlayers = signal<Set<string>>(new Set());
@@ -92,7 +94,6 @@ export class ImportPlayersPage {
   }
 
   async confirmImport() {
-    // TODO: Use Capacitor Geolocation for Android/iOS
     this.importing.set(true);
 
     const location = await this.getLocation();
@@ -153,29 +154,15 @@ export class ImportPlayersPage {
     this.nav.navigateBack('/tabs/players');
   }
 
-  private getLocation(): Promise<{
+  private async getLocation(): Promise<{
     type: 'Point';
     coordinates: number[];
   } | null> {
-    return new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        resolve(null);
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            type: 'Point',
-            coordinates: [position.coords.longitude, position.coords.latitude],
-          });
-        },
-        (err) => {
-          console.error('Geolocation error:', err);
-          resolve(null);
-        },
-        { timeout: 10000, maximumAge: 0 },
-      );
-    });
+    const pos = await this.geoService.getCurrentPosition();
+    if (!pos) return null;
+    return {
+      type: 'Point',
+      coordinates: [pos.longitude, pos.latitude],
+    };
   }
 }

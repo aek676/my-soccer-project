@@ -1,8 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { BackendManagerService } from '@core/services/backend-manager.service';
+import { GeolocationService } from '@core/services/geolocation.service';
 import { NavController, ToastController } from '@ionic/angular';
 import { of } from 'rxjs';
 
@@ -33,6 +34,10 @@ describe('ImportPlayersPage', () => {
     providers: () => ({ playerProvider: mockPlayerProvider }),
   };
 
+  const mockGeoService = {
+    getCurrentPosition: jasmine.createSpy('getCurrentPosition').and.resolveTo({ latitude: 40.4168, longitude: -3.7038 }),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ImportPlayersPage],
@@ -43,6 +48,7 @@ describe('ImportPlayersPage', () => {
         { provide: BackendManagerService, useValue: mockBackendManager },
         { provide: NavController, useValue: mockNavController },
         { provide: ToastController, useValue: mockToastController },
+        { provide: GeolocationService, useValue: mockGeoService },
       ],
     }).compileComponents();
 
@@ -69,30 +75,13 @@ describe('ImportPlayersPage', () => {
   });
 
   it('should call navController.navigateBack on confirmImport', fakeAsync(() => {
-    spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(
-      (success: (position: GeolocationPosition) => void) => {
-        success({
-          coords: {
-            latitude: 40.4168,
-            longitude: -3.7038,
-            accuracy: 10,
-            altitude: null,
-            altitudeAccuracy: null,
-            heading: null,
-            speed: null,
-          },
-          timestamp: Date.now(),
-        } as GeolocationPosition);
-      },
-    );
-
     component.onSearchChange('test');
     tick(300);
 
     component.togglePlayer('1', true);
 
     component.confirmImport();
-    tick();
+    flush();
 
     expect(mockNavController.navigateBack).toHaveBeenCalledWith('/tabs/players');
   }));
