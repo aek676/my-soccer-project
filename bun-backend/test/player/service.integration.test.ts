@@ -131,6 +131,21 @@ describe("PlayerService - Integration Tests", () => {
 			expect(dbPlayer?.team).toBe("Inter Miami");
 		});
 
+		test("persists location coordinates to database", async () => {
+			const location = {
+				type: "Point" as const,
+				coordinates: [2.1734, 41.3851],
+			};
+			await PlayerService.createPlayer({ ...validBody, location });
+
+			const dbPlayer = await Player.findOne({ name: "Lionel Messi" }).lean();
+			expect(dbPlayer).not.toBeNull();
+			expect(dbPlayer?.location).toEqual({
+				type: "Point",
+				coordinates: [2.1734, 41.3851],
+			});
+		});
+
 		test("returns valid MongoDB ObjectId as id", async () => {
 			const result = await PlayerService.createPlayer(validBody);
 			const resultWithStatus = result as {
