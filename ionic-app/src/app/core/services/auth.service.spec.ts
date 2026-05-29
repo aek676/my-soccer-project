@@ -106,15 +106,13 @@ describe('AuthService', () => {
     });
   });
 
-  it('loginAsGuest should call signInAnonymously and createProfile with guest role', (done) => {
-    service.loginAsGuest().subscribe(() => {
-      expect(authFnsSpy.signInAnonymously).toHaveBeenCalledWith(mockAuth);
-      expect(userProfileServiceSpy.createProfile).toHaveBeenCalledWith(
-        mockCredential.user,
-        'guest',
-      );
-      done();
-    });
+  it('loginAsGuest should call signInAnonymously and createProfile with guest role', async () => {
+    await service.loginAsGuest();
+    expect(authFnsSpy.signInAnonymously).toHaveBeenCalledWith(mockAuth);
+    expect(userProfileServiceSpy.createProfile).toHaveBeenCalledWith(
+      mockCredential.user,
+      'guest',
+    );
   });
 
   it('logout should call signOut', () => {
