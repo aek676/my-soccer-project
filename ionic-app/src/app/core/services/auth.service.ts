@@ -24,11 +24,9 @@ export class AuthService {
     );
   }
 
-  loginAsGuest() {
-    return from(this.authFns.signInAnonymously(this.auth)).pipe(
-      switchMap((credential) =>
-        from(this.userProfileService.createProfile(credential.user, 'guest')),
-      ),
+  loginAsGuest(): Promise<void> {
+    return this.authFns.signInAnonymously(this.auth).then((credential) =>
+      this.userProfileService.createProfile(credential.user, 'guest'),
     );
   }
 
