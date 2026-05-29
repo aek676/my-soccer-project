@@ -1,0 +1,227 @@
+<ion-header class="ion-no-border">
+  <app-shared-header
+    [showBackButton]="true"
+    (back)="goBack()"
+  ></app-shared-header>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (player(); as p) {
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <h2 class="hero-name">
+        @for (word of p.name.split(' '); track $index) {
+        <span>{{ word }}</span>
+        }
+      </h2>
+    </div>
+    <div class="hero-chips">
+      @if (p.position) {
+      <div class="chip">
+        <ion-icon name="football-outline"></ion-icon>
+        <span>{{ p.position }}</span>
+      </div>
+      } @if (p.team) {
+      <div class="chip">
+        <ion-icon name="shield-outline"></ion-icon>
+        <span>{{ p.team }}</span>
+      </div>
+      } @if (p.league) {
+      <div class="chip">
+        <ion-icon name="trophy-outline"></ion-icon>
+        <span>{{ p.league }}</span>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Overlapping Content -->
+  <div class="overlap-section">
+    <!-- Left Column: Avatar & Location -->
+    <div class="left-col">
+      <div class="avatar-wrapper">
+        <ion-avatar>
+          @if (p.photo) {
+          <img [src]="p.photo" [alt]="p.name" />
+          } @else {
+          <div class="avatar-fallback">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          }
+        </ion-avatar>
+      </div>
+
+      <div class="location-card">
+        <div class="map-wrapper">
+          <div #mapContainer class="map"></div>
+          <div class="map-label">
+            <ion-icon name="location"></ion-icon>
+            <span>Origin: {{ p.nationality || 'Unknown' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Stats & Comments -->
+    <div class="right-col">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        @if (p.age) {
+        <div class="stat-card">
+          <span class="stat-label">Age</span>
+          <span class="stat-value">{{ p.age }}</span>
+        </div>
+        } @if (p.height) {
+        <div class="stat-card">
+          <span class="stat-label">Height</span>
+          <span class="stat-value">{{ p.height }}</span>
+        </div>
+        } @if (p.weight) {
+        <div class="stat-card">
+          <span class="stat-label">Weight</span>
+          <span class="stat-value">{{ p.weight }}</span>
+        </div>
+        } @if (p.number) {
+        <div class="stat-card">
+          <span class="stat-label">Number</span>
+          <span class="stat-value">#{{ p.number }}</span>
+        </div>
+        }
+        <div class="stat-card stat-card-wide">
+          <span class="stat-label">Primary Position</span>
+          <span class="stat-value">{{ p.position || 'N/A' }}</span>
+        </div>
+      </div>
+
+      <!-- Scout Notes -->
+      <div class="scout-section">
+        <div class="scout-header">
+          <h3>Comments</h3>
+          <ion-button
+            fill="clear"
+            class="add-comment-btn"
+            (click)="openModal()"
+          >
+            <ion-icon name="chatbubble" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+          <div class="comment-card">
+            @if (userRole() === 'admin') {
+            <button class="delete-btn" (click)="confirmDelete(comment)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+            }
+            <div class="comment-top">
+              <div class="stars-display">
+                @for (i of [0,1,2,3,4]; track i) {
+                <ion-icon
+                  [name]="isFilledStar(comment.rating, i) ? 'star' : (isHalfStar(comment.rating, i) ? 'star-half' : 'star')"
+                  [class.star-filled]="isFilledStar(comment.rating, i) || isHalfStar(comment.rating, i)"
+                  [class.star-empty]="!isFilledStar(comment.rating, i) && !isHalfStar(comment.rating, i)"
+                ></ion-icon>
+                }
+              </div>
+              <span class="comment-author">{{ comment.author }}</span>
+            </div>
+            <p class="comment-text">{{ comment.text }}</p>
+            <span class="comment-date">{{ comment.created }}</span>
+            @if (comment.location) {
+            <span class="comment-coords">
+              {{ comment.location.coordinates[1] }}°, {{
+              comment.location.coordinates[0] }}°
+            </span>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="empty-state">
+    <p>Player not found</p>
+  </div>
+  }
+</ion-content>
+
+<!-- Bottom Sheet Modal -->
+<ion-modal
+  [isOpen]="showModal()"
+  (didDismiss)="closeModal()"
+  [breakpoints]="[0.5, 0.8]"
+  [initialBreakpoint]="0.5"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Add Comment</ion-title>
+        <ion-buttons slot="end">
+          <ion-button
+            (click)="submitComment()"
+            class="submit-btn"
+            shape="round"
+          >
+            <strong>Post</strong>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="modal-card">
+        <div class="auth-form">
+          <div class="form-group">
+            <label>Author</label>
+            @if (userRole() === 'guest') {
+            <ion-input
+              placeholder="Enter your name"
+              [(ngModel)]="newComment().author"
+              class="auth-input"
+            />
+            } @else {
+            <ion-input
+              [value]="authorName()"
+              readonly
+              class="auth-input readonly-input"
+            />
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Rating</label>
+            <div class="star-selector">
+              @for (i of [1,2,3,4,5]; track i) {
+              <ion-icon
+                name="star"
+                (click)="setRating(i)"
+                [class.star-selected]="i <= newComment().rating"
+                [class.star-unselected]="i > newComment().rating"
+              ></ion-icon>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Comment</label>
+            <ion-textarea
+              rows="4"
+              [(ngModel)]="newComment().text"
+              class="auth-input"
+            ></ion-textarea>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-alert
+  [isOpen]="showDeleteAlert()"
+  (didDismiss)="onDeleteDismiss($event)"
+  header="Delete Comment"
+  message="Are you sure you want to delete this comment?"
+  [buttons]="deleteAlertButtons"
+/>

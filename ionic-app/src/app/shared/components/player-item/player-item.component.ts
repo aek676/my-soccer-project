@@ -21,6 +21,7 @@ export class PlayerItemComponent {
   @Input() selectable = false;
   @Input() selected = false;
   @Output() selectionChange = new EventEmitter<boolean>();
+  @Output() tap = new EventEmitter<PlayerModel>();
 
   constructor() {
     addIcons({ person, chevronForward });
@@ -28,5 +29,11 @@ export class PlayerItemComponent {
 
   onCheckboxChange(event: any) {
     this.selectionChange.emit(event.detail.checked);
+  }
+
+  onTap() {
+    if (!this.selectable) {
+      this.tap.emit(this.player);
+    }
   }
 }

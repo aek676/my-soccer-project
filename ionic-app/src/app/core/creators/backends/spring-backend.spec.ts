@@ -22,4 +22,10 @@ describe('SpringBackend', () => {
     const provider = backend.createTeamProvider();
     expect(provider).toBeDefined();
   });
+
+  it('should create a comment provider (mock)', () => {
+    const backend = new SpringBackend(config, httpMock);
+    const provider = backend.createCommentProvider();
+    expect(provider).toBeDefined();
+  });
 });

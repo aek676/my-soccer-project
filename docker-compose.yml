@@ -32,6 +32,7 @@ services:
       SPRING_PROFILES_ACTIVE: local
       EUREKA_INSTANCE_HOSTNAME: gateway
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
+      JAVA_TOOL_OPTIONS: -XX:MaxDirectMemorySize=64m
     depends_on:
       - config-server
       - eureka-server

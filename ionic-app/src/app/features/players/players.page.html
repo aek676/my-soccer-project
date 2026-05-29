@@ -21,7 +21,7 @@
 
   <ion-list class="ion-padding" lines="none">
     @for (player of filteredPlayers(); track player.id) {
-    <app-player-item [player]="player"></app-player-item>
+    <app-player-item [player]="player" (tap)="navigateToProfile($event)"></app-player-item>
     }
   </ion-list>
 

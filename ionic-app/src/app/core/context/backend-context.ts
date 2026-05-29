@@ -14,10 +14,12 @@ export class BackendContext {
     this._strategy = value;
   }
 
+  // TODO: Verificar que commentProvider se pasa correctamente en init()
   public init() {
     return {
       playerProvider: this._strategy.createPlayerProvider(),
       teamProvider: this._strategy.createTeamProvider(),
+      commentProvider: this._strategy.createCommentProvider(),
     };
   }
 }
