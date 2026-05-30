@@ -1,4 +1,4 @@
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { PlayerModel } from '@core/models/player.model';
 import { BaseProvider } from '../base-provider';
@@ -20,14 +20,20 @@ export class SpringPlayerProvider
     );
   }
 
-  searchPlayers(_name: string): Observable<PlayerModel[]> {
-    return throwError(() => new Error('Not implemented in Spring backend'));
+  searchPlayers(name: string): Observable<PlayerModel[]> {
+    return this.http.get<PlayerModel[]>(
+      `${this.gatewayUrl}/players-service/players/search/${encodeURIComponent(name)}`,
+    );
   }
 
   importPlayer(
-    _apiPlayerId: number,
-    _location: { type: 'Point'; coordinates: number[] },
+    apiPlayerId: number,
+    location: { type: 'Point'; coordinates: number[] },
   ): Observable<HttpResponse<PlayerModel>> {
-    return throwError(() => new Error('Not implemented in Spring backend'));
+    return this.http.post<PlayerModel>(
+      `${this.gatewayUrl}/players-service/players/import/${apiPlayerId}`,
+      { location },
+      { observe: 'response' },
+    );
   }
 }
