@@ -5,9 +5,9 @@ import { AuthModule } from "../../src/modules/auth";
 const testApp = new Elysia().use(AuthModule).get("/test", ({ user }) => user);
 
 const handle = (headers?: Record<string, string>) =>
-  testApp.handle(
-    new Request("http://localhost/test", { headers: headers ?? {} }),
-  );
+	testApp.handle(
+		new Request("http://localhost/test", { headers: headers ?? {} }),
+	);
 
 describe("AuthModule", () => {
 	describe("derive - user context", () => {
