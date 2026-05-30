@@ -43,7 +43,11 @@ const mockBackendManager = {
       getPlayers: () => of([mockPlayer]),
     },
     teamProvider: {},
-    commentProvider: {} as any,
+    commentProvider: {
+      getCommentsByPlayer: () => of([]),
+      createComment: (comment: CommentModel) => of(comment),
+      deleteComment: () => of(undefined),
+    },
   }),
 };
 
