@@ -1,15 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import { Elysia } from "elysia";
-import { AuthModule } from "../../src/modules/auth";
+import { authPlugin } from "../../src/modules/auth";
 
-const testApp = new Elysia().use(AuthModule).get("/test", ({ user }) => user);
+const testApp = new Elysia().use(authPlugin).get("/test", ({ user }) => user);
 
 const handle = (headers?: Record<string, string>) =>
 	testApp.handle(
 		new Request("http://localhost/test", { headers: headers ?? {} }),
 	);
 
-describe("AuthModule", () => {
+describe("authPlugin", () => {
 	describe("derive - user context", () => {
 		test("extracts all 4 gateway headers", async () => {
 			const res = await handle({
@@ -90,7 +90,7 @@ describe("AuthModule", () => {
 	describe("integration with other routes", () => {
 		test("user context propagates to downstream routes", async () => {
 			const downstream = new Elysia()
-				.use(AuthModule)
+				.use(authPlugin)
 				.get("/hello", ({ user }) => `hello ${user.id}`);
 
 			const res = await downstream.handle(

@@ -1,16 +1,16 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { Elysia } from "elysia";
 import mongoose from "mongoose";
-import { AuthModule } from "../../src/modules/auth";
+import { authPlugin } from "../../src/modules/auth";
 import { PlayerModule } from "../../src/modules/player";
 import { mongoUrl } from "../setup";
 
-const app = new Elysia().use(AuthModule).use(PlayerModule);
+const app = new Elysia().use(authPlugin).use(PlayerModule);
 
 const get = (url: string, headers?: Record<string, string>) =>
 	app.handle(new Request(`http://localhost${url}`, { headers: headers ?? {} }));
 
-describe("AuthModule - Gateway Headers", () => {
+describe("authPlugin - Gateway Headers", () => {
 	beforeAll(async () => {
 		await mongoose.connect(mongoUrl);
 	}, 30000);
@@ -58,7 +58,7 @@ describe("AuthModule - Gateway Headers", () => {
 	describe("headers reach downstream handlers", () => {
 		test("user context is available in route handler", async () => {
 			const testApp = new Elysia()
-				.use(AuthModule)
+				.use(authPlugin)
 				.get("/test-auth", ({ user }) => user);
 
 			const res = await testApp.handle(
@@ -82,7 +82,7 @@ describe("AuthModule - Gateway Headers", () => {
 
 		test("defaults applied when headers are missing", async () => {
 			const testApp = new Elysia()
-				.use(AuthModule)
+				.use(authPlugin)
 				.get("/test-auth", ({ user }) => user);
 
 			const res = await testApp.handle(
@@ -99,7 +99,7 @@ describe("AuthModule - Gateway Headers", () => {
 
 		test("headers are case-insensitive", async () => {
 			const testApp = new Elysia()
-				.use(AuthModule)
+				.use(authPlugin)
 				.get("/test-auth", ({ user }) => ({ userId: user.id }));
 
 			const res = await testApp.handle(
