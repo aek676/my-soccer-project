@@ -73,14 +73,19 @@ public class PlayerService {
       throw new RuntimeException("API key not configured");
     }
 
-    var response = apiSportsClient.searchPlayers(name, apiFootballKey);
-    if (response == null || response.getResponse() == null || response.getResponse().isEmpty()) {
-      return List.of();
-    }
+    try {
+      var response = apiSportsClient.searchPlayers(name, apiFootballKey);
+      if (response == null || response.getResponse() == null || response.getResponse().isEmpty()) {
+        return List.of();
+      }
 
-    return response.getResponse().stream()
-        .map(this::mapApiEntryToResponse)
-        .toList();
+      return response.getResponse().stream()
+          .map(this::mapApiEntryToResponse)
+          .toList();
+    } catch (RuntimeException e) {
+      log.error("API-Football search failed for '{}'", name, e);
+      throw new RuntimeException("Failed to search players: " + e.getMessage());
+    }
   }
 
   public PlayerResponse importPlayerFromApi(Long apiPlayerId, PlayerImportRequest request) {
@@ -160,6 +165,7 @@ public class PlayerService {
         .lastName(entry.getPlayer().getLastname())
         .age(entry.getPlayer().getAge())
         .birthdate(entry.getPlayer().getBirth() != null
+            && entry.getPlayer().getBirth().getDate() != null
             ? LocalDate.parse(entry.getPlayer().getBirth().getDate())
             : null)
         .nationality(entry.getPlayer().getNationality())
