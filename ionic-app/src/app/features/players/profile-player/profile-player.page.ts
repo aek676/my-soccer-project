@@ -17,7 +17,12 @@ import {
   IonButtons,
   IonAlert,
 } from '@ionic/angular/standalone';
-import { AlertController, NavController, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import {
+  AlertController,
+  NavController,
+  ViewWillEnter,
+  ViewWillLeave,
+} from '@ionic/angular';
 import L from 'leaflet';
 import { addIcons } from 'ionicons';
 import {
@@ -40,29 +45,6 @@ import { AuthService } from '@core/services/auth.service';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { GeolocationService } from '@core/services/geolocation.service';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
-
-const MOCK_COMMENTS: CommentModel[] = [
-  {
-    id: '1',
-    author: 'Scout Alpha',
-    text: 'Exceptional pace off the ball. Shows consistent ability to break lines and find space in the final third. Needs to work on weaker foot finishing under pressure.',
-    rating: 4.5,
-    created: 'Oct 12, 2023',
-    idPlayer: '1',
-    idUser: 'guest',
-    location: { type: 'Point', coordinates: [-0.12, 51.51] },
-  },
-  {
-    id: '2',
-    author: 'Scout Beta',
-    text: 'Elite tactical awareness during transition phases. Acted as the primary pivot in counter-attacks. Displayed institutional-grade reliability in possession retention.',
-    rating: 5,
-    created: 'Sep 28, 2023',
-    idPlayer: '1',
-    idUser: 'guest',
-    location: { type: 'Point', coordinates: [-0.12, 51.51] },
-  },
-];
 
 interface NewCommentForm {
   author: string;
@@ -158,8 +140,13 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
         error: () => this.player.set(null),
       });
 
-    // TODO: Sustituir por this.backendManager.providers().commentProvider.getCommentsByPlayer(id).subscribe(...)
-    this.comments.set(MOCK_COMMENTS);
+    this.backendManager
+      .providers()
+      .commentProvider.getCommentsByPlayer(id)
+      .subscribe({
+        next: (comments) => this.comments.set(comments),
+        error: (err) => console.error('Failed to load comments', err),
+      });
 
     this.authState.role$.pipe(take(1)).subscribe((role) => {
       this.userRole.set(role);
@@ -240,9 +227,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     const form = this.newComment();
     if (!form.text || !form.rating) return;
 
-    const role = this.userRole();
     const idPlayer = this.route.snapshot.paramMap.get('id') || '';
-    const idUser = role !== 'guest' ? this.authService.currentUser?.uid || '' : '';
 
     const pos = await this.geoService.getCurrentPosition();
     if (!pos) {
@@ -257,25 +242,28 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     }
 
     const comment: CommentModel = {
-      id: Date.now().toString(),
+      id: '',
       author: form.author,
       text: form.text,
       rating: form.rating,
-      created: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }),
+      created: '',
       idPlayer,
-      idUser,
       location: {
         type: 'Point',
         coordinates: [pos.longitude, pos.latitude],
       },
     };
-    console.log('Submitting comment:', comment);
-    this.comments.update((list) => [...list, comment]);
-    this.closeModal();
+
+    this.backendManager
+      .providers()
+      .commentProvider.createComment(comment)
+      .subscribe({
+        next: (created) => {
+          this.comments.update((list) => [...list, created]);
+          this.closeModal();
+        },
+        error: (err) => console.error('Failed to create comment', err),
+      });
   }
 
   confirmDelete(comment: CommentModel) {
@@ -291,8 +279,14 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
   }
 
   deleteComment(id: string) {
-    // TODO: Sustituir por this.backendManager.providers().commentProvider.deleteComment(id).subscribe(...)
-    this.comments.update((list) => list.filter((c) => c.id !== id));
+    this.backendManager
+      .providers()
+      .commentProvider.deleteComment(id)
+      .subscribe({
+        next: () =>
+          this.comments.update((list) => list.filter((c) => c.id !== id)),
+        error: (err) => console.error('Failed to delete comment', err),
+      });
   }
 
   getStarIcons(rating: number): string[] {
