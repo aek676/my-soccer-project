@@ -50,7 +50,7 @@ export class PlayersPage implements ViewWillEnter {
   private authState = inject(AuthStateService);
 
   players = this.backendManager.players;
-  isGuest$ = this.authState.isGuest$;
+  isAuthenticated$ = this.authState.isAuthenticated$;
 
   ionViewWillEnter() {
     this.backendManager.loadPlayers();
