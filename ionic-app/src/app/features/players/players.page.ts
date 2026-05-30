@@ -9,7 +9,7 @@ import {
   IonIcon,
   ActionSheetController,
 } from '@ionic/angular/standalone';
-import { NavController } from '@ionic/angular';
+import { NavController, ViewWillEnter } from '@ionic/angular';
 import { add, personAdd, cloudDownload } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { FormsModule } from '@angular/forms';
@@ -40,12 +40,16 @@ import { BackendManagerService } from '@core/services/backend-manager.service';
     FilterChipsComponent,
   ],
 })
-export class PlayersPage {
+export class PlayersPage implements ViewWillEnter {
   private actionSheetCtrl = inject(ActionSheetController);
   private backendManager = inject(BackendManagerService);
   private navController = inject(NavController);
 
   players = this.backendManager.players;
+
+  ionViewWillEnter() {
+    this.backendManager.loadPlayers();
+  }
 
   searchQuery = signal('');
   filters = ['Team', 'League', 'Date Added'];
