@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { BackendContext } from '@core/context/backend-context';
 import { NodeBackend } from '@core/creators/backends/node-backend';
 import { SpringBackend } from '@core/creators/backends/spring-backend';
@@ -36,14 +37,18 @@ export class BackendManagerService {
 
   readonly players = toSignal(
     this._providers$.pipe(
-      switchMap((p) => p.playerProvider.getPlayers()),
+      switchMap((p) => p.playerProvider.getPlayers().pipe(
+        catchError(() => of([])),
+      )),
     ),
     { initialValue: [] },
   );
 
   readonly teams = toSignal(
     this._providers$.pipe(
-      switchMap((p) => p.teamProvider.getTeams()),
+      switchMap((p) => p.teamProvider.getTeams().pipe(
+        catchError(() => of([])),
+      )),
     ),
     { initialValue: [] },
   );
