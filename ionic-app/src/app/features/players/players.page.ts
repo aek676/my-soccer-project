@@ -13,6 +13,7 @@ import { NavController, ViewWillEnter } from '@ionic/angular';
 import { add, personAdd, cloudDownload } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { PlayerItemComponent } from '@shared/components/player-item/player-item.component';
 import {
@@ -21,6 +22,7 @@ import {
 } from '@shared/components/filter-chips/filter-chips.component';
 import { PlayerModel } from '@core/models/player.model';
 import { BackendManagerService } from '@core/services/backend-manager.service';
+import { AuthStateService } from '@core/services/auth-state.service';
 
 @Component({
   selector: 'app-players',
@@ -35,6 +37,7 @@ import { BackendManagerService } from '@core/services/backend-manager.service';
     IonFabButton,
     IonIcon,
     FormsModule,
+    AsyncPipe,
     SharedHeaderComponent,
     PlayerItemComponent,
     FilterChipsComponent,
@@ -44,8 +47,10 @@ export class PlayersPage implements ViewWillEnter {
   private actionSheetCtrl = inject(ActionSheetController);
   private backendManager = inject(BackendManagerService);
   private navController = inject(NavController);
+  private authState = inject(AuthStateService);
 
   players = this.backendManager.players;
+  isGuest$ = this.authState.isGuest$;
 
   ionViewWillEnter() {
     this.backendManager.loadPlayers();
