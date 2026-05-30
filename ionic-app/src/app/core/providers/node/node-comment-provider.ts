@@ -1,23 +1,47 @@
-import { Observable, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { CommentModel } from '@core/models/comment.model';
-import { BaseProvider } from '@core/providers/base-provider';
-import { CommentProviderInterface } from '@core/providers/comment-provider.interface';
+import { BaseProvider } from '../base-provider';
+import { CommentProviderInterface } from '../comment-provider.interface';
 
-// TODO: Conectar con bun-backend/api/comments cuando esté implementado
-// TODO: Definir los endpoints exactos (GET /bun-backend/comments?playerid=, POST /bun-backend/comments, DELETE /bun-backend/comments/:id)
-export class NodeCommentProvider extends BaseProvider implements CommentProviderInterface {
+interface CommentResponse extends Omit<CommentModel, 'created'> {
+  created?: string;
+}
+
+export class NodeCommentProvider
+  extends BaseProvider
+  implements CommentProviderInterface
+{
   getCommentsByPlayer(playerId: string): Observable<CommentModel[]> {
-    // TODO: return this.http.get<CommentModel[]>(`${this.gatewayUrl}/bun-backend/comments?playerid=${playerId}`);
-    return of([]);
+    return this.http
+      .get<CommentResponse[]>(`${this.gatewayUrl}/bun-backend/comments`, {
+        params: { playerId },
+      })
+      .pipe(map((comments) => comments.map((c) => this.mapComment(c))));
   }
 
   createComment(comment: CommentModel): Observable<CommentModel> {
-    // TODO: return this.http.post<CommentModel>(`${this.gatewayUrl}/bun-backend/comments`, comment);
-    return of(comment);
+    const { id, idUser, created, ...body } = comment;
+    return this.http
+      .post<CommentResponse>(`${this.gatewayUrl}/bun-backend/comments`, body)
+      .pipe(map((c) => this.mapComment(c)));
   }
 
   deleteComment(id: string): Observable<void> {
-    // TODO: return this.http.delete<void>(`${this.gatewayUrl}/bun-backend/comments/${id}`);
-    return of(undefined);
+    return this.http.delete<void>(
+      `${this.gatewayUrl}/bun-backend/comments/${id}`,
+    );
+  }
+
+  private mapComment(comment: CommentResponse): CommentModel {
+    return {
+      ...comment,
+      created: comment.created
+        ? new Date(comment.created).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        : '',
+    };
   }
 }
