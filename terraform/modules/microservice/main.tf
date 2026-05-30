@@ -38,6 +38,12 @@ resource "azapi_resource" "app" {
                   name      = "MONGO_ATLAS_URI"
                   secretRef = "mongo-atlas-uri"
                 }
+              ] : [],
+              var.api_key_api_football != "" ? [
+                {
+                  name      = "API_KEY_API_FOOTBALL"
+                  secretRef = "api-key-api-football"
+                }
               ] : []
             )
             resources = {
@@ -87,6 +93,12 @@ resource "azapi_resource" "app" {
               {
                 name  = "mongo-atlas-uri"
                 value = var.mongo_atlas_uri
+              }
+            ] : [],
+            var.api_key_api_football != "" ? [
+              {
+                name  = "api-key-api-football"
+                value = var.api_key_api_football
               }
             ] : []
           )

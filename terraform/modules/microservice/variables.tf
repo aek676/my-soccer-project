@@ -82,3 +82,10 @@ variable "mongo_atlas_uri" {
   default     = ""
 }
 
+variable "api_key_api_football" {
+  type        = string
+  description = "API key for api-football.com"
+  sensitive   = true
+  default     = ""
+}
+

@@ -57,8 +57,8 @@ resource "azapi_resource" "config_server" {
 
 module "microservices" {
   source                = "./modules/microservice"
-  for_each              = toset(var.java_services)
-  app_name              = each.value
+  for_each              = var.java_services
+  app_name              = each.key
   image                 = var.image
   eureka_server_id      = azapi_resource.eureka_server.id
   config_server_id      = azapi_resource.config_server.id
@@ -70,6 +70,7 @@ module "microservices" {
   postgres_url          = var.supabase_url
   postgres_user         = var.supabase_user
   postgres_password     = var.supabase_password
+  api_key_api_football  = each.value.needs_api_football_key ? var.api_key_api_football : ""
 }
 
 module "bun_backend" {
@@ -84,6 +85,7 @@ module "bun_backend" {
   gcp_registry_username = "_json_key_base64"
   gcp_registry_password = module.gcp.artifact_registry_json_key
   mongo_atlas_uri       = var.mongo_atlas_uri
+  api_key_api_football  = var.api_key_api_football
 }
 
 module "news_service" {

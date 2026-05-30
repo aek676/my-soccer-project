@@ -20,8 +20,10 @@ variable "image" {
 }
 
 variable "java_services" {
-  type        = list(string)
-  description = "List of microservice names to deploy"
+  type = map(object({
+    needs_api_football_key = optional(bool, false)
+  }))
+  description = "Map of microservice names to their config"
 }
 
 variable "supabase_url" {
@@ -43,6 +45,13 @@ variable "supabase_password" {
 variable "mongo_atlas_uri" {
   type        = string
   description = "MongoDB Atlas connection URI for bun-backend"
+  sensitive   = true
+  default     = ""
+}
+
+variable "api_key_api_football" {
+  type        = string
+  description = "API key for api-football.com"
   sensitive   = true
   default     = ""
 }
