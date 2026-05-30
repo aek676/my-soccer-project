@@ -20,6 +20,8 @@ import es.ual.players_service.exception.PlayerNotFoundException;
 import es.ual.players_service.model.Location;
 import es.ual.players_service.model.Player;
 import es.ual.players_service.repository.PlayerRepository;
+import es.ual.players_service.dto.ApiSportsBirth;
+import es.ual.players_service.dto.ApiSportsPlayer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -199,5 +201,66 @@ class PlayerServiceTest {
     assertThatThrownBy(() -> playerService.importPlayerFromApi(999L, request))
         .isInstanceOf(PlayerNotFoundException.class)
         .hasMessage("Player not found with id: 999");
+  }
+
+  @Test
+  void searchPlayerByName_shouldReturnPlayers_whenApiReturnsResults() {
+    ReflectionTestUtils.setField(playerService, "apiFootballKey", "test-api-key");
+
+    ApiSportsPlayerEntry entry = ApiSportsPlayerEntry.builder()
+        .player(ApiSportsPlayer.builder()
+            .id(456L)
+            .name("Vinícius Júnior")
+            .firstname("Vinícius")
+            .lastname("Júnior")
+            .age(23)
+            .birth(ApiSportsBirth.builder().date("2000-01-12").build())
+            .nationality("Brazil")
+            .height("180 cm")
+            .weight("70 kg")
+            .number(7)
+            .position("Forward")
+            .photo("https://example.com/photo.jpg")
+            .build())
+        .build();
+
+    when(apiSportsClient.searchPlayers("Vinícius", "test-api-key"))
+        .thenReturn(ApiSportsPlayerResponse.builder().response(List.of(entry)).build());
+
+    List<PlayerResponse> result = playerService.searchPlayerByName("Vinícius");
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).getName()).isEqualTo("Vinícius Júnior");
+  }
+
+  @Test
+  void searchPlayerByName_shouldReturnEmptyList_whenApiReturnsNoResults() {
+    ReflectionTestUtils.setField(playerService, "apiFootballKey", "test-api-key");
+
+    when(apiSportsClient.searchPlayers("Unknown", "test-api-key"))
+        .thenReturn(ApiSportsPlayerResponse.builder().response(List.of()).build());
+
+    List<PlayerResponse> result = playerService.searchPlayerByName("Unknown");
+
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  void searchPlayerByName_shouldThrow_whenApiKeyNotConfigured() {
+    assertThatThrownBy(() -> playerService.searchPlayerByName("Vinícius"))
+        .isInstanceOf(RuntimeException.class)
+        .hasMessage("API key not configured");
+  }
+
+  @Test
+  void searchPlayerByName_shouldThrow_whenApiCallFails() {
+    ReflectionTestUtils.setField(playerService, "apiFootballKey", "test-api-key");
+
+    when(apiSportsClient.searchPlayers("Vinícius", "test-api-key"))
+        .thenThrow(new RuntimeException("API connection error"));
+
+    assertThatThrownBy(() -> playerService.searchPlayerByName("Vinícius"))
+        .isInstanceOf(RuntimeException.class)
+        .hasMessage("Failed to search players: API connection error");
   }
 }
