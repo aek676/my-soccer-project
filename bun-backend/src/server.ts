@@ -1,10 +1,11 @@
-import { Elysia } from "elysia";
+import { Elysia, status } from "elysia";
 import { healthcheckPlugin } from "elysia-healthcheck";
 import mongoose from "mongoose";
 import { buildConfig } from "./config/config-server";
 import { checkConnection, connectDB } from "./config/db";
 import { registerWithEureka } from "./config/eureka";
-import { AuthModule } from "./modules/auth";
+import { authPlugin } from "./modules/auth";
+import { CommentModule } from "./modules/comment";
 import { PlayerModule } from "./modules/player";
 
 const config = await buildConfig();
@@ -18,7 +19,7 @@ const app = new Elysia()
 	.onError(({ error, code }) => {
 		if (code === "VALIDATION") {
 			console.error("[VALIDATION ERROR]", JSON.stringify(error.all, null, 2));
-			return { code: 400, message: error.all[0].message };
+			return status(422, { code: 422, message: error.all[0].message });
 		}
 		console.error(
 			`[${code}]`,
@@ -45,8 +46,9 @@ const app = new Elysia()
 			},
 		}),
 	)
-	.use(AuthModule)
-	.use(PlayerModule);
+	.use(authPlugin)
+	.use(PlayerModule)
+	.use(CommentModule);
 
 app.get("/", () => "Hello Elysia");
 
