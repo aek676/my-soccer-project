@@ -166,8 +166,8 @@ public class PlayerService {
         .age(entry.getPlayer().getAge())
         .birthdate(entry.getPlayer().getBirth() != null
             && entry.getPlayer().getBirth().getDate() != null
-            ? LocalDate.parse(entry.getPlayer().getBirth().getDate())
-            : null)
+                ? LocalDate.parse(entry.getPlayer().getBirth().getDate())
+                : null)
         .nationality(entry.getPlayer().getNationality())
         .height(entry.getPlayer().getHeight())
         .weight(entry.getPlayer().getWeight())

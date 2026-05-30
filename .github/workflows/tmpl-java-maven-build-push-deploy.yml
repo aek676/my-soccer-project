@@ -53,10 +53,12 @@ jobs:
         uses: madrapps/jacoco-report@v1
         if: github.event_name == 'pull_request'
         with:
-          path: ${{ inputs.working_directory }}/target/site/jacoco/jacoco.xml
+          paths: ${{ inputs.working_directory }}/target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80
           min-coverage-changed-files: 80
+          title: Code Coverage
+          update-comment: true
 
       - name: Setup Reviewdog
         uses: reviewdog/action-setup@v1
