@@ -25,7 +25,7 @@
     }
   </ion-list>
 
-  @if (!(isGuest$ | async)) {
+  @if (isAuthenticated$ | async) {
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="ion-margin">
     <ion-fab-button (click)="openAddActionSheet()">
       <ion-icon name="add"></ion-icon>
