@@ -55,6 +55,17 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
+  void handleUnauthorized_shouldReturn401WithCustomMessage() {
+    UnauthorizedException ex = new UnauthorizedException("Custom unauthorized message");
+
+    ResponseEntity<ErrorResponse> response = handler.handleUnauthorized(ex);
+
+    assertThat(response.getStatusCode().value()).isEqualTo(401);
+    assertThat(response.getBody().getCode()).isEqualTo(401);
+    assertThat(response.getBody().getMessage()).isEqualTo("Custom unauthorized message");
+  }
+
+  @Test
   void handleTypeMismatch_shouldReturn400() {
     TypeMismatchException ex = new TypeMismatchException("abc", Long.class);
 
