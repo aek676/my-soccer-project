@@ -126,6 +126,11 @@ export class ImportPlayersPage {
           const response = await firstValueFrom(
             provider.importPlayer(apiPlayerId, location),
           );
+
+          if (response.status === 201 && response.body) {
+            this.backendManager.addPlayerToCache(response.body);
+          }
+
           const importMessage = response.status === 200
             ? `${player.name} already imported`
             : `${player.name} imported successfully`;
