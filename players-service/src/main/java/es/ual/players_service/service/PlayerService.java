@@ -159,7 +159,7 @@ public class PlayerService {
 
   private PlayerResponse mapApiEntryToResponse(ApiSportsPlayerEntry entry) {
     return PlayerResponse.builder()
-        .id(entry.getPlayer().getId())
+        .id(null)
         .name(entry.getPlayer().getName())
         .firstName(entry.getPlayer().getFirstname())
         .lastName(entry.getPlayer().getLastname())

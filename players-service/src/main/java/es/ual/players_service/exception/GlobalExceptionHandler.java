@@ -29,11 +29,6 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(400).body(new ErrorResponse(400, message));
   }
 
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
-    return ResponseEntity.status(500).body(new ErrorResponse(500, ex.getMessage()));
-  }
-
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleGeneral(Exception ex) {
     return ResponseEntity.status(500).body(new ErrorResponse(500, "Internal server error"));
