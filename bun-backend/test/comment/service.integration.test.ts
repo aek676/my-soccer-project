@@ -14,7 +14,6 @@ import { CommentService } from "../../src/modules/comment/service";
 import { mongoUrl } from "../setup";
 
 const validPlayerId = "507f1f77bcf86cd799439011";
-const _validCommentId = "507f1f77bcf86cd799439012";
 
 describe("CommentService - Integration Tests", () => {
 	beforeAll(async () => {
