@@ -50,4 +50,5 @@ info:
 
 api:
   football:
-    key: ${API_FOOTBALL_KEY:}
+    key: ${API_KEY_API_FOOTBALL:}
+
