@@ -58,5 +58,7 @@ public class Player {
   @Column(columnDefinition = "jsonb")
   private Location location;
 
+  private Long externalId;
+
   private LocalDateTime created;
 }

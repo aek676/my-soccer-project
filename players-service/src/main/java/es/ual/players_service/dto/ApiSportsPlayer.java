@@ -1,8 +1,5 @@
 package es.ual.players_service.dto;
 
-import es.ual.players_service.model.Location;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,22 +9,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PlayerResponse {
+public class ApiSportsPlayer {
   private Long id;
   private String name;
-  private String firstName;
-  private String lastName;
+  private String firstname;
+  private String lastname;
   private Integer age;
-  private LocalDate birthdate;
+  private ApiSportsBirth birth;
   private String nationality;
   private String height;
   private String weight;
   private Integer number;
-  private String team;
-  private String league;
   private String position;
   private String photo;
-  private Location location;
-  private Long externalId;
-  private LocalDateTime created;
 }

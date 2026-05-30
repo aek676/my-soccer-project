@@ -10,7 +10,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @SpringBootTest(properties = {
     "spring.cloud.config.enabled=false",
     "eureka.client.enabled=false"
-})
+}, useMainMethod = SpringBootTest.UseMainMethod.ALWAYS)
 @Testcontainers
 class PlayersServiceApplicationTests {
 
