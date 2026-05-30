@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { buildConfig } from "./config/config-server";
 import { checkConnection, connectDB } from "./config/db";
 import { registerWithEureka } from "./config/eureka";
+import { AuthModule } from "./modules/auth";
 import { PlayerModule } from "./modules/player";
 
 const config = await buildConfig();
@@ -44,6 +45,7 @@ const app = new Elysia()
 			},
 		}),
 	)
+	.use(AuthModule)
 	.use(PlayerModule);
 
 app.get("/", () => "Hello Elysia");
