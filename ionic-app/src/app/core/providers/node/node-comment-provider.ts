@@ -33,15 +33,13 @@ export class NodeCommentProvider
   }
 
   private mapComment(comment: CommentResponse): CommentModel {
-    return {
-      ...comment,
-      created: comment.created
-        ? new Date(comment.created).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-          })
-        : '',
-    };
+    const created = comment.created
+      ? new Date(comment.created).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+    return { ...comment, created };
   }
 }
