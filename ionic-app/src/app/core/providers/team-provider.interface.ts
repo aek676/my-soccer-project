@@ -1,7 +1,9 @@
 import { Observable } from 'rxjs';
+import { PlayerModel } from '@core/models/player.model';
 import { TeamModel } from '@core/models/team.model';
 
 export interface TeamProviderInterface {
-  getTeamById(teamId: string): Observable<TeamModel>;
-  getTeams(): Observable<TeamModel[]>;
+  generateIdealTeam(): Observable<PlayerModel[]>;
+  saveIdealTeam(name: string, playerIds: string[]): Observable<TeamModel>;
+  getUserTeams(): Observable<TeamModel[]>;
 }
