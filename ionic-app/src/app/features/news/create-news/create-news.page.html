@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <app-shared-header
+    [showBackButton]="true"
+    (back)="goBack()"
+  ></app-shared-header>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="form" class="form-container">
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <ion-input
+        formControlName="title"
+        placeholder="Article title"
+        class="form-input"
+        fill="outline"
+      ></ion-input>
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+      <span class="error-text">Title is required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Content</label>
+      <ion-textarea
+        formControlName="body"
+        placeholder="Article content"
+        [rows]="6"
+        class="form-textarea"
+        fill="outline"
+      ></ion-textarea>
+      @if (form.get('body')?.invalid && form.get('body')?.touched) {
+      <span class="error-text">Content is required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Tags</label>
+      <ion-input
+        formControlName="tags"
+        placeholder="e.g., Transfer, Match Report"
+        class="form-input"
+        fill="outline"
+      ></ion-input>
+    </div>
+
+    <ion-select
+      label="Player"
+      formControlName="idPlayer"
+      placeholder="Select a player"
+      class="form-input"
+      fill="outline"
+    >
+      @for (player of players(); track player.id) {
+      <ion-select-option [value]="player.id"
+        >{{ player.name }}</ion-select-option
+      >
+      }
+    </ion-select>
+    @if (form.get('idPlayer')?.invalid && form.get('idPlayer')?.touched) {
+    <span class="error-text">Player is required</span>
+    }
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-actions">
+      <ion-button
+        fill="outline"
+        color="medium"
+        (click)="goBack()"
+        [disabled]="submitting()"
+      >
+        Cancel
+      </ion-button>
+      <ion-button
+        fill="solid"
+        color="primary"
+        (click)="onSave()"
+        [disabled]="submitting()"
+      >
+        @if (submitting()) {
+        <ion-spinner name="crescent" slot="start"></ion-spinner>
+        } {{ submitting() ? 'Publishing...' : 'Publish Article' }}
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
