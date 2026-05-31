@@ -21,7 +21,6 @@ import {
 import { NavController } from '@ionic/angular';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { FormsModule } from '@angular/forms';
-import { MockNewsProvider } from '@core/providers/mock/mock-news-provider';
 import { add } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { firstValueFrom } from 'rxjs';
@@ -51,7 +50,6 @@ export class CreateNewsPage {
   private fb = inject(FormBuilder);
   private nav = inject(NavController);
   private toastCtrl = inject(ToastController);
-  private newsProvider = new MockNewsProvider();
   private backendManager = inject(BackendManagerService);
 
   form: FormGroup;
@@ -85,7 +83,11 @@ export class CreateNewsPage {
     this.submitting.set(true);
 
     try {
-      await firstValueFrom(this.newsProvider.createNews(this.form.value));
+      await firstValueFrom(
+        this.backendManager
+          .providers()
+          .newsProvider.createNews(this.form.value),
+      );
       const toast = await this.toastCtrl.create({
         message: 'Article created successfully',
         duration: 2000,
@@ -93,7 +95,7 @@ export class CreateNewsPage {
         color: 'success',
       });
       await toast.present();
-      this.nav.back();
+      this.nav.navigateBack('/tabs/news');
     } catch {
       const toast = await this.toastCtrl.create({
         message: 'Failed to create article',

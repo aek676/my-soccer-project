@@ -1,15 +1,16 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   IonContent,
   IonHeader,
   IonFab,
   IonFabButton,
   IonIcon,
+  ViewWillEnter,
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { NewsModel } from '@core/models/news.model';
-import { MockNewsProvider } from '@core/providers/mock/mock-news-provider';
+import { BackendManagerService } from '@core/services/backend-manager.service';
 import { add } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -26,9 +27,9 @@ import { addIcons } from 'ionicons';
     SharedHeaderComponent,
   ],
 })
-export class NewsPage implements OnInit {
+export class NewsPage implements ViewWillEnter {
   private navController = inject(NavController);
-  private newsProvider = new MockNewsProvider();
+  private backendManager = inject(BackendManagerService);
 
   articles = signal<NewsModel[]>([]);
 
@@ -36,8 +37,13 @@ export class NewsPage implements OnInit {
     addIcons({ 'add': add });
   }
 
-  ngOnInit() {
-    this.newsProvider.getNews().subscribe((news) => {
+  getPlayerName(idPlayer: string | number): string {
+    const player = this.backendManager.players().find((p) => p.id == idPlayer);
+    return player?.name ?? 'Unknown Player';
+  }
+
+  ionViewWillEnter() {
+    this.backendManager.providers().newsProvider.getNews().subscribe((news) => {
       this.articles.set(news);
     });
   }
