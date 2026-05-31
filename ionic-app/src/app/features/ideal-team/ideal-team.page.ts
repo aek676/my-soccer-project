@@ -70,8 +70,9 @@ export class IdealTeamPage {
           this._isLoading.set(false);
         },
         error: async (err: HttpErrorResponse) => {
+          const message = err.error?.message ?? 'Failed to generate team';
           const toast = await this.toastController.create({
-            message: err.error?.message ?? 'Failed to generate team',
+            message,
             duration: 2000,
             position: 'bottom',
             color: 'danger',
@@ -114,8 +115,9 @@ export class IdealTeamPage {
           this._teamName.set('');
         },
         error: async (err: HttpErrorResponse) => {
+          const message = err.error?.message ?? 'Failed to save team';
           const toast = await this.toastController.create({
-            message: err.error?.message ?? 'Failed to save team',
+            message,
             duration: 2000,
             position: 'bottom',
             color: 'danger',
