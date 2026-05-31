@@ -1,4 +1,4 @@
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PlayerModel } from '@core/models/player.model';
 import { TeamModel } from '@core/models/team.model';
 import { BaseProvider } from '../base-provider';
@@ -9,17 +9,24 @@ export class SpringTeamProvider
   implements TeamProviderInterface
 {
   generateIdealTeam(): Observable<PlayerModel[]> {
-    // TODO: connect to bun-backend /ideal-team/generate
-    return throwError(() => new Error('TODO: connect to bun-backend'));
+    return this.http.get<PlayerModel[]>(
+      `${this.gatewayUrl}/ideal-team-service/ideal-team/generate`,
+    );
   }
 
   saveIdealTeam(name: string, playerIds: string[]): Observable<TeamModel> {
-    // TODO: connect to bun-backend /ideal-team
-    return throwError(() => new Error('TODO: connect to bun-backend'));
+    return this.http.post<TeamModel>(
+      `${this.gatewayUrl}/ideal-team-service/ideal-team`,
+      {
+        name,
+        players: playerIds,
+      },
+    );
   }
 
   getUserTeams(): Observable<TeamModel[]> {
-    // TODO: connect to bun-backend /ideal-team
-    return throwError(() => new Error('TODO: connect to bun-backend'));
+    return this.http.get<TeamModel[]>(
+      `${this.gatewayUrl}/ideal-team-service/ideal-team`,
+    );
   }
 }
