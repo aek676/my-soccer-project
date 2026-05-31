@@ -1,20 +1,41 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of, throwError } from 'rxjs';
+import { ToastController } from '@ionic/angular/standalone';
 import { AuthStateService } from '@core/services/auth-state.service';
-import { of } from 'rxjs';
-
+import { BackendManagerService } from '@core/services/backend-manager.service';
 import { IdealTeamPage } from './ideal-team.page';
 
 describe('IdealTeamPage', () => {
   let component: IdealTeamPage;
   let fixture: ComponentFixture<IdealTeamPage>;
 
+  const mockBackendManager = {
+    providers: () => ({
+      teamProvider: {
+        generateIdealTeam: jasmine.createSpy('generateIdealTeam').and.returnValue(throwError(() => new Error('TODO'))),
+        saveIdealTeam: jasmine.createSpy('saveIdealTeam').and.returnValue(throwError(() => new Error('TODO'))),
+        getUserTeams: jasmine.createSpy('getUserTeams').and.returnValue(of([])),
+      },
+    }),
+  };
+
+  const mockToastController = jasmine.createSpyObj('ToastController', ['create']);
+
   beforeEach(async () => {
+    mockToastController.create.and.returnValue(
+      Promise.resolve({
+        present: jasmine.createSpy('present'),
+      } as any),
+    );
+
     await TestBed.configureTestingModule({
       imports: [IdealTeamPage],
       providers: [
         provideRouter([]),
         { provide: AuthStateService, useValue: { isGuest$: of(true) } },
+        { provide: BackendManagerService, useValue: mockBackendManager },
+        { provide: ToastController, useValue: mockToastController },
       ],
     }).compileComponents();
 
@@ -25,5 +46,35 @@ describe('IdealTeamPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have squad empty initially', () => {
+    expect(component.squad()).toEqual([]);
+  });
+
+  it('should have isGenerated false initially', () => {
+    expect(component.isGenerated()).toBe(false);
+  });
+
+  it('should have showSaveModal false initially', () => {
+    expect(component.showSaveModal()).toBe(false);
+  });
+
+  it('should generate squad on generateSquad call', async () => {
+    await component.generateSquad();
+    expect(component.squad().length).toBe(11);
+    expect(component.isGenerated()).toBe(true);
+  });
+
+  it('should open save modal on openSaveModal call', () => {
+    component.openSaveModal();
+    expect(component.showSaveModal()).toBe(true);
+  });
+
+  it('should close save modal and reset name on closeSaveModal call', () => {
+    component.openSaveModal();
+    component.closeSaveModal();
+    expect(component.showSaveModal()).toBe(false);
+    expect(component.teamName()).toBe('');
   });
 });

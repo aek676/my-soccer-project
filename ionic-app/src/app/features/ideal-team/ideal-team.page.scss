@@ -1,0 +1,248 @@
+.hero-section {
+  background-color: var(--surface-dark);
+  padding: var(--spacing-section) var(--spacing-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-sm);
+  padding-bottom: var(--spacing-lg);
+}
+
+.hero-title {
+  color: var(--text-on-dark);
+  font-weight: 400;
+  letter-spacing: -1px;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-lg);
+}
+
+.generate-btn {
+  --background: var(--ion-color-primary);
+  --color: var(--text-on-primary);
+  --border-radius: 100px;
+  min-width: 200px;
+  height: 56px;
+  font-weight: 600;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.results-section {
+  padding: 0 var(--spacing-base) var(--spacing-section);
+  background-color: var(--surface-dark);
+}
+
+.results-card {
+  background-color: var(--surface-dark-elevated);
+  border-radius: 24px;
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  position: relative;
+
+  h3 {
+    color: var(--text-on-dark);
+    font-weight: 400;
+  }
+}
+
+.formation-badge {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-on-dark);
+  font-family: var(--monospace-font-family);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 9999px;
+}
+
+.pitch-container {
+  width: 100%;
+  height: 400px;
+  background-color: var(--surface-dark);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.pitch-center-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.pitch-half-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-50%);
+}
+
+.player-row {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding-left: var(--spacing-base);
+  padding-right: var(--spacing-base);
+
+  &.forwards {
+    top: 15%;
+  }
+
+  &.midfielders {
+    top: 42%;
+  }
+
+  &.defenders {
+    bottom: 20%;
+  }
+
+  &.goalkeeper {
+    bottom: 2%;
+    justify-content: center;
+
+    .player-node {
+      align-items: center;
+    }
+  }
+}
+
+.player-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xxs);
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--surface-dark);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+
+  ion-icon {
+    color: var(--text-muted);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.player-name {
+  font-family: var(--monospace-font-family);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-on-dark);
+  padding: 0 2px;
+  text-align: center;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.save-btn {
+  --border-radius: 100px;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --color: var(--text-on-dark);
+  --background: transparent;
+  --background-hover: rgba(255, 255, 255, 0.05);
+  height: 48px;
+  font-weight: 600;
+  width: 100%;
+}
+
+.modal-card {
+  background: var(--surface-soft);
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: var(--spacing-lg);
+}
+
+.save-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-base);
+}
+
+.modal-label {
+  font-family: var(--ion-font-family);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-ink);
+}
+
+.auth-input {
+  --background: var(--surface-canvas);
+  --border-radius: 12px;
+  --border: 1px solid var(--hairline);
+  --border-color: var(--hairline);
+  --border-style: solid;
+  --border-width: 1px;
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-primary);
+  --highlight-color-invalid: var(--ion-color-danger);
+  --padding-start: var(--spacing-base);
+  --padding-end: var(--spacing-base);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 48px;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-ink);
+}
+
+.cancel-btn {
+  --color: var(--text-muted);
+}
+
+.save-btn-modal {
+  --color: var(--ion-color-primary);
+  font-weight: 600;
+}
