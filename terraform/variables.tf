@@ -22,6 +22,7 @@ variable "image" {
 variable "java_services" {
   type = map(object({
     needs_api_football_key = optional(bool, false)
+    needs_groq_api_key     = optional(bool, false)
   }))
   description = "Map of microservice names to their config"
 }
@@ -52,6 +53,13 @@ variable "mongo_atlas_uri" {
 variable "api_key_api_football" {
   type        = string
   description = "API key for api-football.com"
+  sensitive   = true
+  default     = ""
+}
+
+variable "groq_api_key" {
+  type        = string
+  description = "API key for Groq (used by bun-backend and ideal-team-service)"
   sensitive   = true
   default     = ""
 }

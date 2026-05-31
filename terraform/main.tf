@@ -71,6 +71,7 @@ module "microservices" {
   postgres_user         = var.supabase_user
   postgres_password     = var.supabase_password
   api_key_api_football  = each.value.needs_api_football_key ? var.api_key_api_football : ""
+  groq_api_key          = each.value.needs_groq_api_key ? var.groq_api_key : ""
 }
 
 module "bun_backend" {
@@ -86,6 +87,7 @@ module "bun_backend" {
   gcp_registry_password = module.gcp.artifact_registry_json_key
   mongo_atlas_uri       = var.mongo_atlas_uri
   api_key_api_football  = var.api_key_api_football
+  groq_api_key          = var.groq_api_key
 }
 
 module "news_service" {
