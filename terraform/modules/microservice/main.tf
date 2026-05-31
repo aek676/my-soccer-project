@@ -44,6 +44,12 @@ resource "azapi_resource" "app" {
                   name      = "API_KEY_API_FOOTBALL"
                   secretRef = "api-key-api-football"
                 }
+              ] : [],
+              var.groq_api_key != "" ? [
+                {
+                  name      = "GROQ_API_KEY"
+                  secretRef = "groq-api-key"
+                }
               ] : []
             )
             resources = {
@@ -99,6 +105,12 @@ resource "azapi_resource" "app" {
               {
                 name  = "api-key-api-football"
                 value = var.api_key_api_football
+              }
+            ] : [],
+            var.groq_api_key != "" ? [
+              {
+                name  = "groq-api-key"
+                value = var.groq_api_key
               }
             ] : []
           )
