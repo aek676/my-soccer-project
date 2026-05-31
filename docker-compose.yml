@@ -68,12 +68,15 @@ services:
       - eureka-server
       - postgres
       - gateway
+      - players-service
     networks:
       - my-soccer-network
 
   ideal-team-service:
     image: ideal-team-service:0.0.1-SNAPSHOT
     container_name: ideal-team-service
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: local
       EUREKA_INSTANCE_HOSTNAME: ideal-team-service
@@ -83,6 +86,7 @@ services:
       - eureka-server
       - postgres
       - gateway
+      - players-service
     networks:
       - my-soccer-network
 
