@@ -27,9 +27,11 @@
     </div>
   </div>
 
+  @if (userRole() === 'admin') {
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="ion-margin">
     <ion-fab-button (click)="onCreateNews()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  }
 </ion-content>
