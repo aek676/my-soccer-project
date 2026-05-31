@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { BackendContext } from './backend-context';
 import { BackendFactory } from '@core/creators/backends/backend-factory';
 import { CommentProviderInterface } from '@core/providers/comment-provider.interface';
+import { NewsProviderInterface } from '@core/providers/news-provider.interface';
 import { PlayerProviderInterface } from '@core/providers/player-provider.interface';
 import { TeamProviderInterface } from '@core/providers/team-provider.interface';
 import { BackendConfigType } from '@core/types/backend-config.type';
@@ -20,6 +21,9 @@ describe('BackendContext', () => {
     createCommentProvider(): CommentProviderInterface {
       return {} as CommentProviderInterface;
     }
+    createNewsProvider(): NewsProviderInterface {
+      return {} as NewsProviderInterface;
+    }
   }
 
   it('should create an instance with a strategy', () => {
@@ -33,6 +37,7 @@ describe('BackendContext', () => {
     expect(providers.playerProvider).toBeDefined();
     expect(providers.teamProvider).toBeDefined();
     expect(providers.commentProvider).toBeDefined();
+    expect(providers.newsProvider).toBeDefined();
   });
 
   it('should allow changing the strategy', () => {
