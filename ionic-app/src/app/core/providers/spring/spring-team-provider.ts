@@ -1,19 +1,25 @@
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { PlayerModel } from '@core/models/player.model';
 import { TeamModel } from '@core/models/team.model';
 import { BaseProvider } from '../base-provider';
 import { TeamProviderInterface } from '../team-provider.interface';
 
-// TODO: modify the endpoint to match the actual backend API for teams
 export class SpringTeamProvider
   extends BaseProvider
   implements TeamProviderInterface
 {
-  getTeamById(teamId: string): Observable<TeamModel> {
-    return this.http.get<TeamModel>(
-      `${this.gatewayUrl}/teams-spring/${teamId}`,
-    );
+  generateIdealTeam(): Observable<PlayerModel[]> {
+    // TODO: connect to bun-backend /ideal-team/generate
+    return throwError(() => new Error('TODO: connect to bun-backend'));
   }
-  getTeams(): Observable<TeamModel[]> {
-    return this.http.get<TeamModel[]>(`${this.gatewayUrl}/teams-spring`);
+
+  saveIdealTeam(name: string, playerIds: string[]): Observable<TeamModel> {
+    // TODO: connect to bun-backend /ideal-team
+    return throwError(() => new Error('TODO: connect to bun-backend'));
+  }
+
+  getUserTeams(): Observable<TeamModel[]> {
+    // TODO: connect to bun-backend /ideal-team
+    return throwError(() => new Error('TODO: connect to bun-backend'));
   }
 }

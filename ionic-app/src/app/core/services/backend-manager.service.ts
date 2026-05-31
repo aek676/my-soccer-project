@@ -38,17 +38,6 @@ export class BackendManagerService {
 
   readonly players = toSignal(this._playersSubject, { initialValue: [] });
 
-  readonly teams = toSignal(
-    toObservable(this._providers).pipe(
-      switchMap((p) =>
-        p.teamProvider
-          .getTeams()
-          .pipe(catchError(() => of([] as PlayerModel[]))),
-      ),
-    ),
-    { initialValue: [] },
-  );
-
   constructor() {
     toObservable(this._providers)
       .pipe(
