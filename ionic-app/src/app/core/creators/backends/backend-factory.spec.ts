@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { BackendFactory } from './backend-factory';
 import { CommentProviderInterface } from '@core/providers/comment-provider.interface';
+import { NewsProviderInterface } from '@core/providers/news-provider.interface';
 import { PlayerProviderInterface } from '@core/providers/player-provider.interface';
 import { TeamProviderInterface } from '@core/providers/team-provider.interface';
 import { BackendConfigType } from '@core/types/backend-config.type';
@@ -18,6 +19,9 @@ describe('BackendFactory', () => {
     }
     createCommentProvider(): CommentProviderInterface {
       return {} as CommentProviderInterface;
+    }
+    createNewsProvider(): NewsProviderInterface {
+      return {} as NewsProviderInterface;
     }
   }
 
@@ -41,6 +45,12 @@ describe('BackendFactory', () => {
   it('should create a comment provider', () => {
     const factory = new ConcreteFactory(config, httpMock);
     const provider = factory.createCommentProvider();
+    expect(provider).toBeDefined();
+  });
+
+  it('should create a news provider', () => {
+    const factory = new ConcreteFactory(config, httpMock);
+    const provider = factory.createNewsProvider();
     expect(provider).toBeDefined();
   });
 });

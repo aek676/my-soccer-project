@@ -1,24 +1,44 @@
-import { Observable, throwError } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { NewsModel } from '@core/models/news.model';
 import { BaseProvider } from '../base-provider';
 import { NewsProviderInterface } from '../news-provider.interface';
-import { NewsModel } from '@core/models/news.model';
 
 export class SpringNewsProvider
   extends BaseProvider
   implements NewsProviderInterface
 {
   getNews(): Observable<NewsModel[]> {
-    // TODO: Implement when news-service backend is ready
-    return throwError(() => new Error('SpringNewsProvider.getNews() not implemented yet'));
+    return this.http
+      .get<NewsModel[]>(`${this.gatewayUrl}/news-service/news`)
+      .pipe(map((articles) => articles.map((a) => this.mapNews(a))));
   }
 
   getNewsById(id: number): Observable<NewsModel> {
-    // TODO: Implement when news-service backend is ready
-    return throwError(() => new Error('SpringNewsProvider.getNewsById() not implemented yet'));
+    return this.http
+      .get<NewsModel>(`${this.gatewayUrl}/news-service/news/${id}`)
+      .pipe(map((a) => this.mapNews(a)));
   }
 
   createNews(news: Partial<NewsModel>): Observable<NewsModel> {
-    // TODO: Implement when news-service backend is ready
-    return throwError(() => new Error('SpringNewsProvider.createNews() not implemented yet'));
+    const tags = news.tags ?? '';
+    return this.http
+      .post<NewsModel>(`${this.gatewayUrl}/news-service/news`, {
+        title: news.title,
+        body: news.body,
+        tags,
+        idPlayer: news.idPlayer,
+      })
+      .pipe(map((a) => this.mapNews(a)));
+  }
+
+  private mapNews(article: NewsModel): NewsModel {
+    const created = article.created
+      ? new Date(article.created).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+    return { ...article, idPlayer: String(article.idPlayer), created };
   }
 }

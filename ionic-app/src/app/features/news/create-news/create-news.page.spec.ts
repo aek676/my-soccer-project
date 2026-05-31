@@ -3,11 +3,13 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { ToastController } from '@ionic/angular/standalone';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { CreateNewsPage } from './create-news.page';
 import { AuthStateService } from '@core/services/auth-state.service';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { PlayerModel } from '@core/models/player.model';
+import { NavController } from '@ionic/angular';
+import { NewsModel } from '@core/models/news.model';
 
 const mockPlayers: PlayerModel[] = [
   { id: '1', name: 'Marcus Rashford', position: 'Forward' },
@@ -19,13 +21,30 @@ describe('CreateNewsPage', () => {
   let fixture: ComponentFixture<CreateNewsPage>;
   const mockPlayersSignal = signal<PlayerModel[]>(mockPlayers);
 
+  const mockNewsProvider = {
+    getNews: jasmine.createSpy('getNews').and.returnValue(of([])),
+    getNewsById: jasmine.createSpy('getNewsById'),
+    createNews: jasmine.createSpy('createNews').and.returnValue(
+      of({
+        idNews: 1,
+        title: 'Test',
+        body: 'Test body',
+        tags: '',
+        created: 'Jun 1, 2024',
+        idPlayer: '1',
+      } as NewsModel),
+    ),
+  };
+
   const mockBackendManager = {
     players: () => mockPlayersSignal(),
     loadPlayers: jasmine.createSpy('loadPlayers'),
+    providers: () => ({ newsProvider: mockNewsProvider }),
   };
 
   beforeEach(async () => {
     mockPlayersSignal.set(mockPlayers);
+    mockNewsProvider.createNews.calls.reset();
 
     await TestBed.configureTestingModule({
       imports: [CreateNewsPage, ReactiveFormsModule],
@@ -37,6 +56,13 @@ describe('CreateNewsPage', () => {
           useValue: {
             create: () =>
               Promise.resolve({ present: () => Promise.resolve() }),
+          },
+        },
+        {
+          provide: NavController,
+          useValue: {
+            back: jasmine.createSpy('back'),
+            navigateBack: jasmine.createSpy('navigateBack').and.returnValue(Promise.resolve()),
           },
         },
         {
@@ -77,5 +103,55 @@ describe('CreateNewsPage', () => {
     spyOn(component.form, 'markAllAsTouched');
     component.onSave();
     expect(component.form.markAllAsTouched).toHaveBeenCalled();
+  });
+
+  it('should call loadPlayers on ionViewWillEnter', () => {
+    component.ionViewWillEnter();
+    expect(mockBackendManager.loadPlayers).toHaveBeenCalled();
+  });
+
+  it('should navigate back on goBack', () => {
+    const navCtrl = TestBed.inject(NavController);
+    component.goBack();
+    expect(navCtrl.back).toHaveBeenCalled();
+  });
+
+  it('should call createNews and navigate on valid form submit', (done) => {
+    component.form.setValue({
+      title: 'Test Title',
+      body: 'Test body',
+      tags: 'tag1',
+      idPlayer: '1',
+    });
+    component.onSave().then(() => {
+      expect(mockNewsProvider.createNews).toHaveBeenCalledWith(
+        jasmine.objectContaining({ title: 'Test Title' }),
+      );
+      const navCtrl = TestBed.inject(NavController);
+      expect(navCtrl.navigateBack).toHaveBeenCalledWith('/tabs/news');
+      expect(component.submitting()).toBeFalse();
+      done();
+    });
+  });
+
+  it('should show error toast on createNews failure', (done) => {
+    mockNewsProvider.createNews.and.returnValue(
+      throwError(() => new Error('API error')),
+    );
+    component.form.setValue({
+      title: 'Test Title',
+      body: 'Test body',
+      tags: '',
+      idPlayer: '1',
+    });
+    const toastCtrl = TestBed.inject(ToastController);
+    spyOn(toastCtrl, 'create').and.callThrough();
+    component.onSave().then(() => {
+      expect(toastCtrl.create).toHaveBeenCalledWith(
+        jasmine.objectContaining({ color: 'danger' }),
+      );
+      expect(component.submitting()).toBeFalse();
+      done();
+    });
   });
 });
