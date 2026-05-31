@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
@@ -116,24 +116,25 @@ describe('CreateNewsPage', () => {
     expect(navCtrl.back).toHaveBeenCalled();
   });
 
-  it('should call createNews and navigate on valid form submit', fakeAsync(async () => {
+  it('should call createNews and navigate on valid form submit', (done) => {
     component.form.setValue({
       title: 'Test Title',
       body: 'Test body',
       tags: 'tag1',
       idPlayer: '1',
     });
-    await component.onSave();
-    tick();
-    expect(mockNewsProvider.createNews).toHaveBeenCalledWith(
-      jasmine.objectContaining({ title: 'Test Title' }),
-    );
-    const navCtrl = TestBed.inject(NavController);
-    expect(navCtrl.navigateBack).toHaveBeenCalledWith('/tabs/news');
-    expect(component.submitting()).toBeFalse();
-  }));
+    component.onSave().then(() => {
+      expect(mockNewsProvider.createNews).toHaveBeenCalledWith(
+        jasmine.objectContaining({ title: 'Test Title' }),
+      );
+      const navCtrl = TestBed.inject(NavController);
+      expect(navCtrl.navigateBack).toHaveBeenCalledWith('/tabs/news');
+      expect(component.submitting()).toBeFalse();
+      done();
+    });
+  });
 
-  it('should show error toast on createNews failure', fakeAsync(() => {
+  it('should show error toast on createNews failure', (done) => {
     mockNewsProvider.createNews.and.returnValue(
       throwError(() => new Error('API error')),
     );
@@ -145,11 +146,12 @@ describe('CreateNewsPage', () => {
     });
     const toastCtrl = TestBed.inject(ToastController);
     spyOn(toastCtrl, 'create').and.callThrough();
-    component.onSave();
-    flush();
-    expect(toastCtrl.create).toHaveBeenCalledWith(
-      jasmine.objectContaining({ color: 'danger' }),
-    );
-    expect(component.submitting()).toBeFalse();
-  }));
+    component.onSave().then(() => {
+      expect(toastCtrl.create).toHaveBeenCalledWith(
+        jasmine.objectContaining({ color: 'danger' }),
+      );
+      expect(component.submitting()).toBeFalse();
+      done();
+    });
+  });
 });
