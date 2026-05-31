@@ -89,3 +89,10 @@ variable "api_key_api_football" {
   default     = ""
 }
 
+variable "groq_api_key" {
+  type        = string
+  description = "API key for Groq"
+  sensitive   = true
+  default     = ""
+}
+
