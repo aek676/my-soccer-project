@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
@@ -62,7 +62,7 @@ describe('CreateNewsPage', () => {
           provide: NavController,
           useValue: {
             back: jasmine.createSpy('back'),
-            navigateBack: jasmine.createSpy('navigateBack'),
+            navigateBack: jasmine.createSpy('navigateBack').and.returnValue(Promise.resolve()),
           },
         },
         {
@@ -116,25 +116,24 @@ describe('CreateNewsPage', () => {
     expect(navCtrl.back).toHaveBeenCalled();
   });
 
-  it('should call createNews and navigate on valid form submit', (done) => {
+  it('should call createNews and navigate on valid form submit', fakeAsync(async () => {
     component.form.setValue({
       title: 'Test Title',
       body: 'Test body',
       tags: 'tag1',
       idPlayer: '1',
     });
-    component.onSave().then(() => {
-      expect(mockNewsProvider.createNews).toHaveBeenCalledWith(
-        jasmine.objectContaining({ title: 'Test Title' }),
-      );
-      const navCtrl = TestBed.inject(NavController);
-      expect(navCtrl.navigateBack).toHaveBeenCalledWith('/tabs/news');
-      expect(component.submitting()).toBeFalse();
-      done();
-    });
-  });
+    await component.onSave();
+    tick();
+    expect(mockNewsProvider.createNews).toHaveBeenCalledWith(
+      jasmine.objectContaining({ title: 'Test Title' }),
+    );
+    const navCtrl = TestBed.inject(NavController);
+    expect(navCtrl.navigateBack).toHaveBeenCalledWith('/tabs/news');
+    expect(component.submitting()).toBeFalse();
+  }));
 
-  it('should show error toast on createNews failure', (done) => {
+  it('should show error toast on createNews failure', fakeAsync(() => {
     mockNewsProvider.createNews.and.returnValue(
       throwError(() => new Error('API error')),
     );
@@ -146,12 +145,11 @@ describe('CreateNewsPage', () => {
     });
     const toastCtrl = TestBed.inject(ToastController);
     spyOn(toastCtrl, 'create').and.callThrough();
-    component.onSave().then(() => {
-      expect(toastCtrl.create).toHaveBeenCalledWith(
-        jasmine.objectContaining({ color: 'danger' }),
-      );
-      expect(component.submitting()).toBeFalse();
-      done();
-    });
-  });
+    component.onSave();
+    flush();
+    expect(toastCtrl.create).toHaveBeenCalledWith(
+      jasmine.objectContaining({ color: 'danger' }),
+    );
+    expect(component.submitting()).toBeFalse();
+  }));
 });

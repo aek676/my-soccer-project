@@ -57,7 +57,7 @@ describe('NewsPage', () => {
       providers: [
         provideHttpClient(),
         provideRouter([]),
-        { provide: AuthStateService, useValue: { isGuest$: of(true) } },
+        { provide: AuthStateService, useValue: { role$: of('guest'), isGuest$: of(true) } },
         { provide: BackendManagerService, useValue: mockBackendManager },
       ],
     }).compileComponents();
