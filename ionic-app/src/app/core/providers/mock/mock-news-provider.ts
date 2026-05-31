@@ -41,7 +41,7 @@ export class MockNewsProvider implements NewsProviderInterface {
     return of(article!);
   }
 
-  /* istanbul ignore start */
+  /* istanbul ignore next */
   createNews(news: Partial<NewsModel>): Observable<NewsModel> {
     const newArticle: NewsModel = {
       idNews: Math.max(...this.news.map((n) => n.idNews)) + 1,
@@ -54,5 +54,4 @@ export class MockNewsProvider implements NewsProviderInterface {
     this.news = [...this.news, newArticle];
     return of(newArticle);
   }
-  /* istanbul ignore end */
 }
