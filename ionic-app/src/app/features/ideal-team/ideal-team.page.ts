@@ -6,7 +6,7 @@ import { PlayerModel } from '@core/models/player.model';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { ToastController } from '@ionic/angular/standalone';
 import { BackendManagerService } from '@core/services/backend-manager.service';
-import { catchError, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type PlayerPosition = 'Goalkeeper' | 'Defender' | 'Midfielder' | 'Forward';
 type PlayerRole = 'GK' | 'LB' | 'LCB' | 'RCB' | 'RB' | 'LCM' | 'CDM' | 'RCM' | 'LW' | 'ST' | 'RW';
@@ -63,16 +63,16 @@ export class IdealTeamPage {
     this.backendManager
       .providers()
       .teamProvider.generateIdealTeam()
-      .pipe(catchError(() => of([] as PlayerModel[])))
       .subscribe({
         next: (players) => {
           this._squad.set(players as IdealTeamPlayer[]);
           this._isGenerated.set(true);
           this._isLoading.set(false);
         },
-        error: async () => {
+        error: async (err: HttpErrorResponse) => {
+          const message = err.error?.message ?? 'Failed to generate team';
           const toast = await this.toastController.create({
-            message: 'Failed to generate team',
+            message,
             duration: 2000,
             position: 'bottom',
             color: 'danger',
@@ -108,16 +108,16 @@ export class IdealTeamPage {
     this.backendManager
       .providers()
       .teamProvider.saveIdealTeam(name, playerIds)
-      .pipe(catchError(() => of(null)))
       .subscribe({
         next: () => {
           this.backendManager.loadTeams();
           this._showSaveModal.set(false);
           this._teamName.set('');
         },
-        error: async () => {
+        error: async (err: HttpErrorResponse) => {
+          const message = err.error?.message ?? 'Failed to save team';
           const toast = await this.toastController.create({
-            message: 'Failed to save team',
+            message,
             duration: 2000,
             position: 'bottom',
             color: 'danger',

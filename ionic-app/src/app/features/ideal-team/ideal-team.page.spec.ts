@@ -32,19 +32,27 @@ describe('IdealTeamPage', () => {
   let component: IdealTeamPage;
   let fixture: ComponentFixture<IdealTeamPage>;
 
+  const mockTeamProvider = {
+    generateIdealTeam: jasmine.createSpy('generateIdealTeam').and.returnValue(of(MOCK_PLAYERS)),
+    saveIdealTeam: jasmine.createSpy('saveIdealTeam').and.returnValue(of(MOCK_TEAM)),
+    getUserTeams: jasmine.createSpy('getUserTeams').and.returnValue(of([])),
+  };
+
   const mockBackendManager = {
-    providers: () => ({
-      teamProvider: {
-        generateIdealTeam: jasmine.createSpy('generateIdealTeam').and.returnValue(of(MOCK_PLAYERS)),
-        saveIdealTeam: jasmine.createSpy('saveIdealTeam').and.returnValue(of(MOCK_TEAM)),
-        getUserTeams: jasmine.createSpy('getUserTeams').and.returnValue(of([])),
-      },
-    }),
+    providers: () => ({ teamProvider: mockTeamProvider }),
+    loadTeams: jasmine.createSpy('loadTeams'),
   };
 
   const mockToastController = jasmine.createSpyObj('ToastController', ['create']);
 
   beforeEach(async () => {
+    mockTeamProvider.generateIdealTeam.calls.reset();
+    mockTeamProvider.generateIdealTeam.and.returnValue(of(MOCK_PLAYERS));
+    mockTeamProvider.saveIdealTeam.calls.reset();
+    mockTeamProvider.saveIdealTeam.and.returnValue(of(MOCK_TEAM));
+    mockTeamProvider.getUserTeams.calls.reset();
+    mockTeamProvider.getUserTeams.and.returnValue(of([]));
+    mockToastController.create.calls.reset();
     mockToastController.create.and.returnValue(
       Promise.resolve({
         present: jasmine.createSpy('present'),
@@ -98,5 +106,30 @@ describe('IdealTeamPage', () => {
     component.closeSaveModal();
     expect(component.showSaveModal()).toBe(false);
     expect(component.teamName()).toBe('');
+  });
+
+  it('should show toast with backend error message on generateSquad failure', async () => {
+    mockTeamProvider.generateIdealTeam.and.returnValue(
+      throwError(() => ({ error: { message: 'Not enough players in database' } })),
+    );
+
+    await component.generateSquad();
+
+    expect(mockToastController.create).toHaveBeenCalledWith(
+      jasmine.objectContaining({ message: 'Not enough players in database', color: 'danger' }),
+    );
+  });
+
+  it('should show toast with backend error message on save failure', async () => {
+    mockTeamProvider.saveIdealTeam.and.returnValue(
+      throwError(() => ({ error: { message: 'Team name already exists' } })),
+    );
+
+    component.teamName.set('My Team');
+    await component.confirmSaveTeam();
+
+    expect(mockToastController.create).toHaveBeenCalledWith(
+      jasmine.objectContaining({ message: 'Team name already exists', color: 'danger' }),
+    );
   });
 });
