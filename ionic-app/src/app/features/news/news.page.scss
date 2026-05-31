@@ -77,3 +77,21 @@
   margin: 0;
   max-width: 672px;
 }
+
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--spacing-xs);
+}
+
+.tag {
+  font-family: var(--monospace-font-family);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-muted);
+  background: var(--surface-strong);
+  padding: 2px 10px;
+  border-radius: 9999px;
+}

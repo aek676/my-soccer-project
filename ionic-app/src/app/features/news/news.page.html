@@ -15,6 +15,13 @@
         </div>
         <h3 class="article-title">{{ article.title }}</h3>
         <p class="article-body">{{ article.body }}</p>
+        @if (article.tags) {
+        <div class="article-tags">
+          @for (tag of article.tags.split(','); track tag) {
+          <span class="tag">{{ tag.trim() }}</span>
+          }
+        </div>
+        }
       </article>
       }
     </div>
