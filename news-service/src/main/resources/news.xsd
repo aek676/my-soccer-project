@@ -9,7 +9,7 @@
                 <xs:element name="body" type="xs:string"/>
                 <xs:element name="tags" type="xs:string"/>
                 <xs:element name="created" type="xs:string"/>
-                <xs:element name="idPlayer" type="xs:int"/>
+                <xs:element name="idPlayer" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

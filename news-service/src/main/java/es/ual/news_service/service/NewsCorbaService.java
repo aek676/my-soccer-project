@@ -1,16 +1,13 @@
 package es.ual.news_service.service;
 
-import es.ual.news_service.client.PlayerServiceClient;
 import es.ual.news_service.corba.NewsBufferClient;
 import es.ual.news_service.dto.NewsCreateRequest;
 import es.ual.news_service.dto.NewsResponse;
 import es.ual.news_service.exception.NewsNotFoundException;
-import es.ual.news_service.exception.PlayerNotFoundException;
 import es.ual.news_service.model.News;
 import es.ual.news_service.xml.NewsSchemaValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,8 +19,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class NewsCorbaService {
-
-  private final PlayerServiceClient playerServiceClient;
 
   private NewsBufferClient client;
   private final NewsSchemaValidator validator = new NewsSchemaValidator();
@@ -70,8 +65,6 @@ public class NewsCorbaService {
   }
 
   public synchronized NewsResponse putNews(NewsCreateRequest request) {
-    verifyPlayerExists(request.getIdPlayer());
-
     initializeClient();
     if (client == null) {
       throw new RuntimeException("CORBA client not available");
@@ -100,19 +93,6 @@ public class NewsCorbaService {
     }
 
     return toResponse(news);
-  }
-
-  private void verifyPlayerExists(int playerId) {
-    try {
-      ResponseEntity<?> response = playerServiceClient.getPlayerById((long) playerId);
-      if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
-        throw new PlayerNotFoundException(playerId);
-      }
-    } catch (PlayerNotFoundException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new PlayerNotFoundException(playerId);
-    }
   }
 
   private static NewsResponse toResponse(News news) {

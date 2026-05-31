@@ -13,5 +13,5 @@ public class NewsCreateRequest {
   private String title;
   private String body;
   private String tags;
-  private int idPlayer;
+  private String idPlayer;
 }
