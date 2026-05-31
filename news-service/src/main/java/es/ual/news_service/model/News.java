@@ -18,7 +18,7 @@ public class News {
   private String body;
   private String tags;
   private LocalDateTime created;
-  private int idPlayer;
+  private String idPlayer;
 
   public String toXML() {
     StringBuilder xml = new StringBuilder();
@@ -44,7 +44,7 @@ public class News {
       if (createdStr != null && !createdStr.isEmpty()) {
         news.setCreated(LocalDateTime.parse(createdStr));
       }
-      news.setIdPlayer(Integer.parseInt(extractValue(xml, "idPlayer")));
+      news.setIdPlayer(extractValue(xml, "idPlayer"));
       return news;
     } catch (Exception e) {
       e.printStackTrace();

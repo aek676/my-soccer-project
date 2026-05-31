@@ -9,3 +9,5 @@ mvnw.cmd
 .settings/
 .gitattributes
 .gitignore
+src/test/
+README.md

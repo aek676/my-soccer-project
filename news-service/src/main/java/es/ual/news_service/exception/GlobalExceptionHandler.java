@@ -16,12 +16,6 @@ public class GlobalExceptionHandler {
         .body(new ErrorResponse(404, ex.getMessage()));
   }
 
-  @ExceptionHandler(PlayerNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handlePlayerNotFound(PlayerNotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(new ErrorResponse(404, ex.getMessage()));
-  }
-
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
