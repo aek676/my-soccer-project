@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap, catchError } from 'rxjs/operators';
-import { BehaviorSubject, of } from 'rxjs';
+import { switchMap, catchError, startWith } from 'rxjs/operators';
+import { BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
 import { BackendContext } from '@core/context/backend-context';
 import { NodeBackend } from '@core/creators/backends/node-backend';
 import { SpringBackend } from '@core/creators/backends/spring-backend';
@@ -12,6 +12,7 @@ import { PlayerProviderInterface } from '@core/providers/player-provider.interfa
 import { TeamProviderInterface } from '@core/providers/team-provider.interface';
 import { BackendConfigType } from '@core/types/backend-config.type';
 import { PlayerModel } from '@core/models/player.model';
+import { TeamModel } from '@core/models/team.model';
 import { environment } from 'src/environments/environment';
 
 export type BackendType = 'NODE' | 'SPRING';
@@ -32,11 +33,23 @@ export class BackendManagerService {
   private _currentBackend = signal<BackendType>('NODE');
   private _providers = signal<Providers>(this.context.init());
   private _playersSubject = new BehaviorSubject<PlayerModel[]>([]);
+  private _teamsRefresh$ = new Subject<void>();
 
   readonly currentBackend = this._currentBackend.asReadonly();
   readonly providers = this._providers.asReadonly();
 
   readonly players = toSignal(this._playersSubject, { initialValue: [] });
+  readonly teams = toSignal(
+    combineLatest([
+      toObservable(this._providers),
+      this._teamsRefresh$.pipe(startWith(undefined as void)),
+    ]).pipe(
+      switchMap(([p]) =>
+        p.teamProvider.getUserTeams().pipe(catchError(() => of([] as TeamModel[]))),
+      ),
+    ),
+    { initialValue: [] as TeamModel[] },
+  );
 
   constructor() {
     toObservable(this._providers)
@@ -55,6 +68,10 @@ export class BackendManagerService {
       .playerProvider.getPlayers()
       .pipe(catchError(() => of([] as PlayerModel[])))
       .subscribe((players) => this._playersSubject.next(players));
+  }
+
+  loadTeams() {
+    this._teamsRefresh$.next();
   }
 
   addPlayerToCache(player: PlayerModel) {
