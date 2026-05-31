@@ -28,4 +28,10 @@ describe('NodeBackend', () => {
     const provider = backend.createCommentProvider();
     expect(provider).toBeDefined();
   });
+
+  it('should create a news provider', () => {
+    const backend = new NodeBackend(config, httpMock);
+    const provider = backend.createNewsProvider();
+    expect(provider).toBeDefined();
+  });
 });
