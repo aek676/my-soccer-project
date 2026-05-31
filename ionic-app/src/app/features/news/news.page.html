@@ -1,6 +1,28 @@
 <ion-header [translucent]="true">
   <app-shared-header></app-shared-header>
 </ion-header>
+
 <ion-content [fullscreen]="true">
-  <app-explore-container name="News page"></app-explore-container>
+  <div class="news-container">
+    <h1 class="page-title">Player News Network</h1>
+
+    <div class="news-feed">
+      @for (article of articles(); track article.idNews) {
+      <article class="article-card">
+        <div class="article-meta">
+          <span class="article-date">{{ article.created }}</span>
+          <span class="article-author">{{ article.idPlayer }}</span>
+        </div>
+        <h3 class="article-title">{{ article.title }}</h3>
+        <p class="article-body">{{ article.body }}</p>
+      </article>
+      }
+    </div>
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="ion-margin">
+    <ion-fab-button (click)="onCreateNews()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

@@ -23,7 +23,18 @@ export const routes: Routes = [
   },
   {
     path: 'profile-player/:id',
-    loadComponent: () => import('./features/players/profile-player/profile-player.page').then( m => m.ProfilePlayerPage),
+    loadComponent: () =>
+      import('./features/players/profile-player/profile-player.page').then(
+        (m) => m.ProfilePlayerPage,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'create-news',
+    loadComponent: () =>
+      import('./features/news/create-news/create-news.page').then(
+        (m) => m.CreateNewsPage,
+      ),
     canActivate: [authGuard],
   },
   {

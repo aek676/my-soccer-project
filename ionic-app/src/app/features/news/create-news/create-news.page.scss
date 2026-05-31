@@ -1,0 +1,76 @@
+.form-container {
+  padding: var(--spacing-lg) var(--spacing-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-base);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxs);
+}
+
+.form-label {
+  font-family: var(--ion-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-ink);
+}
+
+.form-input,
+.form-textarea {
+  --background: var(--surface-canvas);
+  --border-radius: 12px;
+  --border: 1px solid var(--hairline);
+  --border-color: var(--hairline);
+  --border-style: solid;
+  --border-width: 1px;
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-primary);
+  --highlight-color-invalid: var(--ion-color-danger);
+  --padding-start: var(--spacing-base);
+  --padding-end: var(--spacing-base);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  color: var(--text-ink);
+}
+
+.form-textarea {
+  --padding-top: var(--spacing-base);
+  --padding-bottom: var(--spacing-base);
+}
+
+ion-select {
+  ::part(inner) {
+    justify-content: space-between;
+  }
+
+  ::part(icon) {
+    color: var(--text-ink);
+  }
+}
+
+.form-input.ng-invalid.ng-touched,
+.form-textarea.ng-invalid.ng-touched {
+  --border-color: var(--ion-color-danger);
+}
+
+.error-text {
+  font-family: var(--ion-font-family);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ion-color-danger);
+  padding-left: var(--spacing-xxs);
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-base);
+  padding: var(--spacing-base);
+}
