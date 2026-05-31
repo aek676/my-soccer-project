@@ -169,3 +169,20 @@ ion-segment-button {
     transform: translateY(0);
   }
 }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 16px;
+  color: var(--text-muted, #6c757d);
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+
+  ion-icon {
+    font-size: 48px;
+    opacity: 0.5;
+  }
+}

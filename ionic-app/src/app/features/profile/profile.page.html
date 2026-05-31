@@ -18,7 +18,8 @@
   <ion-item lines="none" class="title-settings">My Teams</ion-item>
 
   <div class="teams-container">
-    @for (team of teams; track team.id) {
+    @if (teams().length > 0) {
+    @for (team of teams(); track team.id) {
     <div class="team-card" [class.expanded]="isTeamExpanded(team.id)">
       <button class="team-header" (click)="toggleTeam(team.id)">
         <div class="team-info">
@@ -48,13 +49,18 @@
             </div>
             <div class="player-details">
               <span class="player-name">{{ player.name | uppercase }}</span>
-              <span class="player-position">{{ player.role }}</span>
+              <span class="player-position">{{ player.position }}</span>
             </div>
           </div>
           }
         </div>
       </div>
       }
+    </div>
+    } } @else {
+    <div class="empty-state">
+      <ion-icon name="trophy-outline" color="medium"></ion-icon>
+      <p>No teams yet</p>
     </div>
     }
   </div>
