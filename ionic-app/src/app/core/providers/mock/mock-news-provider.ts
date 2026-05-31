@@ -44,11 +44,11 @@ export class MockNewsProvider implements NewsProviderInterface {
   createNews(news: Partial<NewsModel>): Observable<NewsModel> {
     const newArticle: NewsModel = {
       idNews: Math.max(...this.news.map((n) => n.idNews)) + 1,
-      title: news.title ?? '',
-      body: news.body ?? '',
+      title: news.title != null ? news.title : '',
+      body: news.body != null ? news.body : '',
       tags: news.tags,
       created: new Date().toISOString(),
-      idPlayer: news.idPlayer ?? 0,
+      idPlayer: news.idPlayer != null ? news.idPlayer : 0,
     };
     this.news = [...this.news, newArticle];
     return of(newArticle);
