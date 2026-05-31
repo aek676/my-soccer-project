@@ -20,11 +20,12 @@ export class SpringNewsProvider
   }
 
   createNews(news: Partial<NewsModel>): Observable<NewsModel> {
+    const tags = news.tags ?? '';
     return this.http
       .post<NewsModel>(`${this.gatewayUrl}/news-service/news`, {
         title: news.title,
         body: news.body,
-        tags: news.tags ?? '',
+        tags,
         idPlayer: news.idPlayer,
       })
       .pipe(map((a) => this.mapNews(a)));

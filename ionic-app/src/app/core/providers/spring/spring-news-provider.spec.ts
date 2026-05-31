@@ -132,5 +132,33 @@ describe('SpringNewsProvider', () => {
       expect(result!.created).toBe('Jun 1, 2024');
       expect(result!.idPlayer).toBe('1');
     });
+
+    it('should default tags to empty string when undefined', () => {
+      const input = {
+        title: 'New Contract',
+        body: 'A new contract has been signed.',
+        tags: undefined as string | undefined,
+        idPlayer: '1' as string | number,
+      };
+
+      const apiResponse = {
+        idNews: 3,
+        title: 'New Contract',
+        body: 'A new contract has been signed.',
+        tags: '',
+        created: '2024-06-01T12:00:00',
+        idPlayer: 1,
+      };
+
+      let result: NewsModel | undefined;
+      provider.createNews(input).subscribe((r) => (result = r));
+
+      const req = httpMock.expectOne('http://localhost:8080/news-service/news');
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body.tags).toBe('');
+      req.flush(apiResponse);
+
+      expect(result!.idNews).toBe(3);
+    });
   });
 });
