@@ -5,5 +5,6 @@ declare module "bun" {
 		MONGO_ATLAS_URI: string;
 		MONGO_ATLAS_DB_NAME: string;
 		API_KEY_API_FOOTBALL: string;
+		GROQ_API_KEY: string;
 	}
 }

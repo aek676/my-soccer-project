@@ -6,6 +6,7 @@ import { checkConnection, connectDB } from "./config/db";
 import { registerWithEureka } from "./config/eureka";
 import { authPlugin } from "./modules/auth";
 import { CommentModule } from "./modules/comment";
+import { IdealTeamModule } from "./modules/ideal-team";
 import { PlayerModule } from "./modules/player";
 
 const config = await buildConfig();
@@ -48,7 +49,8 @@ const app = new Elysia()
 	)
 	.use(authPlugin)
 	.use(PlayerModule)
-	.use(CommentModule);
+	.use(CommentModule)
+	.use(IdealTeamModule);
 
 app.get("/", () => "Hello Elysia");
 
