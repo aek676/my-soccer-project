@@ -14,6 +14,53 @@
 
   } }
 
+  @if (authService.currentUser$ | async; as user) { @if (!user.isAnonymous) {
+  <ion-item lines="none" class="title-settings">My Teams</ion-item>
+
+  <div class="teams-container">
+    @for (team of teams; track team.id) {
+    <div class="team-card" [class.expanded]="isTeamExpanded(team.id)">
+      <button class="team-header" (click)="toggleTeam(team.id)">
+        <div class="team-info">
+          <ion-icon name="trophy-outline" color="primary"></ion-icon>
+          <span class="team-name">{{ team.name }}</span>
+        </div>
+        <div class="team-meta">
+          <span class="team-date">{{ team.created | date:'dd/MM/yyyy' }}</span>
+          <ion-icon
+            [name]="isTeamExpanded(team.id) ? 'chevron-up-outline' : 'chevron-down-outline'"
+            color="medium"
+          ></ion-icon>
+        </div>
+      </button>
+
+      @if (isTeamExpanded(team.id)) {
+      <div class="team-players">
+        <div class="players-grid">
+          @for (player of team.players; track player.id) {
+          <div class="player-item">
+            <div class="player-avatar">
+              @if (player.photo) {
+              <img [src]="player.photo" [alt]="player.name" />
+              } @else {
+              <ion-icon name="person-outline"></ion-icon>
+              }
+            </div>
+            <div class="player-details">
+              <span class="player-name">{{ player.name | uppercase }}</span>
+              <span class="player-position">{{ player.role }}</span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  } }
+
   <ion-item lines="none">
     <ion-label class="title-settings">Settings</ion-label>
   </ion-item>
