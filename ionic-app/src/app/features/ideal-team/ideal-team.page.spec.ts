@@ -6,6 +6,28 @@ import { AuthStateService } from '@core/services/auth-state.service';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { IdealTeamPage } from './ideal-team.page';
 
+const MOCK_PLAYERS = [
+  { id: '1', name: 'Alisson', position: 'Goalkeeper' },
+  { id: '2', name: 'Davies', position: 'Defender' },
+  { id: '3', name: 'Dias', position: 'Defender' },
+  { id: '4', name: 'Saliba', position: 'Defender' },
+  { id: '5', name: 'Walker', position: 'Defender' },
+  { id: '6', name: 'Bellingham', position: 'Midfielder' },
+  { id: '7', name: 'Rodri', position: 'Midfielder' },
+  { id: '8', name: 'De Bruyne', position: 'Midfielder' },
+  { id: '9', name: 'Vinícius Jr', position: 'Forward' },
+  { id: '10', name: 'Haaland', position: 'Forward' },
+  { id: '11', name: 'Saka', position: 'Forward' },
+];
+
+const MOCK_TEAM = {
+  id: 'team1',
+  name: 'My Team',
+  players: MOCK_PLAYERS,
+  created: '2024-01-01',
+  idUser: 'user1',
+};
+
 describe('IdealTeamPage', () => {
   let component: IdealTeamPage;
   let fixture: ComponentFixture<IdealTeamPage>;
@@ -13,8 +35,8 @@ describe('IdealTeamPage', () => {
   const mockBackendManager = {
     providers: () => ({
       teamProvider: {
-        generateIdealTeam: jasmine.createSpy('generateIdealTeam').and.returnValue(throwError(() => new Error('TODO'))),
-        saveIdealTeam: jasmine.createSpy('saveIdealTeam').and.returnValue(throwError(() => new Error('TODO'))),
+        generateIdealTeam: jasmine.createSpy('generateIdealTeam').and.returnValue(of(MOCK_PLAYERS)),
+        saveIdealTeam: jasmine.createSpy('saveIdealTeam').and.returnValue(of(MOCK_TEAM)),
         getUserTeams: jasmine.createSpy('getUserTeams').and.returnValue(of([])),
       },
     }),
