@@ -2,4 +2,3 @@ node_modules/
 firebase-debug.log
 firestore-debug.log
 .env
-storage.rules

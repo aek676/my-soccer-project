@@ -2,6 +2,10 @@ ion-toolbar {
   --border-width: 0;
 }
 
+ion-content {
+  --padding-bottom: 100px;
+}
+
 .hero {
   background: var(--surface-dark);
   color: var(--text-on-dark);
