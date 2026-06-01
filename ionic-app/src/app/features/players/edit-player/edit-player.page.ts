@@ -106,7 +106,6 @@ export class EditPlayerPage implements ViewWillEnter, ViewWillLeave {
     if (!id) return;
     this.playerId.set(id);
     this.loadPlayer(id);
-    setTimeout(() => this.initMap(), 100);
   }
 
   ionViewWillLeave() {
@@ -122,6 +121,7 @@ export class EditPlayerPage implements ViewWillEnter, ViewWillLeave {
         next: (player) => {
           this.populateFields(player);
           this.isLoadingPlayer.set(false);
+          this.initMap();
         },
         error: () => {
           this.isLoadingPlayer.set(false);
