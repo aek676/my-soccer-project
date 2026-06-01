@@ -233,6 +233,11 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
     return age;
   }
 
+  private toOptional(value: string | null | undefined, suffix?: string): string | undefined {
+    if (!value) return undefined;
+    return suffix ? `${value} ${suffix}` : value;
+  }
+
   savePlayer() {
     const errors = this.validate();
     if (errors.length > 0) {
@@ -250,15 +255,15 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
       name: this.alias(),
       firstName: this.firstName(),
       lastName: this.lastName(),
-      birthdate: this.birthdate() || undefined,
-      nationality: this.nationality() || undefined,
-      height: /* istanbul ignore next */ this.height() ? `${this.height()} cm` : undefined,
-      weight: /* istanbul ignore next */ this.weight() ? `${this.weight()} kg` : undefined,
-      league: this.league() || undefined,
-      team: this.team() || undefined,
-      position: this.position() || undefined,
+      birthdate: this.toOptional(this.birthdate()),
+      nationality: this.toOptional(this.nationality()),
+      height: this.toOptional(this.height(), 'cm'),
+      weight: this.toOptional(this.weight(), 'kg'),
+      league: this.toOptional(this.league()),
+      team: this.toOptional(this.team()),
+      position: this.toOptional(this.position()),
       number: this.number() ?? undefined,
-      photo: this.photo() || undefined,
+      photo: this.toOptional(this.photo()),
       age,
     };
 
