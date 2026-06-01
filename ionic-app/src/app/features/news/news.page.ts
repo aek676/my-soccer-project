@@ -42,11 +42,6 @@ export class NewsPage implements ViewWillEnter {
     addIcons({ 'add': add });
   }
 
-  getPlayerName(idPlayer: string | number): string {
-    const player = this.backendManager.players().find((p) => p.id == idPlayer);
-    return player?.name ?? 'Unknown Player';
-  }
-
   ionViewWillEnter() {
     this.authState.role$.pipe(take(1)).subscribe((role) => {
       this.userRole.set(role);

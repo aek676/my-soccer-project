@@ -31,8 +31,8 @@ describe('CreateNewsPage', () => {
         body: 'Test body',
         tags: '',
         created: 'Jun 1, 2024',
-        idPlayer: '1',
-      } as NewsModel),
+        playerName: 'Marcus Rashford',
+      }),
     ),
   };
 
@@ -94,7 +94,7 @@ describe('CreateNewsPage', () => {
   });
 
   it('should validate title and body as required', () => {
-    component.form.setValue({ title: '', body: '', tags: '', idPlayer: null });
+    component.form.setValue({ title: '', body: '', tags: '', playerName: null });
     expect(component.form.get('title')?.invalid).toBeTrue();
     expect(component.form.get('body')?.invalid).toBeTrue();
   });
@@ -121,7 +121,7 @@ describe('CreateNewsPage', () => {
       title: 'Test Title',
       body: 'Test body',
       tags: 'tag1',
-      idPlayer: '1',
+      playerName: 'Marcus Rashford',
     });
     component.onSave().then(() => {
       expect(mockNewsProvider.createNews).toHaveBeenCalledWith(
@@ -142,7 +142,7 @@ describe('CreateNewsPage', () => {
       title: 'Test Title',
       body: 'Test body',
       tags: '',
-      idPlayer: '1',
+      playerName: 'Marcus Rashford',
     });
     const toastCtrl = TestBed.inject(ToastController);
     spyOn(toastCtrl, 'create').and.callThrough();

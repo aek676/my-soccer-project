@@ -46,18 +46,18 @@
 
     <ion-select
       label="Player"
-      formControlName="idPlayer"
+      formControlName="playerName"
       placeholder="Select a player"
       class="form-input"
       fill="outline"
     >
       @for (player of players(); track player.id) {
-      <ion-select-option [value]="player.id"
+      <ion-select-option [value]="player.name"
         >{{ player.name }}</ion-select-option
       >
       }
     </ion-select>
-    @if (form.get('idPlayer')?.invalid && form.get('idPlayer')?.touched) {
+    @if (form.get('playerName')?.invalid && form.get('playerName')?.touched) {
     <span class="error-text">Player is required</span>
     }
   </form>

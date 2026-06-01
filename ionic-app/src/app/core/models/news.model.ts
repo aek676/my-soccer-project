@@ -4,5 +4,5 @@ export interface NewsModel {
   body: string;
   tags?: string;
   created: string;
-  idPlayer: string | number;
+  playerName: string;
 }
