@@ -16,6 +16,7 @@ import es.ual.players_service.dto.ApiSportsGames;
 import es.ual.players_service.dto.PlayerCreateRequest;
 import es.ual.players_service.dto.PlayerImportRequest;
 import es.ual.players_service.dto.PlayerResponse;
+import es.ual.players_service.dto.PlayerUpdateRequest;
 import es.ual.players_service.exception.PlayerNotFoundException;
 import es.ual.players_service.model.Location;
 import es.ual.players_service.model.Player;
@@ -262,5 +263,34 @@ class PlayerServiceTest {
     assertThatThrownBy(() -> playerService.searchPlayerByName("Vinícius"))
         .isInstanceOf(RuntimeException.class)
         .hasMessage("Failed to search players: API connection error");
+  }
+
+  @Test
+  void updatePlayer_shouldUpdateOnlyProvidedFields() {
+    Player existing = Player.builder()
+        .id(1L).name("Lionel Messi").firstName("Lionel").lastName("Messi")
+        .age(36).team("Inter Miami").position("Forward")
+        .build();
+    when(playerRepository.findById(1L)).thenReturn(Optional.of(existing));
+    when(playerRepository.save(any(Player.class))).thenAnswer(inv -> inv.getArgument(0));
+
+    playerService.updatePlayer(1L, PlayerUpdateRequest.builder()
+        .team("Barcelona")
+        .position("Midfielder")
+        .build());
+
+    assertThat(existing.getTeam()).isEqualTo("Barcelona");
+    assertThat(existing.getPosition()).isEqualTo("Midfielder");
+    assertThat(existing.getName()).isEqualTo("Lionel Messi");
+    assertThat(existing.getAge()).isEqualTo(36);
+  }
+
+  @Test
+  void updatePlayer_shouldThrowWhenPlayerNotFound() {
+    when(playerRepository.findById(99L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> playerService.updatePlayer(99L, PlayerUpdateRequest.builder().team("Barça").build()))
+        .isInstanceOf(PlayerNotFoundException.class)
+        .hasMessage("Player not found with id: 99");
   }
 }

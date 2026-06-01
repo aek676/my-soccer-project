@@ -6,6 +6,7 @@ import es.ual.players_service.dto.ApiSportsStatistics;
 import es.ual.players_service.dto.PlayerCreateRequest;
 import es.ual.players_service.dto.PlayerImportRequest;
 import es.ual.players_service.dto.PlayerResponse;
+import es.ual.players_service.dto.PlayerUpdateRequest;
 import es.ual.players_service.exception.PlayerNotFoundException;
 import es.ual.players_service.model.Player;
 import es.ual.players_service.repository.PlayerRepository;
@@ -155,6 +156,29 @@ public class PlayerService {
     Player saved = playerRepository.save(player);
     log.info("Imported player from API with id: {}", saved.getId());
     return toResponse(saved);
+  }
+
+  public void updatePlayer(Long id, PlayerUpdateRequest request) {
+    Player player = playerRepository.findById(id)
+        .orElseThrow(() -> new PlayerNotFoundException(id));
+
+    if (request.getName() != null) player.setName(request.getName());
+    if (request.getFirstName() != null) player.setFirstName(request.getFirstName());
+    if (request.getLastName() != null) player.setLastName(request.getLastName());
+    if (request.getAge() != null) player.setAge(request.getAge());
+    if (request.getBirthdate() != null) player.setBirthdate(LocalDate.parse(request.getBirthdate()));
+    if (request.getNationality() != null) player.setNationality(request.getNationality());
+    if (request.getHeight() != null) player.setHeight(request.getHeight());
+    if (request.getWeight() != null) player.setWeight(request.getWeight());
+    if (request.getNumber() != null) player.setNumber(request.getNumber());
+    if (request.getTeam() != null) player.setTeam(request.getTeam());
+    if (request.getLeague() != null) player.setLeague(request.getLeague());
+    if (request.getPosition() != null) player.setPosition(request.getPosition());
+    if (request.getPhoto() != null) player.setPhoto(request.getPhoto());
+    if (request.getLocation() != null) player.setLocation(request.getLocation());
+
+    playerRepository.save(player);
+    log.info("Updated player with id: {}", id);
   }
 
   private PlayerResponse mapApiEntryToResponse(ApiSportsPlayerEntry entry) {

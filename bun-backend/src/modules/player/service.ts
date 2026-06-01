@@ -19,37 +19,22 @@ export abstract class PlayerService {
 		return { ...rest, id: _id.toString() } as PlayerModel["playerResponse"];
 	}
 
-	static async createPlayer({
-		name,
-		firstName,
-		lastName,
-		age,
-		birthdate,
-		nationality,
-		height,
-		weight,
-		number,
-		team,
-		league,
-		position,
-		photo,
-		location,
-	}: PlayerModel["playerCreateBody"]) {
+	static async createPlayer(body: PlayerModel["playerCreateBody"]) {
 		const playerDoc = await Player.create({
-			name: name,
-			firstName: firstName,
-			lastName: lastName,
-			age: age,
-			birthdate: new Date(birthdate),
-			nationality: nationality,
-			height: height,
-			weight: weight,
-			number: number,
-			team: team,
-			league: league,
-			position: position,
-			photo: photo,
-			location: location,
+			name: body.name,
+			firstName: body.firstName,
+			lastName: body.lastName,
+			age: body.age,
+			birthdate: new Date(body.birthdate),
+			nationality: body.nationality,
+			height: body.height,
+			weight: body.weight,
+			number: body.number,
+			team: body.team,
+			league: body.league,
+			position: body.position,
+			photo: body.photo,
+			location: body.location,
 		});
 
 		const obj = playerDoc.toObject();
@@ -58,6 +43,31 @@ export abstract class PlayerService {
 			...rest,
 			id: _id.toString(),
 		} as PlayerModel["playerResponse"]);
+	}
+
+	static async updatePlayer(id: string, body: PlayerModel["playerUpdateBody"]) {
+		const existing = await Player.findById(id);
+		if (!existing)
+			return status(404, { code: 404, message: "Player not found" });
+
+		if (body.name !== undefined) existing.name = body.name;
+		if (body.firstName !== undefined) existing.firstName = body.firstName;
+		if (body.lastName !== undefined) existing.lastName = body.lastName;
+		if (body.age !== undefined) existing.age = body.age;
+		if (body.birthdate !== undefined)
+			existing.birthdate = new Date(body.birthdate);
+		if (body.nationality !== undefined) existing.nationality = body.nationality;
+		if (body.height !== undefined) existing.height = body.height;
+		if (body.weight !== undefined) existing.weight = body.weight;
+		if (body.number !== undefined) existing.number = body.number;
+		if (body.team !== undefined) existing.team = body.team;
+		if (body.league !== undefined) existing.league = body.league;
+		if (body.position !== undefined) existing.position = body.position;
+		if (body.photo !== undefined) existing.photo = body.photo;
+		if (body.location !== undefined) existing.location = body.location;
+
+		await existing.save();
+		return status(204);
 	}
 
 	static async searchPlayerByName(name: string) {

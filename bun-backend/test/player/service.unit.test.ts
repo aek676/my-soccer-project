@@ -265,6 +265,124 @@ describe("PlayerService - Unit Tests", () => {
 		});
 	});
 
+	describe("updatePlayer", () => {
+		const validId = "507f1f77bcf86cd799439011";
+
+		afterEach(() => {
+			spyOn(Player, "findById").mockRestore();
+		});
+
+		test("calls Player.findById with the given id", async () => {
+			const findByIdSpy = spyOn(Player, "findById").mockReturnValue(
+				Promise.resolve({ save: async () => {} }) as unknown as ReturnType<
+					typeof Player.findById
+				>,
+			);
+
+			await PlayerService.updatePlayer(validId, { name: "New Name" });
+
+			expect(findByIdSpy).toHaveBeenCalledWith(validId);
+		});
+
+		test("returns 404 when player not found", async () => {
+			spyOn(Player, "findById").mockReturnValue(
+				Promise.resolve(null) as unknown as ReturnType<typeof Player.findById>,
+			);
+
+			const result = await PlayerService.updatePlayer(validId, {
+				name: "New Name",
+			});
+			const resultWithStatus = result as {
+				code: number;
+				response: { code: number; message: string };
+			};
+
+			expect(resultWithStatus.code).toBe(404);
+			expect(resultWithStatus.response.message).toBe("Player not found");
+		});
+
+		test("calls save() with updated fields", async () => {
+			let saved = false;
+			const mockDoc = {
+				name: "Old Name",
+				team: "Old Team",
+				save: async () => {
+					saved = true;
+				},
+			};
+			spyOn(Player, "findById").mockReturnValue(
+				Promise.resolve(mockDoc) as unknown as ReturnType<
+					typeof Player.findById
+				>,
+			);
+
+			await PlayerService.updatePlayer(validId, { name: "New Name" });
+
+			expect(saved).toBe(true);
+		});
+
+		test("returns 204 when update succeeds", async () => {
+			spyOn(Player, "findById").mockReturnValue(
+				Promise.resolve({
+					name: "Old Name",
+					save: async () => {},
+				}) as unknown as ReturnType<typeof Player.findById>,
+			);
+
+			const result = await PlayerService.updatePlayer(validId, {
+				name: "New Name",
+			});
+			const resultWithStatus = result as { code: number };
+
+			expect(resultWithStatus.code).toBe(204);
+		});
+
+		test("only updates provided fields", async () => {
+			const mockDoc = {
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				team: "Inter Miami",
+				position: "Forward",
+				save: async () => {},
+			};
+			spyOn(Player, "findById").mockReturnValue(
+				Promise.resolve(mockDoc) as unknown as ReturnType<
+					typeof Player.findById
+				>,
+			);
+
+			await PlayerService.updatePlayer(validId, { team: "Barcelona" });
+
+			expect(mockDoc.name).toBe("Lionel Messi");
+			expect(mockDoc.team).toBe("Barcelona");
+			expect(mockDoc.position).toBe("Forward");
+		});
+
+		test("converts birthdate to Date object", async () => {
+			const mockDoc = {
+				name: "Lionel Messi",
+				birthdate: new Date("1987-06-24"),
+				save: async () => {},
+			};
+			spyOn(Player, "findById").mockReturnValue(
+				Promise.resolve(mockDoc) as unknown as ReturnType<
+					typeof Player.findById
+				>,
+			);
+
+			await PlayerService.updatePlayer(validId, {
+				birthdate: new Date("1987-06-24"),
+			});
+
+			expect(mockDoc.birthdate).toBeInstanceOf(Date);
+			expect((mockDoc.birthdate as Date).toISOString()).toBe(
+				new Date("1987-06-24").toISOString(),
+			);
+		});
+	});
+
 	describe("searchPlayerByName", () => {
 		let fetchSpy: FetchSpy;
 

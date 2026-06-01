@@ -5,6 +5,7 @@ import { PlayerService } from "./service";
 export const PlayerModule = new Elysia({ name: "player" })
 	.model({
 		"player.createBody": PlayerModel.playerCreateBody,
+		"player.updateBody": PlayerModel.playerUpdateBody,
 		"player.importBody": PlayerModel.playerImportBody,
 		"player.response": PlayerModel.playerResponse,
 		"player.error": PlayerModel.errorResponse,
@@ -67,6 +68,23 @@ export const PlayerModule = new Elysia({ name: "player" })
 			response: {
 				200: "player.response",
 				201: "player.response",
+				404: "player.error",
+				500: "player.error",
+			},
+		},
+	)
+	.patch(
+		"/players/:id",
+		async ({ params: { id }, body }) =>
+			await PlayerService.updatePlayer(id, body),
+		{
+			params: t.Object({
+				id: t.String({ pattern: "^[0-9a-fA-F]{24}$" }),
+			}),
+			body: "player.updateBody",
+			response: {
+				204: t.Undefined(),
+				400: "player.error",
 				404: "player.error",
 				500: "player.error",
 			},

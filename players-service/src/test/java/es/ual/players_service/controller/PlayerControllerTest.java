@@ -2,8 +2,11 @@ package es.ual.players_service.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.ual.players_service.dto.PlayerCreateRequest;
 import es.ual.players_service.dto.PlayerImportRequest;
 import es.ual.players_service.dto.PlayerResponse;
+import es.ual.players_service.dto.PlayerUpdateRequest;
 import es.ual.players_service.exception.GlobalExceptionHandler;
 import es.ual.players_service.exception.PlayerNotFoundException;
 import es.ual.players_service.model.Location;
@@ -153,5 +157,36 @@ class PlayerControllerTest {
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value(2))
         .andExpect(jsonPath("$.externalId").value(456));
+  }
+
+  @Test
+  void updatePlayer_shouldReturn204WhenSuccessful() throws Exception {
+    PlayerUpdateRequest request = PlayerUpdateRequest.builder()
+        .team("Barcelona")
+        .position("Midfielder")
+        .build();
+
+    doNothing().when(playerService).updatePlayer(anyLong(), any(PlayerUpdateRequest.class));
+
+    mockMvc.perform(patch("/players/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void updatePlayer_shouldReturn404WhenNotFound() throws Exception {
+    PlayerUpdateRequest request = PlayerUpdateRequest.builder()
+        .team("Barcelona")
+        .build();
+
+    doThrow(new PlayerNotFoundException(99L)).when(playerService).updatePlayer(anyLong(), any(PlayerUpdateRequest.class));
+
+    mockMvc.perform(patch("/players/99")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value(404))
+        .andExpect(jsonPath("$.message").value("Player not found with id: 99"));
   }
 }
