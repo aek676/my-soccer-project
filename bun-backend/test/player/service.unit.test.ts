@@ -14,6 +14,7 @@ import type { ApiSportsPlayer } from "../../src/types/football-api";
 
 type MongooseQuery = ReturnType<typeof Player.find>;
 type MongooseFindByIdQuery = ReturnType<typeof Player.findById>;
+type MongooseFindByIdDeleteQuery = ReturnType<typeof Player.findByIdAndDelete>;
 type MongooseFindOneQuery = ReturnType<typeof Player.findOne>;
 
 const mockFind = <T>(data: T): MongooseQuery =>
@@ -21,6 +22,9 @@ const mockFind = <T>(data: T): MongooseQuery =>
 
 const mockFindById = <T>(data: T): MongooseFindByIdQuery =>
 	({ lean: () => Promise.resolve(data) }) as unknown as MongooseFindByIdQuery;
+
+const mockFindByIdAndDelete = <T>(data: T): MongooseFindByIdDeleteQuery =>
+	Promise.resolve(data) as unknown as MongooseFindByIdDeleteQuery;
 
 const mockFindOne = <T>(data: T | null): MongooseFindOneQuery =>
 	({ lean: () => Promise.resolve(data) }) as unknown as MongooseFindOneQuery;
@@ -54,6 +58,7 @@ describe("PlayerService - Unit Tests", () => {
 	afterEach(() => {
 		spyOn(Player, "find").mockRestore();
 		spyOn(Player, "findById").mockRestore();
+		spyOn(Player, "findByIdAndDelete").mockRestore();
 		spyOn(Player, "create").mockRestore();
 	});
 
@@ -380,6 +385,48 @@ describe("PlayerService - Unit Tests", () => {
 			expect((mockDoc.birthdate as Date).toISOString()).toBe(
 				new Date("1987-06-24").toISOString(),
 			);
+		});
+	});
+
+	describe("deletePlayer", () => {
+		const validId = "507f1f77bcf86cd799439011";
+
+		test("calls Player.findByIdAndDelete with the given id", async () => {
+			const deleteSpy = spyOn(Player, "findByIdAndDelete").mockReturnValue(
+				mockFindByIdAndDelete({ _id: { toString: () => validId } }),
+			);
+
+			await PlayerService.deletePlayer(validId);
+
+			expect(deleteSpy).toHaveBeenCalledWith(validId);
+		});
+
+		test("returns { message: 'Player deleted' } when found", async () => {
+			spyOn(Player, "findByIdAndDelete").mockReturnValue(
+				mockFindByIdAndDelete({ _id: { toString: () => validId } }),
+			);
+
+			const result = await PlayerService.deletePlayer(validId);
+
+			expect(result).toEqual({ message: "Player deleted" });
+		});
+
+		test("returns 404 when player does not exist", async () => {
+			spyOn(Player, "findByIdAndDelete").mockReturnValue(
+				mockFindByIdAndDelete(null),
+			);
+
+			const result = await PlayerService.deletePlayer(
+				"507f1f77bcf86cd799439099",
+			);
+
+			expect(result).toHaveProperty("code", 404);
+			expect(
+				(result as { response: { code: number; message: string } }).response,
+			).toEqual({
+				code: 404,
+				message: "Player not found",
+			});
 		});
 	});
 
