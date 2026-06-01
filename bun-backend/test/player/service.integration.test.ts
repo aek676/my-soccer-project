@@ -278,4 +278,34 @@ describe("PlayerService - Integration Tests", () => {
 			});
 		});
 	});
+
+	describe("deletePlayer", () => {
+		test("deletes player and returns 200", async () => {
+			const player = await Player.create({
+				name: "Lionel Messi",
+				team: "Inter Miami",
+			});
+
+			const result = await PlayerService.deletePlayer(player._id.toString());
+
+			expect(result).toEqual({ message: "Player deleted" });
+
+			const deleted = await Player.findById(player._id);
+			expect(deleted).toBeNull();
+		});
+
+		test("returns 404 when player does not exist", async () => {
+			const result = await PlayerService.deletePlayer(
+				"507f1f77bcf86cd799439099",
+			);
+
+			expect(result).toHaveProperty("code", 404);
+			expect(
+				(result as { response: { code: number; message: string } }).response,
+			).toEqual({
+				code: 404,
+				message: "Player not found",
+			});
+		});
+	});
 });

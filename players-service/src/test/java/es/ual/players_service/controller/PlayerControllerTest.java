@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -185,6 +186,27 @@ class PlayerControllerTest {
     mockMvc.perform(patch("/players/99")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value(404))
+        .andExpect(jsonPath("$.message").value("Player not found with id: 99"));
+  }
+
+  @Test
+  void deletePlayer_shouldReturn200WhenSuccessful() throws Exception {
+    when(playerService.deletePlayer(1L)).thenReturn("Player deleted");
+
+    mockMvc.perform(delete("/players/1")
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value("Player deleted"));
+  }
+
+  @Test
+  void deletePlayer_shouldReturn404WhenNotFound() throws Exception {
+    when(playerService.deletePlayer(99L)).thenThrow(new PlayerNotFoundException(99L));
+
+    mockMvc.perform(delete("/players/99")
+            .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value(404))
         .andExpect(jsonPath("$.message").value("Player not found with id: 99"));

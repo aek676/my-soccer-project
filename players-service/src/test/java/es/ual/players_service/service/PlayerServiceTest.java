@@ -293,4 +293,26 @@ class PlayerServiceTest {
         .isInstanceOf(PlayerNotFoundException.class)
         .hasMessage("Player not found with id: 99");
   }
+
+  @Test
+  void deletePlayer_shouldDeleteWhenFound() {
+    Player player = Player.builder()
+        .id(1L).name("Vinícius Júnior").position("Forward").number(7).age(23)
+        .build();
+    when(playerRepository.findById(1L)).thenReturn(Optional.of(player));
+
+    String result = playerService.deletePlayer(1L);
+
+    assertThat(result).isEqualTo("Player deleted");
+    verify(playerRepository).delete(player);
+  }
+
+  @Test
+  void deletePlayer_shouldThrowWhenNotFound() {
+    when(playerRepository.findById(99L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> playerService.deletePlayer(99L))
+        .isInstanceOf(PlayerNotFoundException.class)
+        .hasMessage("Player not found with id: 99");
+  }
 }

@@ -70,6 +70,13 @@ export abstract class PlayerService {
 		return status(204);
 	}
 
+	static async deletePlayer(id: string) {
+		const deleted = await Player.findByIdAndDelete(id);
+		if (!deleted)
+			return status(404, { code: 404, message: "Player not found" });
+		return { message: "Player deleted" };
+	}
+
 	static async searchPlayerByName(name: string) {
 		const apiKey = Bun.env.API_KEY_API_FOOTBALL;
 		console.log(

@@ -49,14 +49,7 @@ const postWithBody = (url: string, body: Record<string, unknown>) =>
 			body: JSON.stringify(body),
 		}),
 	);
-const put = (url: string, body?: Record<string, unknown>) =>
-	app.handle(
-		new Request(`http://localhost${url}`, {
-			method: "PUT",
-			headers: body ? { "content-type": "application/json" } : undefined,
-			body: body ? JSON.stringify(body) : undefined,
-		}),
-	);
+
 const patch = (url: string, body?: Record<string, unknown>) =>
 	app.handle(
 		new Request(`http://localhost${url}`, {
@@ -65,6 +58,9 @@ const patch = (url: string, body?: Record<string, unknown>) =>
 			body: body ? JSON.stringify(body) : undefined,
 		}),
 	);
+
+const del = (url: string) =>
+	app.handle(new Request(`http://localhost${url}`, { method: "DELETE" }));
 
 const testLocation = { type: "Point", coordinates: [0, 0] };
 
@@ -573,6 +569,41 @@ describe("PlayerModule Routes - Integration Tests", () => {
 			const res = await patch(`/players/${player._id}`, {});
 
 			expect(res.status).toBe(204);
+		});
+	});
+
+	describe("DELETE /players/:id", () => {
+		test("deletes player and returns 200", async () => {
+			const player = await Player.create({
+				name: "Lionel Messi",
+				team: "Inter Miami",
+			});
+
+			const res = await del(`/players/${player._id}`);
+
+			expect(res.status).toBe(200);
+			const data = await res.json();
+			expect(data.message).toBe("Player deleted");
+
+			const deleted = await Player.findById(player._id);
+			expect(deleted).toBeNull();
+		});
+
+		test("returns 404 when player does not exist", async () => {
+			const validId = new mongoose.Types.ObjectId().toString();
+
+			const res = await del(`/players/${validId}`);
+
+			expect(res.status).toBe(404);
+			const data = await res.json();
+			expect(data.code).toBe(404);
+			expect(data.message).toBe("Player not found");
+		});
+
+		test("returns 422 when id format is invalid", async () => {
+			const res = await del("/players/not-valid-id");
+
+			expect(res.status).toBe(422);
 		});
 	});
 });
