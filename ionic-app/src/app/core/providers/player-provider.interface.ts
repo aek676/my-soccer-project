@@ -12,4 +12,5 @@ export interface PlayerProviderInterface {
     apiPlayerId: number,
     location: { type: 'Point'; coordinates: number[] },
   ): Observable<HttpResponse<PlayerModel>>;
+  deletePlayer(playerId: string): Observable<HttpResponse<{ message: string }>>;
 }

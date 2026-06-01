@@ -78,6 +78,12 @@ export class BackendManagerService {
     this._playersSubject.next([...this._playersSubject.getValue(), player]);
   }
 
+  removePlayerFromCache(playerId: string | number) {
+    this._playersSubject.next(
+      this._playersSubject.getValue().filter((p) => p.id !== playerId),
+    );
+  }
+
   toggleBackend() {
     this._currentBackend.update((v) => (v === 'NODE' ? 'SPRING' : 'NODE'));
     const factory =
