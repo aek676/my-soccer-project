@@ -105,6 +105,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
     { text: 'Cancel', role: 'cancel' },
     { text: 'Delete', role: 'destructive' },
   ];
+  showDeletePlayerAlert = signal(false);
   private map?: L.Map;
 
   constructor() {
@@ -294,6 +295,28 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
           this.comments.update((list) => list.filter((c) => c.id !== id)),
         error: (err) => console.error('Failed to delete comment', err),
       });
+  }
+
+  confirmDeletePlayer() {
+    this.showDeletePlayerAlert.set(true);
+  }
+
+  onDeletePlayerDismiss(detail: any) {
+    this.showDeletePlayerAlert.set(false);
+    if (detail.detail.role === 'destructive') {
+      const id = this.player()?.id;
+      if (!id) return;
+      this.backendManager
+        .providers()
+        .playerProvider.deletePlayer(id as string)
+        .subscribe({
+          next: () => {
+            this.backendManager.removePlayerFromCache(id);
+            this.nav.navigateRoot('/players');
+          },
+          error: (err) => console.error('Failed to delete player', err),
+        });
+    }
   }
 
   getStarIcons(rating: number): string[] {

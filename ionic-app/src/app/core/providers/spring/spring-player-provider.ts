@@ -50,4 +50,11 @@ export class SpringPlayerProvider
       { observe: 'response' },
     );
   }
+
+  deletePlayer(playerId: string): Observable<HttpResponse<{ message: string }>> {
+    return this.http.delete<{ message: string }>(
+      `${this.gatewayUrl}/players-service/players/${playerId}`,
+      { observe: 'response' },
+    );
+  }
 }
