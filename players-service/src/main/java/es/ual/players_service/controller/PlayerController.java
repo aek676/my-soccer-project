@@ -13,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/players")
@@ -60,5 +62,11 @@ public class PlayerController {
       @RequestBody PlayerUpdateRequest request) {
     playerService.updatePlayer(id, request);
     return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Map<String, String>> deletePlayer(@PathVariable Long id) {
+    String message = playerService.deletePlayer(id);
+    return ResponseEntity.ok(Map.of("message", message));
   }
 }

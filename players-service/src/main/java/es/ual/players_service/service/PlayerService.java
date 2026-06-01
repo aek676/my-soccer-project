@@ -181,6 +181,14 @@ public class PlayerService {
     log.info("Updated player with id: {}", id);
   }
 
+  public String deletePlayer(Long id) {
+    Player player = playerRepository.findById(id)
+        .orElseThrow(() -> new PlayerNotFoundException(id));
+    playerRepository.delete(player);
+    log.info("Deleted player with id: {}", id);
+    return "Player deleted";
+  }
+
   private PlayerResponse mapApiEntryToResponse(ApiSportsPlayerEntry entry) {
     return PlayerResponse.builder()
         .id(entry.getPlayer().getId())
