@@ -62,7 +62,7 @@ export class CreateNewsPage {
       title: ['', Validators.required],
       body: ['', Validators.required],
       tags: [''],
-      idPlayer: [null, Validators.required],
+      playerName: [null, Validators.required],
     });
   }
 

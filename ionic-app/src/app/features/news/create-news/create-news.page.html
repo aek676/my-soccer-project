@@ -46,13 +46,13 @@
 
     <ion-select
       label="Player"
-      formControlName="idPlayer"
+      formControlName="playerName"
       placeholder="Select a player"
       class="form-input"
       fill="outline"
     >
       @for (player of players(); track player.id) {
-      <ion-select-option [value]="player.id"
+      <ion-select-option [value]="player.name"
         >{{ player.name }}</ion-select-option
       >
       }
