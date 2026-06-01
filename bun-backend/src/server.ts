@@ -1,3 +1,4 @@
+import { openapi } from "@elysia/openapi";
 import { Elysia, status } from "elysia";
 import { healthcheckPlugin } from "elysia-healthcheck";
 import mongoose from "mongoose";
@@ -28,6 +29,29 @@ const app = new Elysia()
 		);
 		return { code: 500, message: "Internal server error" };
 	})
+	.use(
+		openapi({
+			documentation: {
+				info: {
+					title: "My Soccer Project API",
+					version: "1.0.0",
+					description:
+						"Bun/Elysia backend for the My Soccer Project microservice application. Provides endpoints for managing players, comments, and AI-generated ideal team selection.",
+				},
+				tags: [
+					{ name: "Players", description: "Football player management" },
+					{ name: "Comments", description: "Player comments and ratings" },
+					{
+						name: "Ideal Team",
+						description: "AI-powered ideal team generation and user teams",
+					},
+				],
+			},
+			exclude: {
+				paths: ["/", "/health"],
+			},
+		}),
+	)
 	.use(
 		healthcheckPlugin({
 			checks: {

@@ -21,6 +21,12 @@ export const IdealTeamModule = new Elysia({ name: "ideal-team" })
 				401: "idealTeam.error",
 				500: "idealTeam.error",
 			},
+			detail: {
+				summary: "Generate ideal team",
+				description:
+					"Use AI (Groq/Llama) to analyze all players in the database and select the best 11 to form an optimal football team with a realistic formation.",
+				tags: ["Ideal Team"],
+			},
 		},
 	)
 	.post(
@@ -37,6 +43,12 @@ export const IdealTeamModule = new Elysia({ name: "ideal-team" })
 				401: "idealTeam.error",
 				500: "idealTeam.error",
 			},
+			detail: {
+				summary: "Save an ideal team",
+				description:
+					"Save a user-created ideal team (with a name and exactly 11 player IDs) to the database. Requires authentication.",
+				tags: ["Ideal Team"],
+			},
 		},
 	)
 	.get(
@@ -50,6 +62,12 @@ export const IdealTeamModule = new Elysia({ name: "ideal-team" })
 				200: t.Array(IdealTeamModel.response),
 				401: "idealTeam.error",
 				500: "idealTeam.error",
+			},
+			detail: {
+				summary: "Get user's saved teams",
+				description:
+					"Retrieve all ideal teams saved by the authenticated user.",
+				tags: ["Ideal Team"],
 			},
 		},
 	);

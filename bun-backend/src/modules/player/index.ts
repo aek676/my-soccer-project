@@ -15,6 +15,11 @@ export const PlayerModule = new Elysia({ name: "player" })
 			200: t.Array(PlayerModel.playerResponse),
 			500: "player.error",
 		},
+		detail: {
+			summary: "List all players",
+			description: "Retrieve all football players stored in the database.",
+			tags: ["Players"],
+		},
 	})
 	.get(
 		"/players/search/:name",
@@ -27,6 +32,12 @@ export const PlayerModule = new Elysia({ name: "player" })
 			response: {
 				200: t.Array(PlayerModel.playerResponse),
 				500: "player.error",
+			},
+			detail: {
+				summary: "Search players by name",
+				description:
+					"Search football players by name using an external API (API-Football). Returns matched players with their details.",
+				tags: ["Players"],
 			},
 		},
 	)
@@ -43,6 +54,12 @@ export const PlayerModule = new Elysia({ name: "player" })
 				404: "player.error",
 				500: "player.error",
 			},
+			detail: {
+				summary: "Get player by ID",
+				description:
+					"Retrieve a single football player by their MongoDB ObjectId.",
+				tags: ["Players"],
+			},
 		},
 	)
 	.post(
@@ -53,6 +70,11 @@ export const PlayerModule = new Elysia({ name: "player" })
 			response: {
 				201: "player.response",
 				500: "player.error",
+			},
+			detail: {
+				summary: "Create a new player",
+				description: "Add a new football player to the database.",
+				tags: ["Players"],
 			},
 		},
 	)
@@ -71,6 +93,12 @@ export const PlayerModule = new Elysia({ name: "player" })
 				404: "player.error",
 				500: "player.error",
 			},
+			detail: {
+				summary: "Import player from external API",
+				description:
+					"Import a football player from the API-Football external service by their external player ID. Stores player in MongoDB.",
+				tags: ["Players"],
+			},
 		},
 	)
 	.patch(
@@ -88,6 +116,12 @@ export const PlayerModule = new Elysia({ name: "player" })
 				404: "player.error",
 				500: "player.error",
 			},
+			detail: {
+				summary: "Update player",
+				description:
+					"Update an existing football player's information by their MongoDB ObjectId.",
+				tags: ["Players"],
+			},
 		},
 	)
 	.delete(
@@ -103,6 +137,12 @@ export const PlayerModule = new Elysia({ name: "player" })
 				}),
 				404: "player.error",
 				500: "player.error",
+			},
+			detail: {
+				summary: "Delete player",
+				description:
+					"Remove a football player from the database by their MongoDB ObjectId.",
+				tags: ["Players"],
 			},
 		},
 	);

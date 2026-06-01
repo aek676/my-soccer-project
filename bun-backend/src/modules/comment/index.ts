@@ -21,6 +21,12 @@ export const CommentModule = new Elysia({ name: "comment" })
 				404: "comment.error",
 				500: "comment.error",
 			},
+			detail: {
+				summary: "Get comments by player",
+				description:
+					"Retrieve all comments and ratings for a specific football player by their MongoDB ObjectId.",
+				tags: ["Comments"],
+			},
 		},
 	)
 	.post(
@@ -36,6 +42,12 @@ export const CommentModule = new Elysia({ name: "comment" })
 				401: "comment.error",
 				404: "comment.error",
 				500: "comment.error",
+			},
+			detail: {
+				summary: "Create a new comment",
+				description:
+					"Add a comment with a rating (0-5) for a football player. Requires authentication via X-User-Id header.",
+				tags: ["Comments"],
 			},
 		},
 	)
@@ -53,6 +65,11 @@ export const CommentModule = new Elysia({ name: "comment" })
 				}),
 				404: "comment.error",
 				500: "comment.error",
+			},
+			detail: {
+				summary: "Delete a comment",
+				description: "Remove a comment by its MongoDB ObjectId.",
+				tags: ["Comments"],
 			},
 		},
 	);
