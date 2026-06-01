@@ -49,4 +49,8 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '',
   },
+  {
+    path: 'edit-player',
+    loadComponent: () => import('./features/players/edit-player/edit-player.page').then( m => m.EditPlayerPage)
+  },
 ];
