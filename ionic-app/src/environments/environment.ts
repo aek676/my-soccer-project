@@ -4,6 +4,7 @@ export const environment = {
   emulatorHosts: {
     auth: 'http://localhost:9099',
     firestore: 'localhost:8080',
+    storage: 'http://localhost:9199',
   },
   firebase: {
     apiKey: 'AIzaSyBb4WmWroMT5GHaamhKYU9xQk5BLa6dayk',

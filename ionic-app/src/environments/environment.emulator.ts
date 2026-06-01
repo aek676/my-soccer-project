@@ -12,6 +12,7 @@ export const environment = {
   emulatorHosts: {
     auth: 'http://127.0.0.1:9099',
     firestore: '127.0.0.1:8088',
+    storage: 'http://127.0.0.1:9199',
   },
   gatewayUrl: 'http://localhost:8080',
 };
