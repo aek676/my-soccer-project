@@ -33,6 +33,13 @@ export class NodePlayerProvider
     );
   }
 
+  updatePlayer(playerId: string, player: Partial<PlayerModel>): Observable<PlayerModel> {
+    return this.http.patch<PlayerModel>(
+      `${this.gatewayUrl}/bun-backend/players/${playerId}`,
+      player,
+    );
+  }
+
   importPlayer(
     apiPlayerId: number,
     location: { type: 'Point'; coordinates: number[] },
