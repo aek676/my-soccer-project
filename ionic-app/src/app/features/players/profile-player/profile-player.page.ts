@@ -16,6 +16,8 @@ import {
   IonTextarea,
   IonButtons,
   IonAlert,
+  IonFab,
+  IonFabButton,
 } from '@ionic/angular/standalone';
 import {
   AlertController,
@@ -73,6 +75,8 @@ interface NewCommentForm {
     SharedHeaderComponent,
     IonButtons,
     IonAlert,
+    IonFab,
+    IonFabButton,
   ],
 })
 export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
