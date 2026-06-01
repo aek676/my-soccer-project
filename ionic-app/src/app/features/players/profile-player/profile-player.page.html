@@ -226,6 +226,24 @@
   [buttons]="deleteAlertButtons"
 />
 
+<!-- Delete Player Alert -->
+<ion-alert
+  [isOpen]="showDeletePlayerAlert()"
+  (didDismiss)="onDeletePlayerDismiss($event)"
+  header="Delete Player"
+  message="Are you sure you want to delete this player? This action cannot be undone."
+  [buttons]="deleteAlertButtons"
+/>
+
+<!-- Delete FAB (admin only) -->
+@if (userRole() === 'admin') {
+<ion-fab slot="fixed" vertical="bottom" horizontal="start">
+  <ion-fab-button (click)="confirmDeletePlayer()">
+    <ion-icon name="trash"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+}
+
 <!-- Edit FAB (admin only) -->
 @if (userRole() === 'admin') {
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
