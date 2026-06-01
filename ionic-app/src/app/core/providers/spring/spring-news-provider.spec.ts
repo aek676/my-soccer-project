@@ -40,7 +40,7 @@ describe('SpringNewsProvider', () => {
           body: 'Preliminary talks have hit a wall.',
           tags: 'contract,negotiation',
           created: '2024-01-15T00:00:00',
-          idPlayer: 1,
+          playerName: 'Player One',
         },
         {
           idNews: 2,
@@ -48,7 +48,7 @@ describe('SpringNewsProvider', () => {
           body: 'The medical staff has officially cleared Thorne.',
           tags: 'medical,playoffs',
           created: '2024-01-16T00:00:00',
-          idPlayer: 2,
+          playerName: 'Player Two',
         },
       ];
 
@@ -64,8 +64,8 @@ describe('SpringNewsProvider', () => {
       expect(result?.length).toBe(2);
       expect(result![0].created).toBe('Jan 15, 2024');
       expect(result![1].created).toBe('Jan 16, 2024');
-      expect(result![0].idPlayer).toBe('1');
-      expect(result![1].idPlayer).toBe('2');
+      expect(result![0].playerName).toBe('Player One');
+      expect(result![1].playerName).toBe('Player Two');
     });
   });
 
@@ -77,7 +77,7 @@ describe('SpringNewsProvider', () => {
         body: 'Preliminary talks have hit a wall.',
         tags: 'contract,negotiation',
         created: '2024-01-15T00:00:00',
-        idPlayer: 1,
+        playerName: 'Player One',
       };
 
       let result: NewsModel | undefined;
@@ -91,7 +91,7 @@ describe('SpringNewsProvider', () => {
 
       expect(result!.idNews).toBe(1);
       expect(result!.created).toBe('Jan 15, 2024');
-      expect(result!.idPlayer).toBe('1');
+      expect(result!.playerName).toBe('Player One');
     });
   });
 
@@ -101,7 +101,7 @@ describe('SpringNewsProvider', () => {
         title: 'New Contract',
         body: 'A new contract has been signed.',
         tags: 'contract',
-        idPlayer: '1' as string | number,
+        playerName: 'Player One',
       };
 
       const apiResponse = {
@@ -110,7 +110,7 @@ describe('SpringNewsProvider', () => {
         body: 'A new contract has been signed.',
         tags: 'contract',
         created: '2024-06-01T12:00:00',
-        idPlayer: 1,
+        playerName: 'Player One',
       };
 
       let result: NewsModel | undefined;
@@ -124,13 +124,13 @@ describe('SpringNewsProvider', () => {
         title: 'New Contract',
         body: 'A new contract has been signed.',
         tags: 'contract',
-        idPlayer: '1',
+        playerName: 'Player One',
       });
       req.flush(apiResponse);
 
       expect(result!.idNews).toBe(3);
       expect(result!.created).toBe('Jun 1, 2024');
-      expect(result!.idPlayer).toBe('1');
+      expect(result!.playerName).toBe('Player One');
     });
 
     it('should default tags to empty string when undefined', () => {
@@ -138,7 +138,7 @@ describe('SpringNewsProvider', () => {
         title: 'New Contract',
         body: 'A new contract has been signed.',
         tags: undefined as string | undefined,
-        idPlayer: '1' as string | number,
+        playerName: 'Player One',
       };
 
       const apiResponse = {
@@ -147,7 +147,7 @@ describe('SpringNewsProvider', () => {
         body: 'A new contract has been signed.',
         tags: '',
         created: '2024-06-01T12:00:00',
-        idPlayer: 1,
+        playerName: 'Player One',
       };
 
       let result: NewsModel | undefined;
