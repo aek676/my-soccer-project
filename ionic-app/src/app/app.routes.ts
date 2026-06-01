@@ -38,11 +38,15 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: '**',
-    redirectTo: '',
+    path: 'create-player',
+    loadComponent: () =>
+      import('./features/players/create-player/create-player.page').then(
+        (m) => m.CreatePlayerPage,
+      ),
+    canActivate: [authGuard],
   },
   {
-    path: 'create-player',
-    loadComponent: () => import('./features/players/create-player/create-player.page').then( m => m.CreatePlayerPage)
+    path: '**',
+    redirectTo: '',
   },
 ];

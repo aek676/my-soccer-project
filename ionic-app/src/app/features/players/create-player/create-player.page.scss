@@ -2,11 +2,6 @@ ion-toolbar {
   --border-width: 0;
 }
 
-.form-content {
-  padding: var(--spacing-base);
-  padding-bottom: 100px;
-}
-
 .photo-section {
   display: flex;
   justify-content: center;
@@ -148,7 +143,6 @@ ion-select.form-input {
 }
 
 .footer {
-  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -158,5 +152,4 @@ ion-select.form-input {
   display: flex;
   justify-content: flex-end;
   gap: var(--spacing-md);
-  z-index: 100;
 }
