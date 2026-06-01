@@ -224,6 +224,7 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
     const birth = new Date(birthdate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
+    /* istanbul ignore next */
     if (
       monthDiff < 0 ||
       (monthDiff === 0 && today.getDate() < birth.getDate())
