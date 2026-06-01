@@ -57,6 +57,14 @@ const put = (url: string, body?: Record<string, unknown>) =>
 			body: body ? JSON.stringify(body) : undefined,
 		}),
 	);
+const patch = (url: string, body?: Record<string, unknown>) =>
+	app.handle(
+		new Request(`http://localhost${url}`, {
+			method: "PATCH",
+			headers: body ? { "content-type": "application/json" } : undefined,
+			body: body ? JSON.stringify(body) : undefined,
+		}),
+	);
 
 const testLocation = { type: "Point", coordinates: [0, 0] };
 
@@ -490,7 +498,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		});
 	});
 
-	describe("PUT /players/:id", () => {
+	describe("PATCH /players/:id", () => {
 		test("returns 204 when update succeeds with valid body", async () => {
 			const player = await Player.create({
 				name: "Lionel Messi",
@@ -501,7 +509,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				position: "Forward",
 			});
 
-			const res = await put(`/players/${player._id}`, {
+			const res = await patch(`/players/${player._id}`, {
 				team: "Barcelona",
 				position: "Midfielder",
 			});
@@ -515,7 +523,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				team: "Inter Miami",
 			});
 
-			await put(`/players/${player._id}`, { team: "Barcelona" });
+			await patch(`/players/${player._id}`, { team: "Barcelona" });
 
 			const updated = await Player.findById(player._id).lean();
 			expect(updated?.team).toBe("Barcelona");
@@ -524,7 +532,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		test("returns 404 for non-existent player", async () => {
 			const validId = new mongoose.Types.ObjectId().toString();
 
-			const res = await put(`/players/${validId}`, { team: "Barcelona" });
+			const res = await patch(`/players/${validId}`, { team: "Barcelona" });
 
 			expect(res.status).toBe(404);
 			const data = await res.json();
@@ -533,7 +541,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 		});
 
 		test("returns 400 for invalid id format", async () => {
-			const res = await put("/players/not-valid-id", { team: "Barcelona" });
+			const res = await patch("/players/not-valid-id", { team: "Barcelona" });
 
 			expect(res.status).toBeGreaterThanOrEqual(400);
 		});
@@ -548,7 +556,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				position: "Forward",
 			});
 
-			await put(`/players/${player._id}`, { team: "Barcelona" });
+			await patch(`/players/${player._id}`, { team: "Barcelona" });
 
 			const updated = await Player.findById(player._id).lean();
 			expect(updated?.team).toBe("Barcelona");
@@ -562,7 +570,7 @@ describe("PlayerModule Routes - Integration Tests", () => {
 				team: "Test Team",
 			});
 
-			const res = await put(`/players/${player._id}`, {});
+			const res = await patch(`/players/${player._id}`, {});
 
 			expect(res.status).toBe(204);
 		});
