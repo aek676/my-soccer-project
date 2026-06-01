@@ -1,7 +1,7 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { take } from 'rxjs';
 import {
   IonContent,
@@ -77,6 +77,7 @@ interface NewCommentForm {
     IonAlert,
     IonFab,
     IonFabButton,
+    RouterModule,
   ],
 })
 export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
