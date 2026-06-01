@@ -7,6 +7,7 @@ export interface PlayerProviderInterface {
   getPlayers(): Observable<PlayerModel[]>;
   searchPlayers(name: string): Observable<PlayerModel[]>;
   createPlayer(player: Partial<PlayerModel>): Observable<PlayerModel>;
+  updatePlayer(playerId: string, player: Partial<PlayerModel>): Observable<PlayerModel>;
   importPlayer(
     apiPlayerId: number,
     location: { type: 'Point'; coordinates: number[] },

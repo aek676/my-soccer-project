@@ -1,0 +1,162 @@
+ion-toolbar {
+  --border-width: 0;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.photo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.photo-upload {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px dashed var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--ion-color-primary);
+  }
+
+  &.uploading {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-muted);
+
+    span {
+      font-size: 12px;
+    }
+  }
+}
+
+.section-card {
+  background: var(--surface-container-low);
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-ink);
+  margin: 0 0 var(--spacing-base) 0;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.section-description {
+  font-family: var(--ion-font-family);
+  font-size: 14px;
+  color: var(--text-body);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-base);
+}
+
+.form-input {
+  --background: var(--surface-canvas);
+  --border-radius: 12px;
+  --border: 1px solid var(--hairline);
+  --border-color: var(--hairline);
+  --border-style: solid;
+  --border-width: 1px;
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-primary);
+  --highlight-color-invalid: var(--ion-color-danger);
+  --padding-start: var(--spacing-base);
+  --padding-end: var(--spacing-base);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  font-family: var(--ion-font-family);
+  font-size: 16px;
+  color: var(--text-ink);
+}
+
+ion-select.form-input {
+  ::part(inner) {
+    justify-content: space-between;
+  }
+
+  ::part(icon) {
+    color: var(--text-ink);
+  }
+}
+
+.map-wrapper {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+
+  .map {
+    height: 256px;
+    width: 100%;
+    display: block;
+    z-index: 1;
+  }
+}
+
+.locate-btn {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  --border-radius: 50%;
+  --background: var(--surface-container-high);
+  --color: var(--text-ink);
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.coords-display {
+  font-family: var(--monospace-font-family);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin: var(--spacing-sm) 0 0 0;
+}
+
+.footer {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+}

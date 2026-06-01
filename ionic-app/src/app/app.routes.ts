@@ -49,4 +49,12 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '',
   },
+  {
+    path: 'edit-player/:id',
+    loadComponent: () =>
+      import('./features/players/edit-player/edit-player.page').then(
+        (m) => m.EditPlayerPage,
+      ),
+    canActivate: [authGuard],
+  },
 ];

@@ -33,6 +33,13 @@ export class SpringPlayerProvider
     );
   }
 
+  updatePlayer(playerId: string, player: Partial<PlayerModel>): Observable<PlayerModel> {
+    return this.http.patch<PlayerModel>(
+      `${this.gatewayUrl}/players-service/players/${playerId}`,
+      player,
+    );
+  }
+
   importPlayer(
     apiPlayerId: number,
     location: { type: 'Point'; coordinates: number[] },
