@@ -73,7 +73,7 @@ export const PlayerModule = new Elysia({ name: "player" })
 			},
 		},
 	)
-	.put(
+	.patch(
 		"/players/:id",
 		async ({ params: { id }, body }) =>
 			await PlayerService.updatePlayer(id, body),
