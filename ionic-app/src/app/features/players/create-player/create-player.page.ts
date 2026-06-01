@@ -1,4 +1,10 @@
-import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,7 +24,7 @@ import {
 import { addIcons } from 'ionicons';
 import { camera, locate, arrowBack } from 'ionicons/icons';
 import L from 'leaflet';
-import { CameraResultType } from '@capacitor/camera';
+import { Camera } from '@capacitor/camera';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { GeolocationService } from '@core/services/geolocation.service';
 import { ImageUploadService } from '@core/services/image-upload.service';
@@ -162,17 +168,15 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
 
   async takePhoto() {
     try {
-      const result = await this.camera.getPhoto({
+      const result = await this.camera.takePhoto({
         quality: 80,
-        resultType: CameraResultType.Base64,
-        allowEditing: true,
       });
 
-      if (result.base64String) {
+      const source = result.uri || result.webPath;
+      if (source) {
         this.isUploading.set(true);
-        const base64Data = `data:image/jpeg;base64,${result.base64String}`;
         const downloadUrl = await this.imageUploadService.uploadPlayerPhoto(
-          base64Data,
+          source,
           this.alias() || undefined,
         );
         this.photo.set(downloadUrl);
@@ -190,7 +194,15 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
     if (!this.alias()) errors.push('Alias is required');
     if (!this.firstName()) errors.push('First name is required');
     if (!this.lastName()) errors.push('Last name is required');
+    if (!this.birthdate()) errors.push('Birthdate is required');
+    if (!this.nationality()) errors.push('Nationality is required');
+    if (!this.height()) errors.push('Height is required');
+    if (!this.weight()) errors.push('Weight is required');
+    if (!this.league()) errors.push('League is required');
+    if (!this.team()) errors.push('Team is required');
     if (!this.position()) errors.push('Position is required');
+    if (!this.number()) errors.push('Shirt number is required');
+    if (!this.photo()) errors.push('Photo is required');
     if (!this.location().coordinates) {
       errors.push('Location is required. Tap the map to pin the position.');
     }
@@ -207,6 +219,20 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
     await alert.present();
   }
 
+  private calculateAge(birthdate: string): number {
+    const today = new Date();
+    const birth = new Date(birthdate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  }
+
   savePlayer() {
     const errors = this.validate();
     if (errors.length > 0) {
@@ -216,19 +242,24 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
 
     this.isLoading.set(true);
 
+    const age = this.birthdate()
+      ? this.calculateAge(this.birthdate())
+      : undefined;
+
     const player: Partial<PlayerModel> = {
       name: this.alias(),
       firstName: this.firstName(),
       lastName: this.lastName(),
       birthdate: this.birthdate() || undefined,
       nationality: this.nationality() || undefined,
-      height: this.height() || undefined,
-      weight: this.weight() || undefined,
+      height: this.height() ? `${this.height()} cm` : undefined,
+      weight: this.weight() ? `${this.weight()} kg` : undefined,
       league: this.league() || undefined,
       team: this.team() || undefined,
       position: this.position() || undefined,
       number: this.number() ?? undefined,
       photo: this.photo() || undefined,
+      age,
     };
 
     if (this.location().coordinates) {
