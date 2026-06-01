@@ -49,14 +49,7 @@ const postWithBody = (url: string, body: Record<string, unknown>) =>
 			body: JSON.stringify(body),
 		}),
 	);
-const put = (url: string, body?: Record<string, unknown>) =>
-	app.handle(
-		new Request(`http://localhost${url}`, {
-			method: "PUT",
-			headers: body ? { "content-type": "application/json" } : undefined,
-			body: body ? JSON.stringify(body) : undefined,
-		}),
-	);
+
 const patch = (url: string, body?: Record<string, unknown>) =>
 	app.handle(
 		new Request(`http://localhost${url}`, {
