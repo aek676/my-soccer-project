@@ -121,7 +121,7 @@ export class EditPlayerPage implements ViewWillEnter, ViewWillLeave {
         next: (player) => {
           this.populateFields(player);
           this.isLoadingPlayer.set(false);
-          this.initMap();
+          setTimeout(() => this.initMap(), 50);
         },
         error: () => {
           this.isLoadingPlayer.set(false);
