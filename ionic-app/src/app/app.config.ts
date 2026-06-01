@@ -19,6 +19,11 @@ import {
   getFirestore,
   provideFirestore,
 } from '@angular/fire/firestore';
+import {
+  connectStorageEmulator,
+  getStorage,
+  provideStorage,
+} from '@angular/fire/storage';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 
@@ -49,6 +54,17 @@ export const appConfig: ApplicationConfig = {
         connectFirestoreEmulator(firestore, host, parseInt(port, 10));
       }
       return firestore;
+    }),
+    provideStorage(() => {
+      const app = inject(FirebaseApp);
+      const storage = getStorage(app);
+      if (environment.useEmulators) {
+        const [host, port] = environment.emulatorHosts.storage
+          .replace('http://', '')
+          .split(':');
+        connectStorageEmulator(storage, host, parseInt(port, 10));
+      }
+      return storage;
     }),
   ],
 };
