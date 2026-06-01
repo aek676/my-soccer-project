@@ -26,6 +26,13 @@ export class NodePlayerProvider
     );
   }
 
+  createPlayer(player: Partial<PlayerModel>): Observable<PlayerModel> {
+    return this.http.post<PlayerModel>(
+      `${this.gatewayUrl}/bun-backend/players`,
+      player,
+    );
+  }
+
   importPlayer(
     apiPlayerId: number,
     location: { type: 'Point'; coordinates: number[] },
