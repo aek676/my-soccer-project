@@ -12,14 +12,20 @@ import {
   IonIcon,
   IonItem,
   IonButton,
-  IonChip,
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { SharedHeaderComponent } from '@shared/components/shared-header/shared-header.component';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { addIcons } from 'ionicons';
-import { server, logOutOutline, chevronDownOutline, chevronUpOutline, personOutline, trophyOutline } from 'ionicons/icons';
+import {
+  server,
+  logOutOutline,
+  chevronDownOutline,
+  chevronUpOutline,
+  personOutline,
+  trophyOutline,
+} from 'ionicons/icons';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { UpperCasePipe, DatePipe } from '@angular/common';
 
@@ -41,7 +47,6 @@ import { UpperCasePipe, DatePipe } from '@angular/common';
     IonIcon,
     IonItem,
     IonButton,
-    IonChip,
     AsyncPipe,
     UpperCasePipe,
     DatePipe,
@@ -58,7 +63,14 @@ export class ProfilePage {
   readonly teams = this.backendManager.teams;
 
   constructor() {
-    addIcons({ server, logOutOutline, chevronDownOutline, chevronUpOutline, personOutline, trophyOutline });
+    addIcons({
+      server,
+      logOutOutline,
+      chevronDownOutline,
+      chevronUpOutline,
+      personOutline,
+      trophyOutline,
+    });
   }
 
   toggleTeam(teamId: string): void {
