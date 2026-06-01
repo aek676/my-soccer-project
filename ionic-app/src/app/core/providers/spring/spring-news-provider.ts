@@ -26,7 +26,7 @@ export class SpringNewsProvider
         title: news.title,
         body: news.body,
         tags,
-        idPlayer: news.idPlayer,
+        playerName: news.playerName,
       })
       .pipe(map((a) => this.mapNews(a)));
   }
@@ -39,6 +39,6 @@ export class SpringNewsProvider
           year: 'numeric',
         })
       : '';
-    return { ...article, idPlayer: String(article.idPlayer), created };
+    return { ...article, created };
   }
 }
