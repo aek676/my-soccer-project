@@ -172,12 +172,12 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
         quality: 80,
       });
 
-      const source = result.uri || result.webPath;
+      const source = result.uri ?? result.webPath;
       if (source) {
         this.isUploading.set(true);
         const downloadUrl = await this.imageUploadService.uploadPlayerPhoto(
           source,
-          this.alias() || undefined,
+          this.toOptional(this.alias()),
         );
         this.photo.set(downloadUrl);
         this.isUploading.set(false);
