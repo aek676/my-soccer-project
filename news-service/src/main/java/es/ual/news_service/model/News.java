@@ -18,7 +18,7 @@ public class News {
   private String body;
   private String tags;
   private LocalDateTime created;
-  private String idPlayer;
+  private String playerName;
 
   public String toXML() {
     StringBuilder xml = new StringBuilder();
@@ -28,7 +28,7 @@ public class News {
     xml.append("<body>").append(escapeXML(body)).append("</body>");
     xml.append("<tags>").append(escapeXML(tags)).append("</tags>");
     xml.append("<created>").append(created != null ? created.toString() : "").append("</created>");
-    xml.append("<idPlayer>").append(idPlayer).append("</idPlayer>");
+    xml.append("<playerName>").append(playerName).append("</playerName>");
     xml.append("</news>");
     return xml.toString();
   }
@@ -44,7 +44,7 @@ public class News {
       if (createdStr != null && !createdStr.isEmpty()) {
         news.setCreated(LocalDateTime.parse(createdStr));
       }
-      news.setIdPlayer(extractValue(xml, "idPlayer"));
+      news.setPlayerName(extractValue(xml, "playerName"));
       return news;
     } catch (Exception e) {
       e.printStackTrace();

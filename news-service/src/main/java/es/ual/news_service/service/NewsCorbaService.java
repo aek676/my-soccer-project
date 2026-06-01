@@ -79,7 +79,7 @@ public class NewsCorbaService {
         .body(request.getBody())
         .tags(request.getTags())
         .created(LocalDateTime.now())
-        .idPlayer(request.getIdPlayer())
+        .playerName(request.getPlayerName())
         .build();
 
     String xml = news.toXML();
@@ -102,7 +102,7 @@ public class NewsCorbaService {
         .body(news.getBody())
         .tags(news.getTags())
         .created(news.getCreated())
-        .idPlayer(news.getIdPlayer())
+        .playerName(news.getPlayerName())
         .build();
   }
 }

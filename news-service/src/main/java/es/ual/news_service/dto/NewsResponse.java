@@ -16,5 +16,5 @@ public class NewsResponse {
   private String body;
   private String tags;
   private LocalDateTime created;
-  private String idPlayer;
+  private String playerName;
 }
