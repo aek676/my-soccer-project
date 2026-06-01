@@ -49,6 +49,14 @@ const postWithBody = (url: string, body: Record<string, unknown>) =>
 			body: JSON.stringify(body),
 		}),
 	);
+const put = (url: string, body?: Record<string, unknown>) =>
+	app.handle(
+		new Request(`http://localhost${url}`, {
+			method: "PUT",
+			headers: body ? { "content-type": "application/json" } : undefined,
+			body: body ? JSON.stringify(body) : undefined,
+		}),
+	);
 
 const testLocation = { type: "Point", coordinates: [0, 0] };
 
@@ -479,6 +487,84 @@ describe("PlayerModule Routes - Integration Tests", () => {
 			expect(data).toHaveProperty("message");
 			expect(typeof data.code).toBe("number");
 			expect(typeof data.message).toBe("string");
+		});
+	});
+
+	describe("PUT /players/:id", () => {
+		test("returns 204 when update succeeds with valid body", async () => {
+			const player = await Player.create({
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				team: "Inter Miami",
+				position: "Forward",
+			});
+
+			const res = await put(`/players/${player._id}`, {
+				team: "Barcelona",
+				position: "Midfielder",
+			});
+
+			expect(res.status).toBe(204);
+		});
+
+		test("persists updated fields to database", async () => {
+			const player = await Player.create({
+				name: "Lionel Messi",
+				team: "Inter Miami",
+			});
+
+			await put(`/players/${player._id}`, { team: "Barcelona" });
+
+			const updated = await Player.findById(player._id).lean();
+			expect(updated?.team).toBe("Barcelona");
+		});
+
+		test("returns 404 for non-existent player", async () => {
+			const validId = new mongoose.Types.ObjectId().toString();
+
+			const res = await put(`/players/${validId}`, { team: "Barcelona" });
+
+			expect(res.status).toBe(404);
+			const data = await res.json();
+			expect(data.code).toBe(404);
+			expect(data.message).toBe("Player not found");
+		});
+
+		test("returns 400 for invalid id format", async () => {
+			const res = await put("/players/not-valid-id", { team: "Barcelona" });
+
+			expect(res.status).toBeGreaterThanOrEqual(400);
+		});
+
+		test("partial update only changes provided fields", async () => {
+			const player = await Player.create({
+				name: "Lionel Messi",
+				firstName: "Lionel",
+				lastName: "Messi",
+				age: 36,
+				team: "Inter Miami",
+				position: "Forward",
+			});
+
+			await put(`/players/${player._id}`, { team: "Barcelona" });
+
+			const updated = await Player.findById(player._id).lean();
+			expect(updated?.team).toBe("Barcelona");
+			expect(updated?.name).toBe("Lionel Messi");
+			expect(updated?.position).toBe("Forward");
+		});
+
+		test("returns 204 with empty body (all fields optional)", async () => {
+			const player = await Player.create({
+				name: "Test Player",
+				team: "Test Team",
+			});
+
+			const res = await put(`/players/${player._id}`, {});
+
+			expect(res.status).toBe(204);
 		});
 	});
 });
