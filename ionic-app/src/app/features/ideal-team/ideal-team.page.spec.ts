@@ -58,6 +58,7 @@ describe('IdealTeamPage', () => {
         present: jasmine.createSpy('present'),
       } as any),
     );
+    mockBackendManager.loadTeams.calls.reset();
 
     await TestBed.configureTestingModule({
       imports: [IdealTeamPage],
@@ -131,5 +132,39 @@ describe('IdealTeamPage', () => {
     expect(mockToastController.create).toHaveBeenCalledWith(
       jasmine.objectContaining({ message: 'Team name already exists', color: 'danger' }),
     );
+  });
+
+  it('should show toast warning when team name is empty', async () => {
+    component.teamName.set('');
+    await component.confirmSaveTeam();
+
+    expect(mockToastController.create).toHaveBeenCalledWith(
+      jasmine.objectContaining({ message: 'Please enter a team name', color: 'warning' }),
+    );
+  });
+
+  it('should show toast success and call loadTeams on save success', async () => {
+    mockTeamProvider.saveIdealTeam.and.returnValue(of(MOCK_TEAM));
+
+    component.teamName.set('My Team');
+    await component.confirmSaveTeam();
+
+    expect(mockBackendManager.loadTeams).toHaveBeenCalled();
+    expect(component.showSaveModal()).toBe(false);
+    expect(component.teamName()).toBe('');
+  });
+
+  it('should have correct playersByPosition computed', async () => {
+    await component.generateSquad();
+
+    const byPos = component.playersByPosition();
+    expect(byPos.goalkeepers.length).toBe(1);
+    expect(byPos.defenders.length).toBe(4);
+    expect(byPos.midfielders.length).toBe(3);
+    expect(byPos.forwards.length).toBe(3);
+  });
+
+  it('should calculate correct formation', () => {
+    expect(component.formation()).toBe('4-3-3');
   });
 });
