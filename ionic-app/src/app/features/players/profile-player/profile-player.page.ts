@@ -38,6 +38,7 @@ import {
   person,
   chatbubble,
   trash,
+  createOutline,
 } from 'ionicons/icons';
 import { BackendManagerService } from '@core/services/backend-manager.service';
 import { PlayerModel } from '@core/models/player.model';
@@ -118,6 +119,7 @@ export class ProfilePlayerPage implements ViewWillEnter, ViewWillLeave {
       person,
       chatbubble,
       trash,
+      createOutline,
     });
 
     delete (L.Icon.Default.prototype as any)._getIconUrl;
