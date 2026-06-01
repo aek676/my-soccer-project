@@ -239,6 +239,10 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
     return suffix ? `${value} ${suffix}` : value;
   }
 
+  private nullishToUndefined(value: number | null): number | undefined {
+    return value ?? undefined;
+  }
+
   savePlayer() {
     const errors = this.validate();
     if (errors.length > 0) {
@@ -263,7 +267,7 @@ export class CreatePlayerPage implements ViewWillEnter, ViewWillLeave {
       league: this.toOptional(this.league()),
       team: this.toOptional(this.team()),
       position: this.toOptional(this.position()),
-      number: this.number() ?? undefined,
+      number: this.nullishToUndefined(this.number()),
       photo: this.toOptional(this.photo()),
       age,
     };
