@@ -5,3 +5,17 @@ spring:
     import: "optional:configserver:http://localhost:8888/"
   main:
     web-application-type: reactive
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Players Service
+        url: /players-service/v3/api-docs
+      - name: Comments Service
+        url: /comments-service/v3/api-docs
+      - name: Ideal Team Service
+        url: /ideal-team-service/v3/api-docs
+      - name: News Service
+        url: /news-service/v3/api-docs
+      - name: Bun Backend
+        url: /bun-backend/openapi/json
