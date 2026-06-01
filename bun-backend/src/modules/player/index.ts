@@ -89,4 +89,20 @@ export const PlayerModule = new Elysia({ name: "player" })
 				500: "player.error",
 			},
 		},
+	)
+	.delete(
+		"/players/:id",
+		async ({ params: { id } }) => await PlayerService.deletePlayer(id),
+		{
+			params: t.Object({
+				id: t.String({ pattern: "^[0-9a-fA-F]{24}$" }),
+			}),
+			response: {
+				200: t.Object({
+					message: t.String(),
+				}),
+				404: "player.error",
+				500: "player.error",
+			},
+		},
 	);
