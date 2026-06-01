@@ -114,7 +114,10 @@ export class PlayersPage implements ViewWillEnter {
         {
           text: 'Add Manually',
           icon: 'person-add',
-          handler: () => {},
+          handler: async () => {
+            await sheet.dismiss();
+            this.navController.navigateForward('/create-player');
+          },
         },
         {
           text: 'Import from API',

@@ -1,13 +1,180 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>create-player</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border">
+  <app-shared-header
+    [showBackButton]="true"
+    (back)="cancel()"
+  ></app-shared-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">create-player</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <form class="form-content">
+    <!-- Photo Upload -->
+    <div class="photo-section">
+      <div
+        class="photo-upload"
+        (click)="takePhoto()"
+        [class.uploading]="isUploading()"
+      >
+        @if (isUploading()) {
+        <ion-spinner name="crescent"></ion-spinner>
+        } @else if (photo()) {
+        <img [src]="photo()" alt="Player photo" />
+        } @else {
+        <div class="photo-placeholder">
+          <ion-icon name="camera" size="large"></ion-icon>
+          <span>Add Photo</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2 class="section-title">Personal Information</h2>
+      <div class="form-fields">
+        <ion-input
+          label="Alias / Nickname"
+          [(ngModel)]="alias"
+          name="alias"
+          placeholder="e.g. Magic"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-input
+          label="First Name"
+          [(ngModel)]="firstName"
+          name="firstName"
+          placeholder="First Name"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-input
+          label="Last Name"
+          [(ngModel)]="lastName"
+          name="lastName"
+          placeholder="Last Name"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-input
+          label="Birthdate"
+          type="date"
+          [(ngModel)]="birthdate"
+          name="birthdate"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-input
+          label="Nationality"
+          [(ngModel)]="nationality"
+          name="nationality"
+          placeholder="e.g. Spanish"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+      </div>
+    </div>
+
+    <!-- Physical Stats -->
+    <div class="section-card">
+      <h2 class="section-title">Physical Stats</h2>
+      <div class="form-fields">
+        <ion-input
+          label="Height (cm)"
+          type="number"
+          [(ngModel)]="height"
+          name="height"
+          placeholder="185"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-input
+          label="Weight (kg)"
+          type="number"
+          [(ngModel)]="weight"
+          name="weight"
+          placeholder="80"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+      </div>
+    </div>
+
+    <!-- Sporting Information -->
+    <div class="section-card">
+      <h2 class="section-title">Sporting Information</h2>
+      <div class="form-fields">
+        <ion-input
+          label="League"
+          [(ngModel)]="league"
+          name="league"
+          placeholder="e.g. Premier League"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-input
+          label="Team"
+          [(ngModel)]="team"
+          name="team"
+          placeholder="e.g. Arsenal FC"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+        <ion-select
+          label="Primary Position"
+          [(ngModel)]="position"
+          name="position"
+          placeholder="Select position..."
+          fill="outline"
+          class="form-input"
+        >
+          <ion-select-option value="Goalkeeper">Goalkeeper</ion-select-option>
+          <ion-select-option value="Defender">Defender</ion-select-option>
+          <ion-select-option value="Midfielder">Midfielder</ion-select-option>
+          <ion-select-option value="Forward">Forward</ion-select-option>
+        </ion-select>
+        <ion-input
+          label="Shirt Number"
+          type="number"
+          [(ngModel)]="number"
+          name="number"
+          placeholder="10"
+          fill="outline"
+          class="form-input"
+        ></ion-input>
+      </div>
+    </div>
+
+    <!-- Current Location -->
+    <div class="section-card">
+      <h2 class="section-title">Current Location</h2>
+      <p class="section-description">
+        Tap the map or use your current location to pin the player's position.
+      </p>
+      <div class="map-wrapper">
+        <div #mapContainer class="map"></div>
+        <ion-button class="locate-btn" (click)="useCurrentLocation()" [disabled]="isLocating()">
+          @if (isLocating()) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            <ion-icon name="locate" slot="icon-only"></ion-icon>
+          }
+        </ion-button>
+      </div>
+      @if (location().coordinates) {
+      <p class="coords-display">
+        {{ location().coordinates![1].toFixed(4) }}°, {{
+        location().coordinates![0].toFixed(4) }}°
+      </p>
+      }
+    </div>
+  </form>
+
+  <!-- Fixed Footer -->
+  <div class="footer">
+    <ion-button fill="outline" (click)="cancel()">Cancel</ion-button>
+    <ion-button (click)="savePlayer()" [disabled]="isLoading()">
+      @if (isLoading()) {
+      <ion-spinner name="crescent"></ion-spinner>
+      } @else { Save Player }
+    </ion-button>
+  </div>
 </ion-content>
