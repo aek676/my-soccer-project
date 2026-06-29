@@ -9,10 +9,12 @@
   "scripts": {
     "build:frontend": "cd ionic-app && bun run build",
     "build:frontend:e2e": "cd ionic-app && bun run build -- --configuration=emulator",
+    "start:front": "cd ionic-app && bun run start --configuration=emulator",
     "emulator": "firebase emulators:start",
     "test:e2e": "firebase emulators:exec --only auth,hosting \"cd testE2E && bunx playwright test\""
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "firebase-tools": "^14.21.0"
   }
 }

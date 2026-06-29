@@ -148,30 +148,30 @@ services:
     networks:
       - my-soccer-network
 
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: always
-    ports:
-      - "8091:8081"
-    environment:
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-      ME_CONFIG_BASICAUTH_ENABLED: true
-      ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
-      ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
-    depends_on:
-      - mongo
-    networks:
-      - my-soccer-network
+  # mongo-express:
+  #   image: mongo-express
+  #   container_name: mongo-express
+  #   restart: always
+  #   ports:
+  #     - "8091:8081"
+  #   environment:
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+  #     ME_CONFIG_BASICAUTH_ENABLED: true
+  #     ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
+  #     ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
+  #   depends_on:
+  #     - mongo
+  #   networks:
+  #     - my-soccer-network
 
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
-    ports:
-      - "8090:8080"
-    networks:
-      - my-soccer-network
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: always
+  #   ports:
+  #     - "8090:8080"
+  #   networks:
+  #     - my-soccer-network
 
 networks:
   my-soccer-network:
